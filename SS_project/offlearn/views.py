@@ -13,4 +13,12 @@ from offlearn.models import *
 class show_course_guest(View):
     def get(self, request):
         return render(request, 'Allcourse-Guest.html')
-    
+
+
+class create_course(View):
+    def get(self, request):
+        return render(request, 'Create_Course.html')
+
+class edit_course(View):
+    def get(self, request):
+        return render(request, 'Edit_Course.html')
