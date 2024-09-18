@@ -1,14 +1,13 @@
+{% extends 'base.html' %}
 {% load static tailwind_tags %}
 
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>All Course</title>
-    <link rel="stylesheet" href="../output.css">
+
+
+
+    <title>{% block name %} All Course {% endblock %}</title>
     {% tailwind_css %}
+    {% block mycss %}
     <style>
         .redcolor {
             background-color: #D9272E;
@@ -45,12 +44,11 @@
             background-image: url("{% static 'images/12133.jpg' %}");
         }
     </style>
+    {% endblock %}
 
-</head>
-
-<body>
+    {% block content %}
     <!--cover ด้านบน-->
-    <div class="bg-cover w-auto h-[200px] mybg"></div>
+    <div class="bg-cover w-auto h-[500px] mybg"></div>
     <!--text -->
     <div class="grid justify-items-center mt-10">
         <a href="Allcourse-Guest.php">
@@ -142,6 +140,4 @@
 
 
     </div>
-</body>
-
-</html>
+    {% endblock %}
