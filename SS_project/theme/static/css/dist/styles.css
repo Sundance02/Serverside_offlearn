@@ -749,40 +749,6 @@ select {
   outline: 1px auto -webkit-focus-ring-color;
 }
 
-.container {
-  width: 100%;
-}
-
-@media (min-width: 640px) {
-  .container {
-    max-width: 640px;
-  }
-}
-
-@media (min-width: 768px) {
-  .container {
-    max-width: 768px;
-  }
-}
-
-@media (min-width: 1024px) {
-  .container {
-    max-width: 1024px;
-  }
-}
-
-@media (min-width: 1280px) {
-  .container {
-    max-width: 1280px;
-  }
-}
-
-@media (min-width: 1536px) {
-  .container {
-    max-width: 1536px;
-  }
-}
-
 .static {
   position: static;
 }
@@ -819,11 +785,6 @@ select {
 .mx-48 {
   margin-left: 12rem;
   margin-right: 12rem;
-}
-
-.mx-auto {
-  margin-left: auto;
-  margin-right: auto;
 }
 
 .mr-4 {
@@ -874,28 +835,8 @@ select {
   height: 1rem;
 }
 
-.h-\[200px\] {
-  height: 200px;
-}
-
-.h-screen {
-  height: 100vh;
-}
-
-.h-\[400px\] {
-  height: 400px;
-}
-
-.h-\[600px\] {
-  height: 600px;
-}
-
 .h-\[500px\] {
   height: 500px;
-}
-
-.h-\[300px\] {
-  height: 300px;
 }
 
 .w-28 {
@@ -918,12 +859,12 @@ select {
   width: 24rem;
 }
 
-.w-auto {
-  width: auto;
-}
-
 .w-\[150px\] {
   width: 150px;
+}
+
+.w-auto {
+  width: auto;
 }
 
 .grid-cols-3 {
@@ -961,11 +902,6 @@ select {
 .rounded-t-md {
   border-top-left-radius: 0.375rem;
   border-top-right-radius: 0.375rem;
-}
-
-.bg-gray-50 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(249 250 251 / var(--tw-bg-opacity));
 }
 
 .bg-\[\#D9272E\] {
@@ -1022,13 +958,9 @@ select {
   text-align: center;
 }
 
-.font-serif {
-  font-family: ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
-}
-
-.text-5xl {
-  font-size: 3rem;
-  line-height: 1;
+.text-4xl {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
 }
 
 .text-sm {
@@ -1041,11 +973,6 @@ select {
   line-height: 1.75rem;
 }
 
-.text-4xl {
-  font-size: 2.25rem;
-  line-height: 2.5rem;
-}
-
 .font-bold {
   font-weight: 700;
 }
@@ -1054,12 +981,9 @@ select {
   font-weight: 500;
 }
 
-.leading-normal {
-  line-height: 1.5;
-}
-
-.tracking-normal {
-  letter-spacing: 0em;
+.text-black {
+  --tw-text-opacity: 1;
+  color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 .text-gray-500 {
@@ -1070,11 +994,6 @@ select {
 .text-gray-600 {
   --tw-text-opacity: 1;
   color: rgb(75 85 99 / var(--tw-text-opacity));
-}
-
-.text-black {
-  --tw-text-opacity: 1;
-  color: rgb(0 0 0 / var(--tw-text-opacity));
 }
 
 .text-white {
