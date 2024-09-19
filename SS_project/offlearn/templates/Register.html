@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block name %} Register {% endblock %}
+
+{% block content %}
+
+<body class="font-body">
+    <div class="flex flex-col items-center justify-center m-5">
+        <div class="head">
+            <h1 class="text-center text-5xl p-5 font-semibold">สมัครสมาชิก</h1>
+        </div>
+
+        <div class="bg-[#F4F4F4] p-10 rounded-3xl shadow-md">
+
+            <div class="flex flex-col bg-white rounded-3xl p-5">
+                <div id="input-firstname" class="grid grid-cols-4 m-3">
+                    <label for="name" class="font-semibold text-xl">ชื่อ</label>
+                    <input type="text" id="firstname" name="firstname"
+                        class="bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4 w-[700px]">
+                </div>
+
+                <div id="input-lastname" class="grid grid-cols-4 m-3">
+                    <label for="lastname" class="font-semibold text-xl">นามสกุล</label>
+                    <input type="text" id="lastname" name="lastname"
+                        class="bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4">
+                </div>
+
+                <div id="input-firstname" class="grid grid-cols-4 m-3">
+                    <label for="name" class="font-semibold text-xl">ชื่อผู้ใช้</label>
+                    <input type="text" id="firstname" name="firstname"
+                        class="bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4 w-[700px]">
+                </div>
+
+                <div id="input-email" class="grid grid-cols-4 m-3">
+                    <label for="lastname" class="font-semibold text-xl">อีเมลล์</label>
+                    <input type="email" id="email" name="email"
+                        class="bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4" />
+                </div>
+
+                <div id="input-tel" class="grid grid-cols-4 m-3">
+                    <label for="tel" class="font-semibold text-xl">เบอร์โทร</label>
+                    <input type="tel" id="tel" class="bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4" />
+                </div>
+
+                <div id="input-password" class="grid grid-cols-4 m-3">
+                    <label for="password" class="font-semibold text-xl">รหัสผ่าน</label>
+                    <input type="password" id="password" name="password"
+                        class="bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4" />
+                </div>
+
+                <div id="input-confirm" class="grid grid-cols-4 m-3">
+                    <label for="confirm" class="font-semibold text-xl">ยืนยันรหัสผ่าน</label>
+                    <input type="password" id="confirm" name="confirm"
+                        class="bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4" />
+                </div>
+
+                <!-- updatefile & uploadfile -->
+                <div id="input-profile" class="grid grid-cols-4 m-3">
+                    <label for="profileCourse" class="font-semibold text-xl">รูปภาพ</label>
+                    <div class="col-span-3 flex space-x-4">
+                        <input id="upload-profile" onchange="updatefile()" type="file"
+                            class="rounded-full w-[150px] hidden">
+                        <label id="label-upload" for="upload-profile"
+                            class="flex rounded-full bg-[#FFDADA] py-2 px-4 w-[200px]">
+                            <img id="icon-file" src="{% static 'images/add_file_icon.svg' %}" alt="" class="flex-none">
+                            <p id="p-file-name"
+                                class="underline underline-offset-4 text-md text-center flex-grow font-normal truncate"
+                                id="uploadfile"> Upload file </p>
+                        </label>
+                        <div id="show-file-name" class="text-[#B9B9B9] box-border pt-4 text-base truncate">
+                            อัตราส่วนรูปภาพเป็น 16:9
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+            <div class="flex items-center justify-center">
+                <button class="register bg-[#D9272E] text-white px-6 py-3 mt-5 rounded-full w-[200px]" name="register"
+                    id="register" onclick="register()">สมัครสมาชิก</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+{% endblock %}
