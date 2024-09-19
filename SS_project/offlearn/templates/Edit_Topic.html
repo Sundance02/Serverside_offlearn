@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% load static tailwind_tags %}
+<!-- ต้องใช้ข้อมูลด้วยว่าเป็น topic ของคอร์สอะไร เพื่อให้ เพิ่ม topic นั้นเข้าคอร์สได้ -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block name %} Edit Topic {% endblock %}</title>
+    {% tailwind_css %}
+</head>
+<body class="font-body">
+    {% block content %}
+    <div id="header" class="bg-[#D9272E] h-[105px]"></div>
+    
+    <div class="grid grid-cols-1 gap-8 my-8">
+
+        <p class="text-center text-4xl text-black font-semibold" id="title"> แก้ไขหัวข้อ </p>
+
+        <div class="rounded-md bg-[#F4F4F4] w-[1141px] p-8 place-self-center font-medium grid grid-cols-1">
+            <div class="rounded-md bg-white m-8 p-8 text-xl">
+                <div id="input-name" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
+                    <label for="nameCourse"> <h6> ชื่อหัวข้อ </h6> </label>
+                    <input type="text" id="name" name="Name" class="bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4">
+                </div>
+                <div id="input-description" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
+                    <label for="descriptionCourse"> <h6> รายละเอียด </h6> </label>
+                    <textarea name="Description" id="description" cols="30" rows="5" class="bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4"></textarea>
+                </div>
+                <div id="input-profile" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
+                    <label for="document-topic"> <h6> เอกสาร </h6> </label>
+
+                    <div class="bg-[#F4F4F4] col-span-3 rounded-full p-1 flex space-x-4" id="document">
+                        
+                        <input id="upload-document" onchange="addfile()" type="file" class="rounded-full hidden">
+                        <label for="upload-document" id="add-document" class="flex justify-center flex-none">
+                            <img src="../image/circle-plus.svg" alt="">
+                        </label>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="flex space-x-4 w-[700px] place-self-center" id="contain-button">
+            
+            <div onclick="deleteTopic()" class="bg-[#F8F8F8] rounded-full text-[#5E5E5E] font-normal text-base text-center w-[195px] px-3 py-2 border border-[#D0D0D0]">
+                ลบหัวข้อ
+            </div>
+            <div onclick="updateTopic()" class="bg-primary rounded-full text-white font-normal text-base text-center w-[195px] place-self-center px-3 py-2">
+                แก้ไขหัวข้อ
+            </div>
+            <div onclick="cancelTopic()" class="bg-[#F8F8F8] rounded-full text-[#5E5E5E] font-normal text-base text-center w-[195px] px-3 py-2 border border-[#D0D0D0]">
+                ยกเลิกแก้ไข
+            </div>
+            
+            </div>
+
+        </div>
+    </div>
+    {% endblock %}
+</body>
+
+<!-- <script>
+    function cancelTopic(){
+        window.location.href = `../tobe/show_selected_course_teacher.php?cID=${CourseID}`
+    }
+</script>
+
+<script>
+    let TopicID = '<?php echo $_GET['TopicID'];?>'
+    let CourseID = '<?php echo $_GET['CourseID'];?>'
+    setTopic(TopicID)
+    
+    // ส่งไฟล์มาด้วยจะใช้ set ค่า
+    let ListDocument = {}
+
+    function setTopic(topicid){
+
+        fetch('../server/web_server.php', {
+            method: 'POST',
+            body: JSON.stringify({ 'TopicID' : TopicID }),
+            headers :{
+                'Service' : 'Set Topic'
+            }
+        })
+        .then(response => {
+            return response.json()
+        }).then(data => {
+            console.log(data)
+            document.getElementById('name').value = data['name']
+            document.getElementById('description').value = data['description']
+        })
+
+        
+        
+    }
+</script>
+<script>
+function addfile(){
+    
+    check_file = document.getElementById('upload-document').files[0]
+
+    if(check_file === null || check_file === undefined){
+        return ''
+    }else{
+
+        if(ListDocument.hasOwnProperty(`${check_file.name}`)){
+            return ''
+        }
+        
+        if(!OnUploadDocumentCheck(check_file.name)){
+                return ''
+            }
+        ListDocument[`${check_file.name}`] = check_file
+        
+    }
+
+    
+    let contain = document.getElementById('document')
+
+    let show_file = document.createElement('label')
+    let param = document.createElement('p')
+    let img = document.createElement('img')
+
+    show_file.classList.add('document', "truncate", "flex", "rounded-full", "bg-[#FFDADA]", "py-1", "px-3", "w-[150px]")
+    show_file.setAttribute('who', `${check_file.name}`)
+
+    param.textContent = check_file.name
+    param.classList.add("text-sm", "text-center",  "flex-grow", "font-normal", "truncate")
+
+    img.setAttribute('src', '../image/close.svg')
+    img.setAttribute('onclick', `deleteFile(this)`)
+    img.classList.add('flex-none')
+
+    show_file.appendChild(param)
+    show_file.appendChild(img)
+
+    contain.insertBefore(show_file, document.getElementById(`upload-document`) )
+
+    console.log(ListDocument)
+    
+}
+
+function deleteFile(element){
+    let target = element.parentElement
+    delete ListDocument[`${target.textContent}`]
+    target.remove()
+}
+
+// check file type
+
+function OnUploadDocumentCheck(file){
+
+    var extall="doc,docx,odt,pdf,tex,txt,rtf,wps,wks,wpd";
+
+    ext = file.split('.').pop().toLowerCase();
+
+    if(parseInt(extall.indexOf(ext)) < 0){
+        alert('Extension support : ' + extall);
+        return false;
+    }
+
+    return true;
+}
+
+</script>
+<script>
+function updateTopic(){
+//newname
+    
+    let formData = new FormData()
+    let number = 0
+    let keys = Object.keys(ListDocument)
+    keys.forEach(item=>{
+        formData.append( `file${number}` , ListDocument[keys])
+        number++
+    })
+    
+    console.log(formData.get('file0'))
+
+    formData.append('name', document.getElementById('name').value)
+    formData.append('description', document.getElementById('description').value)
+    formData.append('count', number)
+    formData.append('TopicID', TopicID)
+    formData.append('CourseID', CourseID)
+    
+
+    fetch('../server/web_server.php', {
+        method: 'POST',
+        body: formData,
+        headers :{
+            'Service' : 'Update Topic'
+        }
+    })
+    .then(response => {
+        console.log(response)
+        return response.text()
+    }).then(data => {
+        console.log(data)
+        window.location.href = `../tobe/show_selected_course_teacher.php?cID=${CourseID}`
+    })
+
+}
+
+function deleteTopic(){
+    fetch('../server/web_server.php', {
+        method: 'POST',
+        body: JSON.stringify({ 'CourseID' : CourseID, 'TopicID' : TopicID }),
+        headers :{
+            'Service' : 'Delete Topic'
+        }
+    })
+    .then(response => {
+        console.log(response)
+        return response.text()
+    }).then(data => {
+        console.log(data)
+        window.location.href = `../tobe/show_selected_course_teacher.php?cID=${CourseID}`
+    })
+}
+
+</script> -->
+</html>

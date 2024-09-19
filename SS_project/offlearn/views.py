@@ -22,3 +22,15 @@ class create_course(View):
 class edit_course(View):
     def get(self, request):
         return render(request, 'Edit_Course.html')
+
+class create_topic(View):
+    def get(self, request):
+        return render(request, 'Create_Topic.html')
+
+class edit_topic(View):
+    def get(self, request):
+        return render(request, 'Edit_Topic.html')
+
+class profile(View):
+    def get(self, request):
+        return render(request, 'Profile.html')
