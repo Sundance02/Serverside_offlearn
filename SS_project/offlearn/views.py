@@ -29,3 +29,40 @@ class create_course(View):
 class edit_course(View):
     def get(self, request):
         return render(request, 'Edit_Course.html')
+    
+class view_description(View):
+    def get(self, request):
+        return render(request, 'view_description.html')
+    
+class Register(View):
+    def get(self, request):
+        return render(request, 'Register.html')
+
+class Login(View):
+    def get(self, request):
+        return render(request, 'Login.html')
+    
+class Course_Detail_student(View):
+    def get(self, request):
+        return render(request, 'show_selected_course_student.html')
+    
+class Course_Detail_teacher(View):
+    def get(self, request):
+        return render(request, 'show_selected_course_teacher.html')
+
+class Student_List(View):
+    def get(self, request):
+        return render(request, 'student_list.html')
+    
+
+class teacher_quiz(View):
+    def get(self, request):
+        return render(request, 'teacher_quiz.html')
+    
+class teacher_quiz_detail(View):
+    def get(self, request):
+        return render(request, 'teacher_quiz_detail.html')
+    
+class student_quiz(View):
+    def get(self, request):
+        return render(request, 'student_quiz.html')

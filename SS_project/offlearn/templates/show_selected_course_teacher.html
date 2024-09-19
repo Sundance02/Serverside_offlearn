@@ -1,0 +1,89 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block name %} Course_Detail {% endblock %}
+{% block content %}
+
+
+<div id="header"></div>
+<div class="grid gap-y-10 grid-cols-1 mt-12">
+
+    <!-- section one -->
+    <div class="grid gap-y-12 gap-x-12 grid-cols-2  place-self-center">
+
+        <!-- img -->
+        <div class="h-[100%] p-8 ">
+            <img class="rounded-lg aspect-[16/9]" src="{% static 'images/bg.jpg' %}">
+        </div>
+
+        <!-- name & details -->
+        <div>
+            <div class="grid-cols-2 grid gap-y-12 gap-x-12">
+                <div>
+                    <p class="text-5xl"> Course Name</p>
+                </div>
+                <div class="pl-72 ">
+                    <button class="rounded-xl ring-1 ring-red-600 bg-red-600 text-white  px-8 py-4"
+                        onclick="">แก้ไขคอร์ส</button>
+                </div>
+            </div>
+            <br>
+            <div class="grid grid-cols-3">
+                <div class=" col-span-2 text-center rounded-3xl shadow-md p-2 bg-rose-200">
+                    Course ID
+                </div>
+
+            </div>
+            <br>
+            <div>
+                <p>
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim et culpa, saepe sint ipsam id fugit
+                    autem nesciunt aut eaque earum ipsa doloribus ab repudiandae aperiam corrupti fugiat, voluptas
+                    necessitatibus? Lorem ipsum dolor sit amet consectetur adipisicing elit. Esse, consequatur alias expedita dignissimos vero incidunt excepturi maxime ratione saepe non omnis vel beatae error quas. Excepturi dignissimos minima sunt quas?
+                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Itaque totam eius quisquam necessitatibus sit, ex alias numquam consequatur, error possimus ad hic illo aliquam esse enim sunt porro aut fugit?
+                </p>
+            </div>
+            <br>
+
+            <div class="grid grid-cols-6 gap-x-12">
+                <button class="rounded-xl ring-1 ring-gray-500 bg-whitetext-black px-16 py-4 col-span-2" onclick="">QUIZ</button>
+                <button class="rounded-xl ring-1 ring-gray-500 bg-whitetext-black px-16 py-4 col-span-2" onclick="">นักเรียนในคอร์สเรียน</button>
+            </div>
+
+        </div>
+    </div>
+    <!-- topics -->
+    <div class="bg-slate-200 rounded-xl shadow-md my-8 mx-8 p-8 place-self-center w-full">
+
+        <div class="bg-white rounded-xl p-10">
+            <!-- topics details -->
+            <div class="pb-6">
+                <p class="text-3xl pb-2"><b>ชื่อTOPIC</b></p>
+                <p>
+
+                </p><br>
+
+
+                <a class="underline" href="../Server/File/'.$courseid.'/'.$topicid.'/'.$array_file[$f].'"
+                    download>เเสดงไฟล์</a>
+                <br>
+            </div>
+
+
+            <!-- btn -->
+            <div class="grid justify-items-center grid-cols-1">
+                <div>
+
+                    <button onClick=""
+                        class="rounded-full ring-1 ring-red-600 bg-red-600 text-white px-8 py-2">เเก้ไขเนื้อหา</button>
+                </div>
+            </div>
+        </div><br>
+
+
+
+    </div>
+
+</div>
+
+
+{% endblock %}
