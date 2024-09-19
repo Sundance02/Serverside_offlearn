@@ -1,6 +1,12 @@
 # Ignore virtual environment folder
 myvenv/
 
+css, settings
+
+SS_project/SS_project/settings.py
+SS_project/theme/static/css/dist/styles.css
+
+
 # Ignore other files/folders
 *.pyc
 __pycache__/
