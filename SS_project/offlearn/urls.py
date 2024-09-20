@@ -19,5 +19,6 @@ urlpatterns = [
     path("teacher_quiz_detail/", views.teacher_quiz_detail.as_view(), name="teacher_quiz_detail"),
     path("student_quiz/", views.student_quiz.as_view(), name="student_quiz"),
     path("student_quiz_answer/", views.student_quiz_answer.as_view(), name="student_quiz_answer"),
+    path("student_quiz_detail/", views.student_quiz_detail.as_view(), name="student_quiz_detail"),
 ]
 
