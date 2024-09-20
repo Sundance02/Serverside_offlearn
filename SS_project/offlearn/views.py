@@ -78,3 +78,7 @@ class teacher_quiz_detail(View):
 class student_quiz(View):
     def get(self, request):
         return render(request, 'student_quiz.html')
+
+class student_quiz_answer(View):
+    def get(self, request):
+        return render(request, 'student_quiz_answer.html')
