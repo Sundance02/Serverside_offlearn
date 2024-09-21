@@ -3,7 +3,6 @@ from django.db import models
 # Create your models here.
 from django.db import models
 
-# User model
 class User(models.Model):
     user_name = models.CharField(max_length=20, unique=True, null=False)
     password = models.CharField(max_length=20, null=False)
@@ -12,7 +11,7 @@ class User(models.Model):
         return self.user_name
 
 
-# Student model
+
 class Student(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50, null=False)
@@ -23,7 +22,7 @@ class Student(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
-# Instructor model
+
 class Instructor(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     first_name = models.CharField(max_length=50, null=False)
@@ -34,7 +33,7 @@ class Instructor(models.Model):
         return f"{self.first_name} {self.last_name}"
 
 
-# Course model
+
 class Course(models.Model):
     course_name = models.CharField(max_length=80, null=False)
     course_description = models.CharField(max_length=255)
@@ -44,7 +43,7 @@ class Course(models.Model):
         return self.course_name
 
 
-# Content model
+
 class Content(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     content_name = models.CharField(max_length=80)
@@ -54,7 +53,7 @@ class Content(models.Model):
         return self.content_name
 
 
-# Material model
+
 class Material(models.Model):
     content = models.ForeignKey(Content, on_delete=models.CASCADE)
     file_path = models.CharField(max_length=255)
@@ -64,7 +63,7 @@ class Material(models.Model):
         return self.file_path
 
 
-# Quiz model
+
 class Quiz(models.Model):
     course = models.ForeignKey(Course, on_delete=models.CASCADE)
     quiz_name = models.CharField(max_length=255, null=False)
@@ -75,7 +74,7 @@ class Quiz(models.Model):
         return self.quiz_name
 
 
-# Question model
+
 class Question(models.Model):
     class QuestionType(models.Choices):
         Choice = "Choice"
@@ -89,7 +88,7 @@ class Question(models.Model):
         return self.question_name
 
 
-# Choice model
+
 class Choice(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice_name = models.CharField(max_length=80)
@@ -99,7 +98,7 @@ class Choice(models.Model):
         return self.choice_name
 
 
-# StudentAnswer model
+
 class StudentAnswer(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
@@ -111,7 +110,7 @@ class StudentAnswer(models.Model):
         return self.text_answer
 
 
-# QuizScore model
+
 class QuizScore(models.Model):
     student = models.ForeignKey(Student, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
