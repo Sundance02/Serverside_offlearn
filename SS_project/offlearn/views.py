@@ -7,6 +7,7 @@ from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views import View
 from django.db import transaction
 from offlearn.models import *
+from .forms import *
 
 
 
@@ -86,3 +87,35 @@ class student_quiz_answer(View):
 class student_quiz_detail(View):
     def get(self, request):
         return render(request, 'student_quiz_detail.html')
+
+class create_quiz(View):
+    def get(self, request):
+        quizform = AddQuizForm()
+        return render(request, 'create_quiz.html', {"form": quizform})
+
+
+class add_choice_question(View):
+
+    def get(self, request):
+        return render(request, 'partials/choice_question.html', {'choiceform': AddChoiceForm(), 'questionform': AddQuestionForm()})
+    
+    def post(self, request):
+        pass
+
+
+class add_choice(View):
+
+    def get(self, request):
+        return render(request, 'partials/addchoice.html', {'choiceform': AddChoiceForm()})
+    
+    def post(self, request):
+        pass
+
+
+class add_context_question(View):
+
+    def get(self, request):
+        return render(request, 'partials/context_question.html', {'questionform': AddQuestionForm()})
+    
+    def post(self, request):
+        pass

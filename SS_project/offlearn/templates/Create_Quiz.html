@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block name %}k Quiz{% endblock %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+
+<body>
+    {% block content %}
+    <div>
+        <div class="grid place-content-center mt-8">
+            <p class="text-5xl font-bold">Create Quiz</p>
+        </div>
+    </div>
+    <div class="mx-20 mt-10">
+        <form method="post">
+            <div class="pt-4 bg-gray-200 rounded-xl mt-4 p-6 grid place-items-center" id="questionContainer">
+                <div class="bg-white rounded-lg shadow-md p-6 w-[75%] mb-10" id="quiz_form">
+                    {% csrf_token %}
+                    <div class="mb-4 flex justify-left">
+                        <label class="block text-gray-700 font-semibold mr-2 w-[20%] text-center text-2xl">Quiz
+                            Name</label>
+                        {{ form.name }}
+                    </div>
+
+                    <div class="mb-4 flex justify-left">
+                        <label class="block text-gray-700 font-semibold mr-2 w-[20%] text-center text-2xl">Max
+                            point</label>
+                        {{ form.max_point }}
+                    </div>
+
+                    <div class="mb-4 flex justify-left">
+                        <label class="block text-gray-700 font-semibold mr-2 w-[20%] text-center text-2xl">Due
+                            Date</label>
+                        {{ form.deadline }}
+                    </div>
+        </form>
+    </div>
+
+    <div id="dynamicContent" class="w-full grid place-items-center">
+
+    </div>
+
+    <div class="mb-4 flex justify-left space-x-7" id="beforelast">
+        <button hx-get="{% url 'add_choice_question' %}" hx-target="#dynamicContent" hx-swap="beforeend"
+            id="addQuestion" class="rounded-xl"
+            style="text-decoration: underline; color: rgb(29, 4, 253); cursor: pointer;">+ Add Choice Question</button>
+        <button hx-get="{% url 'add_context_question' %}" hx-target="#dynamicContent" hx-swap="beforeend"
+            id="addQuestion" class="rounded-xl"
+            style="text-decoration: underline; color: rgb(29, 4, 253); cursor: pointer;">+ Add Context Question</button>
+    </div>
+
+    <div onclick="createTopic()"
+        class="mt-10 bg-red-500 rounded-full text-white font-normal text-base text-center w-[195px] place-self-center px-3 py-2">
+        Create Quiz
+    </div>
+    </div>
+    </form>
+    </div>
+    {% endblock %}
+
+    {% block script %}
+    <script src="https://unpkg.com/htmx.org@2.0.2"></script>
+    {% endblock %}
+</body>
+
+</html>

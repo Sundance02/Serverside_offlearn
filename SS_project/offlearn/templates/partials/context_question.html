@@ -1,0 +1,22 @@
+<div class="bg-white rounded-lg shadow-md p-6 w-[75%] mb-10" id="question_form">
+    <div class="flex justify-end">
+        <button hx-on:click = "this.closest('#question_form').remove()" style="cursor: pointer;">X</button>
+    </div>
+    <div class="mb-4 flex justify-left">
+        <label class="block text-gray-700 text-2xl mr-2 w-[20%] text-center">Question</label>
+        <!-- <textarea class="bg-gray-200 rounded-md px-3 py-2 w-[70%]" placeholder="Enter Question"></textarea> -->
+        {{ questionform.question_name }}
+    </div>
+
+    <div class="mb-4 flex justify-left">
+        <label class="block text-gray-700 font-semibold mr-2 w-[20%] text-center">Point</label>
+        <!-- <input class="bg-gray-200 border rounded-md px-3 py-2 w-[10%]" type="number" placeholder="Enter point"> -->
+        {{ questionform.point }}
+    </div>
+
+    <div class="mb-4 flex justify-left"></div>
+        <label class="block text-gray-700 font-semibold mr-2 w-full text-center">(Context Answer)</label>
+    
+    </div>
+    
+</div>
