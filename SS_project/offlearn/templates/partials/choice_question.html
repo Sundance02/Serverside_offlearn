@@ -26,7 +26,7 @@
                 {{ choiceform.choice_name }}
                 {{ choiceform.is_correct }}
             </div>
-            <a id="addChoice" hx-get="{% url 'add_choice' %}" hx-target="#addChoice" hx-swap="beforebegin" style="text-decoration: underline; color: blue; cursor: pointer;">+ Choice</a>
+            <a id="addChoice" hx-get="{% url 'add_choice' %}" hx-target="this" hx-swap="beforebegin" style="text-decoration: underline; color: blue; cursor: pointer;">+ Choice</a>
         </div>
     </div>
 
