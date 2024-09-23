@@ -12,15 +12,18 @@
     <div id="start"></div> 
     <div class="flex justify-between w-auto h-25 items-center bg-[#D9272E]">
         <div class="name">
-            <h3 class="text-white p-6 text-4xl">IT OffLearn</h3>
+            <a href="{% url 'show_course_guest' %}">
+                <h3 class="text-white p-6 text-4xl">IT OffLearn</h3>
+            </a>
         </div>
 
         <div class="container-btn">
-            <button class="login bg-white text-black py-3 rounded-full w-[150px]" name="login"  onclick="window.location.href='login.html'">
+            <button class="login bg-white text-black py-3 rounded-full w-[150px]" name="login" onclick="window.location.href='{% url 'Login' %}'">
                 เข้าสู่ระบบ
             </button>
-            <button class="register bg-white text-black py-3 m-6 rounded-full w-[150px]" name="register"
-                onclick="window.location.href='register.html'">
+            
+            
+            <button class="register bg-white text-black py-3 m-6 rounded-full w-[150px]" name="register" onclick="window.location.href='{% url 'Register' %}'">
                 ลงทะเบียน
             </button>
         </div>

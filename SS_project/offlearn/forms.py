@@ -2,6 +2,14 @@ from datetime import *
 from django import forms
 from .models import *
 from django.forms import ModelForm, ValidationError
+from django.forms import ModelForm, DateField, Textarea
+from django.forms.widgets import TextInput, Textarea, PasswordInput
+from django.core.exceptions import ValidationError
+from datetime import date
+from django import forms
+from offlearn.models import *
+from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm
 
 class AddQuizForm(ModelForm):
 
@@ -32,3 +40,27 @@ class AddChoiceForm(ModelForm):
     class Meta:
         model = Choice
         fields = ['choice_name', 'is_correct']
+
+
+
+
+
+class Registerform(UserCreationForm):
+    first_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4 w-[700px]"}))
+    last_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
+    password1 = forms.CharField(widget=PasswordInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4 w-[700px]"}))
+    password2 = forms.CharField(widget=PasswordInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4 w-[700px]"}))
+    email = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
+    username = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4 w-[700px]"}))
+    # ยังไม่ได้ทำรูป
+
+    class Meta:
+        model = User
+        fields = [
+            "username",
+            "first_name", 
+            "last_name", 
+            "password1",
+            "password2",
+            "email",
+        ]
