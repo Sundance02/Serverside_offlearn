@@ -1,36 +1,41 @@
 from django.db import models
+from django.contrib.auth.models import User
 
 # Create your models here.
 from django.db import models
 
-class User(models.Model):
-    user_name = models.CharField(max_length=20, unique=True, null=False)
-    password = models.CharField(max_length=20, null=False)
-
-    def __str__(self):
-        return self.user_name
-
-
-
-class Student(models.Model):
+class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=50, null=False)
-    last_name = models.CharField(max_length=50, null=False)
-    courses = models.ManyToManyField('Course', related_name='students')
+    role = models.CharField(max_length=20, null=False)
 
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+# class User(models.Model):
+#     user_name = models.CharField(max_length=20, unique=True, null=False)
+#     password = models.CharField(max_length=20, null=False)
+
+#     def __str__(self):
+#         return self.user_name
 
 
 
-class Instructor(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
-    first_name = models.CharField(max_length=50, null=False)
-    last_name = models.CharField(max_length=50, null=False)
-    courses = models.ManyToManyField('Course', related_name='instructors')
+# class Student(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     first_name = models.CharField(max_length=50, null=False)
+#     last_name = models.CharField(max_length=50, null=False)
+#     courses = models.ManyToManyField('Course', related_name='students')
 
-    def __str__(self):
-        return f"{self.first_name} {self.last_name}"
+#     def __str__(self):
+#         return f"{self.first_name} {self.last_name}"
+
+
+
+# class Instructor(models.Model):
+#     user = models.OneToOneField(User, on_delete=models.CASCADE)
+#     first_name = models.CharField(max_length=50, null=False)
+#     last_name = models.CharField(max_length=50, null=False)
+#     courses = models.ManyToManyField('Course', related_name='instructors')
+
+#     def __str__(self):
+#         return f"{self.first_name} {self.last_name}"
 
 
 
@@ -100,7 +105,8 @@ class Choice(models.Model):
 
 
 class StudentAnswer(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    # student = models.ForeignKey(Student, on_delete=models.CASCADE)1
+    role = models.ForeignKey(Profile, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
     text_answer = models.CharField(max_length=255)
@@ -112,7 +118,8 @@ class StudentAnswer(models.Model):
 
 
 class QuizScore(models.Model):
-    student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    # student = models.ForeignKey(Student, on_delete=models.CASCADE)
+    role = models.ForeignKey(Profile, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     score = models.IntegerField()
 
