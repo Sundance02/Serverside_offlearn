@@ -11,6 +11,7 @@ from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from offlearn.forms import *
+from django.contrib.auth.models import User, Group
 
 
 class show_course_guest(LoginRequiredMixin, View):
@@ -61,7 +62,10 @@ class Register(View):
     def post(self, request):
         form = Registerform(request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            group = Group.objects.get(name='Student')
+            user.groups.add(group)
+            user.save
             messages.success(request, 'Account created successfully')  
             return redirect('Login')
         return render(request, 'Register.html', {"form": form})
