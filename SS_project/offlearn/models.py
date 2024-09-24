@@ -17,6 +17,7 @@ class User_Info(models.Model):
 
 
 class Course(models.Model):
+    user_course = models.ManyToManyField(User)
     course_name = models.CharField(max_length=80, null=False)
     course_description = models.CharField(max_length=255)
     course_image = models.CharField(max_length=255)

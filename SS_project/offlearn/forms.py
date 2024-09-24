@@ -9,7 +9,7 @@ from datetime import date
 from django import forms
 from offlearn.models import *
 from django.contrib.auth.models import User
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 
 class AddQuizForm(ModelForm):
 
@@ -63,4 +63,15 @@ class Registerform(UserCreationForm):
             "password1",
             "password2",
             "email",
+        ]
+
+class Loginform(AuthenticationForm):
+    username = forms.CharField(widget=TextInput(attrs={"class":"block bg-white w-full border border-slate-300 rounded-md w-[350px] py-2 px-4", "placeholder":"ชื่อผู้ใช้..." }))
+    password = forms.CharField(widget=PasswordInput(attrs={"class":"block bg-white w-full border border-slate-300 rounded-md w-[350px] py-2 px-4", "placeholder":"รหัสผ่าน..."}))
+
+    class Meta:
+        model = User
+        fields = [
+            "username",
+            "password"
         ]

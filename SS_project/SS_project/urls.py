@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.urls import path, include
-from offlearn.views import Login, Register
+from offlearn.views import Login, Register, Logout
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -8,5 +8,6 @@ urlpatterns = [
     path("offlearn/", include("offlearn.urls")),
     path("Login/", Login.as_view(), name="Login"),
     path("Register/", Register.as_view(), name="Register"),
+    path("Logout/", Logout.as_view(), name="Logout"),
 
 ]

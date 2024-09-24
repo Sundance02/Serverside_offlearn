@@ -2,36 +2,34 @@
 {% load static %}
 {% block name %} Login {% endblock %}
 {% block content %}
+
 <body class="font-body bg-black/50">
 
-        <div class="flex flex-col items-center justify-center">
+    <div class="flex flex-col items-center justify-center">
 
-            <div class="grid grid-cols-1 bg-white shadow-xl border border-slate-300 rounded-md p-10  m-[150px]">
-                <h3 class="p-6 text-4xl text-center font-semibold">IT UnderLearn</h3>
-
+        <div class="grid grid-cols-1 bg-white shadow-xl border border-slate-300 rounded-md p-10  m-[150px]">
+            <h3 class="p-6 text-4xl text-center font-semibold">IT UnderLearn</h3>
+            <form action="" method="post">
+                {% csrf_token %}
                 <div class="m-3">
-                    <input class="block bg-white w-full border border-slate-300 rounded-md w-[350px] py-2 px-4"
-                        placeholder="ชื่อผู้ใช้..." type="text" name="username" id="username" />
+                    {{form.username}}
                 </div>
 
                 <div class="m-3">
-                    <input class="block bg-white w-full border border-slate-300 rounded-md w-[350px] py-2 px-4"
-                        placeholder="รหัสผ่าน..." type="password" name="password" id="password" />
+                    {{form.password}}
                 </div>
 
                 <div class="flex items-center justify-center">
-                    <button class="login bg-[#D9272E] text-white px-6 py-3 m-3 w-[350px] rounded-md" name="login"
-                        onclick="login()">เข้าสู่ระบบ</button>
+                    <button class="login bg-[#D9272E] text-white px-6 py-3 m-3 w-[350px] rounded-md" name="login">เข้าสู่ระบบ</button>
                 </div>
 
                 <div class="flex items-center justify-center">
-                    <button class="login bg-[#F4F4F4] text-black px-6 py-3 m-3 w-[350px] rounded-md" name="register"
-                        onclick="window.location.href='register.php'">สมัครสมาชิก</button>
+                    <button class="login bg-[#F4F4F4] text-black px-6 py-3 m-3 w-[350px] rounded-md" name="register"><a href="{% url 'Register' %}">สมัครสมาชิก</a></button>
                 </div>
+            </form>
 
-
-            </div>
         </div>
+    </div>
     </div>
 
 </body>

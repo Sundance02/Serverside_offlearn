@@ -109,17 +109,15 @@
 <!-- course ทั้งหมด -->
 <div class="grid justify-items-center gap-y-12 grid-cols-3 mt-12 mx-48">
     <!-- ข้อมูลของ course -->
-    <div class="w-9/12 class rounded-md shadow-md relative">
-        <img src="{% static 'images/bg.jpg' %}" alt="" class="rounded-t-md object-cover">
-        <p class="text-Black text-xl text-center font-medium pt-6">CyberSecurity</p>
-        <p class="text-Gray-800 mt-3 text-center px-8">Lorem ipsum dolor sit amet consectetur adipisicing elit.
-            Quas
-            totam unde nemo voluptate illo facere quidem nostrum? Dolorum dicta unde voluptatibus alias impedit
-            nulla accusantium deleniti temporibus, iste repellat aliquid.</p>
-        <button
-            class="rounded-full ring-1 ring-gray-300 text-gray-500  mt-96 mx-28 w-40 h-10 hover:bg-red-600 hover:text-white absolute bottom-6">ดูเนื้อหาคอร์สเรียน</button>
-    </div>
-
+    {% for course in courses %}
+        <div class="w-9/12 class rounded-md shadow-md relative">
+            <img src="{% static 'images/bg.jpg' %}" alt="" class="rounded-t-md object-cover">
+            <p class="text-Black text-xl text-center font-medium pt-6">{{course.course_name}}</p>
+            <p class="text-Gray-800 mt-3 text-center px-8">{{course.course_description}}</p>
+            <button
+                class="rounded-full ring-1 ring-gray-300 text-gray-500  mt-96 mx-28 w-40 h-10 hover:bg-red-600 hover:text-white absolute bottom-6">ดูเนื้อหาคอร์สเรียน</button>
+        </div>
+    {% endfor %}
     <div class="w-9/12 class rounded-md shadow-md relative">
         <img src="{% static 'images/bg.jpg' %}" alt="" class="rounded-t-md">
         <p class="text-Black text-xl text-center font-medium pt-6">CyberSecurity</p>
