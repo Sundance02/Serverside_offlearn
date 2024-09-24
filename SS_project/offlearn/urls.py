@@ -20,5 +20,7 @@ urlpatterns = [
     path("add_choice_question/", views.add_choice_question.as_view(), name="add_choice_question"),
     path("add_choice/", views.add_choice.as_view(), name="add_choice"),
     path("add_context_question/", views.add_context_question.as_view(), name="add_context_question"),
+    path("searched/", views.searched_course.as_view(), name="searched"),
+
 ]
 

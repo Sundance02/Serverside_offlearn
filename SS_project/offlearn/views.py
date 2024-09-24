@@ -19,7 +19,6 @@ from django.contrib.auth import login, logout
 class show_course(View):
     def get(self, request):
         if(request.user.groups.filter(name="Student").exists()):
-            print(request.user.id)
             user_course = Course.objects.filter(user_course__id = request.user.id)
             context = {"courses":user_course}
             page = "Allcourse-Student.html"
@@ -33,7 +32,20 @@ class show_course(View):
             page = "Allcourse-Guest.html"
         return render(request, page, context)  
         
-  
+class searched_course(View):
+    def post(self, request):
+        if(request.user.groups.filter(name="Student").exists()):
+            page = "Allcourse-Student.html"
+        elif(request.user.groups.filter(name="Instructor").exists()):
+            page = "Allcourse-Teacher.html"
+        else:
+            page = "Allcourse-Guest.html"
+        searched_info = request.POST['searched']
+        result = Course.objects.filter(course_name__icontains = searched_info)
+        context = {"courses":result}
+        return render(request, page, context)
+
+
     
 class create_course(LoginRequiredMixin, View):
     login_url = '/Login/'
@@ -65,6 +77,19 @@ class view_description(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'view_description.html')
     
+class Changepassword(View):
+    def get(self, request):
+        form = Changepasswordform(request.user)
+        return render(request, 'Change.html', {"form": form})
+    
+    def post(self, request):
+        form = Changepasswordform(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            user.save
+            messages.success(request, 'เปลี่ยนรหัสผ่านสำเร็จ กรุณา Login ใหม่อีกครั้ง')  
+            return redirect('Login')
+        return render(request, 'Change.html', {"form": form})    
 
 
 
@@ -79,6 +104,7 @@ class Register(View):
         if form.is_valid():
             user = form.save()
             group = Group.objects.get(name='Student')
+            User_Info.objects.create(user = user, role="Student", profile_image='test.jpg')
             user.groups.add(group)
             user.save
             messages.success(request, 'Account created successfully')  
