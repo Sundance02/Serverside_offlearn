@@ -16,8 +16,7 @@ from django.contrib.auth import login, logout
 
 
 
-class show_course(LoginRequiredMixin, View):
-    login_url = '/Login/'
+class show_course(View):
     def get(self, request):
         if(request.user.groups.filter(name="Student").exists()):
             print(request.user.id)
