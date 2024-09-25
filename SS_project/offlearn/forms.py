@@ -90,12 +90,13 @@ class Changepasswordform(SetPasswordForm):
 
 
 class CreateCourse(ModelForm):
-    course_name = forms.CharField(widget=PasswordInput(attrs={"class":"block bg-white w-full border border-slate-300 rounded-md w-[350px] py-2 px-4", "placeholder":"รหัสผ่านใหม่"}))
-    course_description = forms.CharField(widget=PasswordInput(attrs={"class":"block bg-white w-full border border-slate-300 rounded-md w-[350px] py-2 px-4", "placeholder":"ยืนยันรหัสผ่าน"}))
-
+    course_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
+    course_description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}))
+    course_image = forms.ImageField()
     class Meta:
         model = Course
         fields = [
             "course_name",
-            "course_description"
+            "course_description",
+            "course_image"
         ]

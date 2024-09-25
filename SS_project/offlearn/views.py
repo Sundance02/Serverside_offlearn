@@ -67,13 +67,40 @@ class create_course(LoginRequiredMixin, View):
     permission_required = ["offlearn.add_course"]
     def get(self, request):
         form = CreateCourse()
-        return render(request, 'show_selected_course.html', {"form":form})
+        print("เข้า get")
+        return render(request, 'Create_Course.html', {"form":form})
     def post(self, request):
-        form = CreateCourse(request.POST)
+        form = CreateCourse(request.POST, request.FILES)
+        print('wait to valid')
+        print(form.errors)
         if(form.is_valid()):
-            form.save()
+            print("ถูกต้องเเล้วค้าบบบ")
             course = form.save()
-        return render(request, 'show_selected_course.html', {"course":course})
+            teacher = User.objects.get(pk=request.user.id)
+            course.user_course.add(teacher)
+            course.save()
+            return redirect('show_course')
+        return render(request, 'Create_Course.html')
+
+# class Register(View):
+#     def get(self, request):
+#         print('yahaloooo')
+#         form = Registerform()
+#         return render(request, 'Register.html', {"form": form})
+    
+#     def post(self, request):
+#         form = Registerform(request.POST, request.FILES)
+#         print(request.FILES)
+#         if form.is_valid():
+#             user = form.save()
+#             group = Group.objects.get(name='Student')
+#             User_Info.objects.create(user = user, role="Student", profile_image= form.cleaned_data['profile_image'])
+#             user.groups.add(group)
+#             user.save()
+#             messages.success(request, 'Account created successfully')  
+#             return redirect('Login')
+#         return render(request, 'Register.html', {"form": form})
+
 
 class edit_course(LoginRequiredMixin, View):
     login_url = '/Login/'
@@ -243,6 +270,8 @@ class create_quiz(View):
             return redirect('question_list', quiz.id)
 
         return render(request, 'Create_Quiz.html', {'form': form, 'course': course})
+    
+
 class add_choice_question(View):
 
     def get(self, request, quiz_id):
@@ -274,9 +303,6 @@ class add_choice_question(View):
 
         print(formset.errors)
         return render(request, 'choice_question.html', {'questionform': questionform, 'choiceform': formset, 'quiz': quiz})
-    
-    def post(self, request):
-        pass
 
 class add_context_question(View):
 

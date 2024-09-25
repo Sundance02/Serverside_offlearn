@@ -20,8 +20,8 @@ class Course(models.Model):
     user_course = models.ManyToManyField(User)
     course_name = models.CharField(max_length=80, null=False)
     course_description = models.CharField(max_length=255)
-    course_image = models.CharField(max_length=255)
-
+    course_image = models.ImageField()
+    # เพิ่มอาจารย์ผู้สอน
     def __str__(self):
         return self.course_name
 
