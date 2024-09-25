@@ -19,32 +19,42 @@
         <div>
             <div class="grid-cols-2 grid gap-y-12 gap-x-12">
                 <div>
-                    <p class="text-5xl"> Course Name</p>
+                    <p class="text-5xl">{{course.course_name}}</p>
                 </div>
+                {% if perms.offlearn.quit_course %}
                 <div class="pl-72 ">
-                    <button class="rounded-xl ring-1 ring-gray-500 bg-white text-black bg-white text-black  px-8 py-4"
-                        onclick="quitCourse()">ออกคอร์ส</button>
+                    <button class="rounded-xl ring-1 ring-gray-500 bg-white text-black bg-white text-black  px-8 py-4"> <a href="{% url 'quit' course.id %}">ออกคอร์ส</a></button>
                 </div>
+                {% endif %}
+
+                {% if perms.offlearn.change_course %}
+                <div class="pl-72 ">
+                    <button class="rounded-xl ring-1 ring-red-600 bg-red-600 text-white  px-8 py-4"
+                        onclick="">แก้ไขคอร์ส</button>
+                </div>
+                {% endif %}
+  
             </div>
             <br>
             <div class="grid grid-cols-3">
                 <div class=" col-span-2 text-center rounded-3xl shadow-md p-2 bg-rose-200">
-                    Course ID
+                    Course ID: {{course.id}}
                 </div>
 
             </div>
             <br>
             <div>
                 <p>
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit. Enim et culpa, saepe sint ipsam id fugit
-                    autem nesciunt aut eaque earum ipsa doloribus ab repudiandae aperiam corrupti fugiat, voluptas
-                    necessitatibus?
+                    {{course.course_description}}
                 </p>
             </div>
             <br>
 
             <div>
                 <button class="rounded-xl ring-1 ring-gray-500 bg-whitetext-black px-16 py-4" onclick="">QUIZ</button>
+                {% if perms.offlearn.view_studentincourse %}
+                <button class="rounded-xl ring-1 ring-gray-500 bg-whitetext-black px-16 py-4 "><a href="{% url 'student_list' course.id %}">นักเรียนในคอร์สเรียน</a></button>
+                {% endif %}
             </div>
 
         </div>
@@ -67,19 +77,22 @@
             </div>
 
 
+            {% if perms.offlearn.change_course %}
             <!-- btn -->
             <div class="grid justify-items-center grid-cols-1">
                 <div>
 
-                    <button onClick=""
-                        class="rounded-full ring-1 ring-gray-300 text-gray-500 px-8 py-2 hover:bg-red-600 hover:text-white mx-5">รีวิวหัวข้อ</button>
+                    <button
+                        class="rounded-full ring-1 ring-red-600 bg-red-600 text-white px-8 py-2">เเก้ไขเนื้อหา</button>
                 </div>
             </div>
         </div><br>
-
-
-
     </div>
+    <div class="grid justify-items-center grid-cols-1">
+        <button class="rounded-xl ring-1 ring-red-600 bg-red-600 text-white px-8 py-4" onclick="AddTopic()">เพิ่มเนื้อหาใหม่</button>
+        <br>
+    </div>
+    {% endif %}
 
 </div>
 
