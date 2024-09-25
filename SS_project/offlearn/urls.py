@@ -1,5 +1,8 @@
 from django.urls import path
 from offlearn import views
+from django.conf import settings
+from django.conf.urls.static import static
+
 urlpatterns = [
     path("", views.show_course.as_view(), name="show_course"),
     path("create_course/", views.create_course.as_view(), name="create_course"),
@@ -22,6 +25,5 @@ urlpatterns = [
     path("searched/", views.searched_course.as_view(), name="searched"),
     path("enroll/<int:course_id>", views.enroll.as_view(), name="enroll"),
     path("quit/<int:course_id>", views.quit.as_view(), name="quit"),
-
-]
+]+ static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 

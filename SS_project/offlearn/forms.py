@@ -50,6 +50,7 @@ class Registerform(UserCreationForm):
     password2 = forms.CharField(widget=PasswordInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4 w-[700px]"}))
     email = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
     username = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4 w-[700px]"}))
+    profile_image = forms.ImageField()
     # ยังไม่ได้ทำรูป
 
     class Meta:
@@ -61,6 +62,7 @@ class Registerform(UserCreationForm):
             "password1",
             "password2",
             "email",
+            "profile_image"
         ]
 
 class Loginform(AuthenticationForm):
@@ -84,4 +86,16 @@ class Changepasswordform(SetPasswordForm):
         fields = [
             "new_password1",
             "new_password2"
+        ]
+
+
+class CreateCourse(ModelForm):
+    course_name = forms.CharField(widget=PasswordInput(attrs={"class":"block bg-white w-full border border-slate-300 rounded-md w-[350px] py-2 px-4", "placeholder":"รหัสผ่านใหม่"}))
+    course_description = forms.CharField(widget=PasswordInput(attrs={"class":"block bg-white w-full border border-slate-300 rounded-md w-[350px] py-2 px-4", "placeholder":"ยืนยันรหัสผ่าน"}))
+
+    class Meta:
+        model = Course
+        fields = [
+            "course_name",
+            "course_description"
         ]

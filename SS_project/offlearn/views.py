@@ -67,8 +67,16 @@ class searched_course(View):
     
 class create_course(LoginRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ["offlearn.add_course"]
     def get(self, request):
-        return render(request, 'Create_Course.html')
+        form = CreateCourse()
+        return render(request, 'show_selected_course.html', {"form":form})
+    def post(self, request):
+        form = CreateCourse(request.POST)
+        if(form.is_valid()):
+            form.save()
+            course = form.save()
+        return render(request, 'show_selected_course.html', {"course":course})
 
 class edit_course(LoginRequiredMixin, View):
     login_url = '/Login/'
@@ -152,13 +160,14 @@ class Register(View):
         return render(request, 'Register.html', {"form": form})
     
     def post(self, request):
-        form = Registerform(request.POST)
+        form = Registerform(request.POST, request.FILES)
+        print(request.FILES)
         if form.is_valid():
             user = form.save()
             group = Group.objects.get(name='Student')
-            User_Info.objects.create(user = user, role="Student", profile_image='test.jpg')
+            User_Info.objects.create(user = user, role="Student", profile_image= form.cleaned_data['profile_image'])
             user.groups.add(group)
-            user.save
+            user.save()
             messages.success(request, 'Account created successfully')  
             return redirect('Login')
         return render(request, 'Register.html', {"form": form})

@@ -40,18 +40,13 @@
         </div>
 
         <div class="bg-[#F4F4F4] p-10 rounded-3xl shadow-xl">
-
             <div class="on flex bg-white items-center p-10 rounded-3xl w-[900px]">
                 <div class="container-img flex flex-col justify-center items-center max-w-full">
-                    <img  src="{% static 'images/profile_test.png' %}" class="pic-pro object-cover w-[200px]" alt="">'
+                    <img  src="{{user.user_info.profile_image}}" class="pic-pro object-cover w-[200px]" alt="">'
                     <!-- updatefile & uploadfile -->
                     <div id="input-profile" class="profile">
                         <div class="col-span-3 flex flex-col space-x-4">
                             <input id="upload-profile" onchange="updatefile()" type="file" class="rounded-full w-[150px] hidden">
-                            <label id="label-upload" for="upload-profile" class="flex rounded-full bg-[#FFDADA] py-2 px-4 w-[200px]">
-                                <p id="p-file-name" class="underline underline-offset-4 text-md text-center flex-grow font-normal truncate p-1" id="uploadfile"> Upload file </p>
-                                <img id="icon-file" src="../image/pencil.svg" alt="" class="flex-none p-1">
-                            </label>
                             <div id="show-file-name" class="flex text-[#B9B9B9] box-border pt-4 text-base truncate"></div>
                         </div>
                     </div>

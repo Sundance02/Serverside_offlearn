@@ -92,7 +92,7 @@
         <p class="text-Black text-4xl  text-center font-medium pt-6">สร้างคอร์สเรียน</p>
 
         <button
-            class="rounded-full ring-1 ring-gray-300 text-gray-500  mx-28 w-40 h-10 hover:bg-red-600 hover:text-white absolute mt-10">เพิ่มคอร์สเรียน</button>
+            class="rounded-full ring-1 ring-gray-300 text-gray-500  mx-28 w-40 h-10 hover:bg-red-600 hover:text-white absolute mt-10"><a href="{% url 'create_course' %}">เพิ่มคอร์สเรียน</a></button>
     </div>
 
     {% for course in courses %}

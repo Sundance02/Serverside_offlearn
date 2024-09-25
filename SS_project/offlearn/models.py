@@ -12,7 +12,7 @@ class User_Info(models.Model):
         Text = "Instructor"
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=Role.choices)
-    profile_image = models.ImageField(upload_to='SS_project/profile')
+    profile_image = models.ImageField(upload_to='profile/')
 
 
 
