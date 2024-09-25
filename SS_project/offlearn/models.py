@@ -3,39 +3,16 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 from django.db import models
+from django.contrib.auth.models import User
 
-class Profile(models.Model):
+
+class User_Info(models.Model):
+    class Role(models.Choices):
+        Choice = "Student"
+        Text = "Instructor"
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=20, null=False)
-
-# class User(models.Model):
-#     user_name = models.CharField(max_length=20, unique=True, null=False)
-#     password = models.CharField(max_length=20, null=False)
-
-#     def __str__(self):
-#         return self.user_name
-
-
-
-# class Student(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     first_name = models.CharField(max_length=50, null=False)
-#     last_name = models.CharField(max_length=50, null=False)
-#     courses = models.ManyToManyField('Course', related_name='students')
-
-#     def __str__(self):
-#         return f"{self.first_name} {self.last_name}"
-
-
-
-# class Instructor(models.Model):
-#     user = models.OneToOneField(User, on_delete=models.CASCADE)
-#     first_name = models.CharField(max_length=50, null=False)
-#     last_name = models.CharField(max_length=50, null=False)
-#     courses = models.ManyToManyField('Course', related_name='instructors')
-
-#     def __str__(self):
-#         return f"{self.first_name} {self.last_name}"
+    role = models.CharField(max_length=20, choices=Role.choices)
+    profile_image = models.ImageField(upload_to='SS_project/profile')
 
 
 
@@ -87,7 +64,7 @@ class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     question_name = models.CharField(max_length=255, null=False)
     point = models.IntegerField(null=False)
-    question_type = models.CharField(max_length=10, choices=QuestionType.choices)  # Enum: single/multiple choice, etc.
+    question_type = models.CharField(max_length=10, choices=QuestionType.choices)
 
     def __str__(self):
         return self.question_name
@@ -105,11 +82,10 @@ class Choice(models.Model):
 
 
 class StudentAnswer(models.Model):
-    # student = models.ForeignKey(Student, on_delete=models.CASCADE)1
-    role = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
-    text_answer = models.CharField(max_length=255)
+    text_answer = models.CharField(max_length=255, null=True)
     submit_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
@@ -118,8 +94,7 @@ class StudentAnswer(models.Model):
 
 
 class QuizScore(models.Model):
-    # student = models.ForeignKey(Student, on_delete=models.CASCADE)
-    role = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     score = models.IntegerField()
 
