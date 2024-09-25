@@ -13,32 +13,19 @@
                 <table class=" min-w-full rounded-xl">
                     <thead>
                         <tr class="bg-gray-50">
-                            <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> Company </th>
-                            <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> User ID </th>
-                            <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> Type </th>
+                            <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> ชื่อ </th>
+                            <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> นามสกุล </th>
+                            <th scope="col" class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> คะเเนน </th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% for student in students %}
                         <tr class="odd:bg-white even:bg-gray-50">
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 "> Louis Vuitton</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> 20010510 </td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> Customer</td>
+                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">{{student.first_name}}</td>
+                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> {{student.last_name}} </td>
+                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> 100</td>
                         </tr>
-                        <tr class="odd:bg-white even:bg-gray-50">
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 "> Apple</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> 20010511 </td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> Partner</td>
-                        </tr>
-                        <tr class="odd:bg-white even:bg-gray-50">
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 "> Johnson</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> 20010512 </td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> Customer</td>
-                        </tr>
-                        <tr class="odd:bg-white even:bg-gray-50">
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 "> Starbucks</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> 20010513 </td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900"> Reseller</td>
-                        </tr>
+                        {% endfor %}
                     </tbody>
                 </table>
             </div>

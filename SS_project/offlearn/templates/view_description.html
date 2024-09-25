@@ -18,18 +18,17 @@
 
         <div class=" m-8 place-self-center w-[50%]">
             <h1 class="head text-3xl">
-                CyberSecurity
+                {{course.course_name}}
             </h1>
             <p>
-                Lorem ipsum dolor, sit amet consectetur adipisicing elit. Voluptatibus, illo, repudiandae deserunt eius consectetur repellat commodi voluptas unde impedit tempora ea, placeat iusto iure quia doloribus praesentium itaque quae voluptates?
+                {{course.course_description}}
             </p>
         </div>
 
         <div class="place-self-center">
 
-                <button class="enroll bg-[#D9272E] text-white px-6 py-3 mt-3 rounded-full w-[200px]" name="enroll" id="enroll" onclick="addCourse()">เข้าคอร์ส</button>
-                <button class="enroll bg-[#D9272E] text-white px-6 py-3 mt-3 rounded-full w-[200px]" name="enroll" id="enroll" onclick="Register()">สมัคร</button>
-   
+                <button class="enroll bg-[#D9272E] text-white px-6 py-3 mt-3 rounded-full w-[200px]"><a href="{% url 'enroll' course.id %}">เข้าคอร์ส</a></button>
+
         </div>
     </div>
 

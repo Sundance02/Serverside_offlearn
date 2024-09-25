@@ -40,10 +40,28 @@ class searched_course(View):
             page = "Allcourse-Teacher.html"
         else:
             page = "Allcourse-Guest.html"
+      
         searched_info = request.POST['searched']
         result = Course.objects.filter(course_name__icontains = searched_info)
         context = {"courses":result}
         return render(request, page, context)
+    def get(self, request):
+        if(request.user.groups.filter(name="Student").exists()):
+            page = "Allcourse-Student.html"
+        elif(request.user.groups.filter(name="Instructor").exists()):
+            page = "Allcourse-Teacher.html"
+        else:
+            page = "Allcourse-Guest.html"
+        result = ""       
+        filter = request.GET.get('filter')
+        if(filter == "all"):
+            result = Course.objects.all()
+        elif(filter == "own"):
+            result = Course.objects.filter(user_course__id = request.user.id)
+        elif(filter == "notown"):
+            result = Course.objects.exclude(user_course__id = request.user.id)
+        context = {"courses":result}
+        return render(request, page, context)   
 
 
     
@@ -72,11 +90,45 @@ class profile(LoginRequiredMixin, View):
     def get(self, request):
         return render(request, 'Profile.html')
     
-class view_description(LoginRequiredMixin, View):
-    login_url = '/Login/'
-    def get(self, request):
-        return render(request, 'view_description.html')
+class view_description (View):
+    def get(self, request, course_id):
+        course = Course.objects.get(pk=course_id)
+        context = {"course":course}
+        return render(request, 'view_description.html', context)
     
+class enroll(LoginRequiredMixin, View):
+    login_url = '/Login/'
+    def get(self, request, course_id):
+        course = Course.objects.get(pk=course_id)
+        student = User.objects.get(pk=request.user.id)
+        student.course_set.add(course)
+        context = {"course":course}
+        return render(request, 'show_selected_course.html', context)
+    
+class quit(LoginRequiredMixin, View):
+    login_url = '/Login/'
+    def get(self, request, course_id):
+        course = Course.objects.get(pk=course_id)
+        student = User.objects.get(pk=request.user.id)
+        student.course_set.remove(course)
+        return redirect('show_course')
+    
+class Course_Detail(LoginRequiredMixin, View):
+    login_url = '/Login/'
+    def get(self, request, course_id):
+        # incourse = เช็คว่าอยู่ใน course ไหม
+        incourse = Course.objects.filter(pk=course_id, user_course = request.user)
+        course = Course.objects.get(pk=course_id)
+        context = {"course": course}
+        print(incourse)
+        # exists เอาไว้เช็คว่าที่ filter นั้นมีข้อมูลไหม
+        if(incourse.exists()):
+            print('incourse')
+            return render(request, 'show_selected_course.html', context)
+        # อย่าลืม teacher
+        return render(request, 'view_description.html', context)
+
+
 class Changepassword(View):
     def get(self, request):
         form = Changepasswordform(request.user)
@@ -128,25 +180,18 @@ class Login(View):
 class Logout(View):
     def get(self, request):
         logout(request)
-        return redirect('Login')
+        return redirect('show_course')
     
 
-
-
-class Course_Detail_student(LoginRequiredMixin, View):
-    login_url = '/Login/'
-    def get(self, request):
-        return render(request, 'show_selected_course_student.html')
-    
-class Course_Detail_teacher(LoginRequiredMixin, View):
-    login_url = '/Login/'
-    def get(self, request):
-        return render(request, 'show_selected_course_teacher.html')
 
 class Student_List(LoginRequiredMixin, View):
     login_url = '/Login/'
-    def get(self, request):
-        return render(request, 'student_list.html')
+    def get(self, request, course_id):
+
+        student = User.objects.filter(course__id = course_id, user_info__role = "Student")
+        print(student)
+        context = {"students":student}
+        return render(request, 'student_list.html', context)
     
 
 class teacher_quiz(LoginRequiredMixin, View):

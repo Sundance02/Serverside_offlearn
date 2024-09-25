@@ -57,15 +57,29 @@
 <!--cover ด้านบน-->
 <div class="bg-cover w-auto h-[500px] mybg"></div>
 <!--text -->
+
 <div class="grid grid-cols-8">
+
     <div class="col-span-2"></div>
     <div class="w-[100%] flex space-x-4 justify-center col-span-4">
-        <div class="grid grid-cols-1 flex grow justify-items-center mt-10 ">
-            <a href="{% url 'show_course' %}" class="text-Black text-xl font-bold" name="own">คอร์สเรียนของคุณ</a>
+        <div class="grid grid-cols-1 flex-none justify-items-center mt-10 pt-2">
+            <a href="{% url 'searched' %}?filter=all"
+            class="text-gray-800 text-l font-bold" name="all">คอร์สเรียนทั้งหมด</a>
             <div class="redcolor w-28 h-1.5 place-content-center"></div>
         </div>
+        <div class="grid grid-cols-1 flex grow justify-items-center mt-10 ">
+            <a href="{% url 'searched' %}?filter=own"class="text-Black text-xl font-bold" name="own">คอร์สเรียนของคุณ</a>
+            <div class="redcolor w-28 h-1.5 place-content-center"></div>
+        </div>
+        <div class="grid grid-cols-1 flex flex-none justify-items-center mt-10 pt-2">
+            <a href="{% url 'searched' %}?filter=notown"
+                class="text-gray-800 text-l font-bold" name="notown">คอร์สเรียนที่ยังไม่ได้เข้า</a>
+            <div class="redcolor w-28 h-1.5 place-content-center"></div>
+        </div>
+
     </div>
     <div class="col-span-2"></div>
+
 </div>
 
 
@@ -96,84 +110,17 @@
 <!-- course ทั้งหมด -->
 <div class="grid justify-items-center gap-y-12 grid-cols-3 mt-12 mx-48">
     <!-- ข้อมูลของ course -->
-
-
     {% for course in courses %}
         <div class="w-9/12 class rounded-md shadow-md relative">
             <img src="{% static 'images/bg.jpg' %}" alt="" class="rounded-t-md object-cover">
             <p class="text-Black text-xl text-center font-medium pt-6">{{course.course_name}}</p>
             <p class="text-Gray-800 mt-3 text-center px-8">{{course.course_description}}</p>
             <button
-                class="rounded-full ring-1 ring-gray-300 text-gray-500  mt-96 mx-28 w-40 h-10 hover:bg-red-600 hover:text-white absolute bottom-6">ดูเนื้อหาคอร์สเรียน</button>
+                class="rounded-full ring-1 ring-gray-300 text-gray-500  mt-96 mx-28 w-40 h-10 hover:bg-red-600 hover:text-white absolute bottom-6"><a href="{% url 'Course_Detail' course.id %}">ดูเนื้อหาคอร์สเรียน</a></button>
         </div>
     {% endfor %}
     
-
-
-
 </div>
 {% endblock %}
-
-
-
-
-<!-- course ทั้งหมด
-    <div class="grid justify-items-center gap-y-12 grid-cols-3 mt-12 mx-48">
-        ข้อมูลของ course
-        <div class="w-9/12 class rounded-md shadow-md relative">
-            <img src="bg.jpg" alt="" class="rounded-t-md">
-            <p class="text-Black text-xl text-center font-medium pt-6">CyberSecurity</p>
-            <p class="text-Gray-800 mt-3 text-center px-8">Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas
-                totam unde nemo voluptate illo facere quidem nostrum? Dolorum dicta unde voluptatibus alias impedit
-                nulla accusantium deleniti temporibus, iste repellat aliquid.</p>
-            <button
-                class="rounded-full ring-1 ring-gray-300 text-gray-500  mt-96 mx-28 w-40 h-10 hover:bg-red-600 hover:text-white absolute bottom-6">ดูเนื้อหาคอร์สเรียน</button>
-        </div>
-        <div class="w-9/12 class rounded-md shadow-md relative">
-            <img src="bg.jpg" alt="" class="rounded-t-md">
-            <p class="text-Black text-xl text-center font-medium pt-6">CyberSecurity</p>
-            <p class="text-Gray-800 mt-3 text-center px-8">Lorem ipsum dolor sit amet consectetur adipisicing ostrum?
-                Dolorum dicta unde voluptatibus alias impedit nulla accusantium deleniti temporibus, iste repellat
-                aliquid.</p>
-            <button
-                class="rounded-full ring-1 ring-gray-300 text-gray-500  mt-96 mx-28 w-40 h-10 hover:bg-red-600 hover:text-white absolute bottom-6">ดูเนื้อหาคอร์สเรียน</button>
-        </div>
-        <div class="w-9/12 class rounded-md shadow-md relative">
-            <img src="bg.jpg" alt="" class="rounded-t-md">
-            <p class="text-Black text-xl text-center font-medium pt-6">CyberSecurity</p>
-            <p class="text-Gray-800 mt-3 text-center px-8">Lorem ipsum antium deleniti temporibus, iste repellat
-                aliquid.</p>
-            <button
-                class="rounded-full ring-1 ring-gray-300 text-gray-500  mt-96 mx-28 w-40 h-10 hover:bg-red-600 hover:text-white absolute bottom-6">ดูเนื้อหาคอร์สเรียน</button>
-        </div>
-        <div class="w-9/12 class rounded-md shadow-md relative">
-            <img src="bg.jpg" alt="" class="rounded-t-md">
-            <p class="text-Black text-xl text-center font-medium pt-6">CyberSecurity</p>
-            <p class="text-Gray-800 mt-3 text-center px-8">Lorem ipsum antium deleniti temporibus, iste repellat
-                aliquid.</p>
-            <button
-                class="rounded-full ring-1 ring-gray-300 text-gray-500  mt-96 mx-28 w-40 h-10 hover:bg-red-600 hover:text-white absolute bottom-6">ดูเนื้อหาคอร์สเรียน</button>
-        </div>
-        <div class="w-9/12 class rounded-md shadow-md relative">
-            <img src="bg.jpg" alt="" class="rounded-t-md">
-            <p class="text-Black text-xl text-center font-medium pt-6">CyberSecurity</p>
-            <p class="text-Gray-800 mt-3 text-center px-8">Lorem ipsum antium deleniti temporibus, iste repellat
-                aliquid. Lorem ipsum antium deleniti temporibus, iste repellat</p>
-            <button
-                class="rounded-full ring-1 ring-gray-300 text-gray-500  mt-96 mx-28 w-40 h-10 hover:bg-red-600 hover:text-white absolute bottom-6">ดูเนื้อหาคอร์สเรียน</button>
-        </div>
-        <div class="w-9/12 class rounded-md shadow-md relative">
-            <img src="bg.jpg" alt="" class="rounded-t-md">
-            <p class="text-Black text-xl text-center font-medium pt-6">CyberSecurity</p>
-            <p class="text-Gray-800 mt-3 text-center px-8">Lorem ipsum, dolor sit amet consectetur adipisicing elit.
-                Error illo omnis asperiores cum quos ipsa quod eaque expedita distinctio quam. Deserunt enim blanditiis
-                commodi quis maxime ab molestiae numquam minus?</p>
-            <button
-                class="rounded-full ring-1 ring-gray-300 text-gray-500  mt-96 mx-28 w-40 h-10 hover:bg-red-600 hover:text-white absolute bottom-6">ดูเนื้อหาคอร์สเรียน</button>
-        </div> -->
-
-
-
-
 
 
