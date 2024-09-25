@@ -1,9 +1,9 @@
 from django.db import models
-from django.contrib.auth.models import User
-
 # Create your models here.
 from django.db import models
 from django.contrib.auth.models import User
+
+
 
 
 class User_Info(models.Model):
@@ -12,7 +12,7 @@ class User_Info(models.Model):
         Text = "Instructor"
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=Role.choices)
-    profile_image = models.ImageField(upload_to='profile/')
+    profile_image = models.ImageField()
 
 
 
@@ -65,7 +65,7 @@ class Question(models.Model):
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     question_name = models.CharField(max_length=255, null=False)
     point = models.IntegerField(null=False)
-    question_type = models.CharField(max_length=10, choices=QuestionType.choices)  # Enum: single/multiple choice, etc.
+    question_type = models.CharField(max_length=10, choices=QuestionType.choices)
 
     def __str__(self):
         return self.question_name
@@ -84,8 +84,10 @@ class Choice(models.Model):
 
 class StudentAnswer(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
+    text_answer = models.CharField(max_length=255, null=True)
     text_answer = models.CharField(max_length=255, null=True)
     submit_date = models.DateTimeField(auto_now_add=True)
 
@@ -95,6 +97,7 @@ class StudentAnswer(models.Model):
 
 
 class QuizScore(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
     score = models.IntegerField()

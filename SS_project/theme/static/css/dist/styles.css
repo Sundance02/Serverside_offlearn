@@ -899,6 +899,10 @@ select {
   margin-bottom: 1rem;
 }
 
+.mb-6 {
+  margin-bottom: 1.5rem;
+}
+
 .mb-8 {
   margin-bottom: 2rem;
 }
@@ -1051,12 +1055,12 @@ select {
   width: 100%;
 }
 
-.w-\[1141px\] {
-  width: 1141px;
+.w-\[100px\] {
+  width: 100px;
 }
 
-.w-\[15\%\] {
-  width: 15%;
+.w-\[1141px\] {
+  width: 1141px;
 }
 
 .w-\[150px\] {
@@ -1107,56 +1111,20 @@ select {
   width: 100%;
 }
 
-.w-\[5\%\] {
-  width: 5%;
+.w-\[80\%\] {
+  width: 80%;
 }
 
-.w-\[8\%\] {
-  width: 8%;
-}
-
-.w-\[18\%\] {
-  width: 18%;
-}
-
-.w-\[full\%\] {
-  width: full%;
-}
-
-.w-\[full\] {
-  width: full;
-}
-
-.w-\[25\%\] {
-  width: 25%;
+.w-\[90\%\] {
+  width: 90%;
 }
 
 .w-\[30\%\] {
   width: 30%;
 }
 
-.w-\[40\%\] {
-  width: 40%;
-}
-
-.w-1\/5 {
-  width: 20%;
-}
-
-.w-3\/4 {
-  width: 75%;
-}
-
-.w-\[130px\] {
-  width: 130px;
-}
-
-.w-\[100px\] {
-  width: 100px;
-}
-
-.w-1 {
-  width: 0.25rem;
+.w-\[5\%\] {
+  width: 5%;
 }
 
 .min-w-0 {
@@ -1304,12 +1272,6 @@ select {
   margin-left: calc(1.75rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
-.space-y-5 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-y-reverse: 0;
-  margin-top: calc(1.25rem * calc(1 - var(--tw-space-y-reverse)));
-  margin-bottom: calc(1.25rem * var(--tw-space-y-reverse));
-}
-
 .place-self-center {
   place-self: center;
 }
@@ -1421,11 +1383,6 @@ select {
   background-color: rgb(0 0 0 / 0.5);
 }
 
-.bg-blue-500 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(59 130 246 / var(--tw-bg-opacity));
-}
-
 .bg-gray-200 {
   --tw-bg-opacity: 1;
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
@@ -1472,6 +1429,11 @@ select {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+}
+
+.bg-red-400 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(248 113 113 / var(--tw-bg-opacity));
 }
 
 .bg-cover {
@@ -1578,6 +1540,16 @@ select {
 .py-\[0\.25rem\] {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
+}
+
+.px-10 {
+  padding-left: 2.5rem;
+  padding-right: 2.5rem;
+}
+
+.px-20 {
+  padding-left: 5rem;
+  padding-right: 5rem;
 }
 
 .pb-2 {
@@ -1860,11 +1832,6 @@ select {
 
 .hover\:bg-black\/50:hover {
   background-color: rgb(0 0 0 / 0.5);
-}
-
-.hover\:bg-blue-700:hover {
-  --tw-bg-opacity: 1;
-  background-color: rgb(29 78 216 / var(--tw-bg-opacity));
 }
 
 .hover\:bg-gray-300:hover {
