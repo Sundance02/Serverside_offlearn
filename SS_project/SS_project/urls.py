@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.urls import path, include
 from offlearn.views import Login, Register, Logout, Changepassword
-
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("__reload__/", include("django_browser_reload.urls")),
@@ -11,3 +12,4 @@ urlpatterns = [
     path("Logout/", Logout.as_view(), name="Logout"),
     path("Changepassword/", Changepassword.as_view(), name="Changepassword"),
 ]
+urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

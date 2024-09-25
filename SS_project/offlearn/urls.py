@@ -20,7 +20,6 @@ urlpatterns = [
     path("student_quiz_detail/", views.student_quiz_detail.as_view(), name="student_quiz_detail"),
     path("create_quiz/", views.create_quiz.as_view(), name="create_quiz"),
     path("add_choice_question/", views.add_choice_question.as_view(), name="add_choice_question"),
-    path("add_choice/", views.add_choice.as_view(), name="add_choice"),
     path("add_context_question/", views.add_context_question.as_view(), name="add_context_question"),
     path("searched/", views.searched_course.as_view(), name="searched"),
     path("enroll/<int:course_id>", views.enroll.as_view(), name="enroll"),
@@ -31,5 +30,3 @@ urlpatterns = [
     path("add_context_question/<int:quiz_id>/", views.add_context_question.as_view(), name="add_context_question"),
     path("question_list/<int:quiz_id>/", views.question_list.as_view(), name="question_list"),
 ]
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

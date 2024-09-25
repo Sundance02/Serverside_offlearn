@@ -93,6 +93,7 @@ class edit_topic(LoginRequiredMixin, View):
 class profile(LoginRequiredMixin, View):
     login_url = '/Login/'
     def get(self, request):
+        print(request.user.user_info.profile_image)
         return render(request, 'Profile.html')
     
 class view_description (View):
@@ -224,16 +225,13 @@ class student_quiz_detail(LoginRequiredMixin, View):
     login_url = '/Login/'
     def get(self, request):
         return render(request, 'student_quiz_detail.html')
-    
-
-class create_quiz(LoginRequiredMixin, View):
-    login_url = '/Login/'
+class create_quiz(View):
 
     def get(self, request, course_id):
         quizform = AddQuizForm()
         course = Course.objects.get(pk=course_id)
         return render(request, 'Create_Quiz.html', {"form": quizform, 'course': course})
-    
+
     def post(self, request, course_id):
         form = AddQuizForm(request.POST)
         course = Course.objects.get(pk=course_id)
@@ -243,40 +241,50 @@ class create_quiz(LoginRequiredMixin, View):
             quiz.save()
 
             return redirect('question_list', quiz.id)
-        
+
         return render(request, 'Create_Quiz.html', {'form': form, 'course': course})
-
-
 class add_choice_question(View):
 
     def get(self, request, quiz_id):
-        
+
         ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm, extra=2)
         formset = ChoiceFormSet(queryset=Choice.objects.none())
         quiz = Quiz.objects.get(pk=quiz_id)
         return render(request, 'choice_question.html', {'choiceform': formset, 'questionform': AddQuestionForm(), 'quiz': quiz})
+
+    def post(self, request, quiz_id):
+
+        questionform = AddQuestionForm(request.POST)
+        quiz = Quiz.objects.get(pk=quiz_id)
+        ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm, extra=10)
+        formset = ChoiceFormSet(request.POST, queryset=Choice.objects.none())
+
+        if questionform.is_valid() and formset.is_valid():
+            quest = questionform.save(commit=False)
+            quest.quiz = quiz
+            quest.save()
+
+            for form in formset:
+
+                choice = form.save(commit=False)
+                choice.question = quest
+                choice.save()
+
+            return redirect('question_list', quiz_id)
+
+        print(formset.errors)
+        return render(request, 'choice_question.html', {'questionform': questionform, 'choiceform': formset, 'quiz': quiz})
     
     def post(self, request):
         pass
 
-
-class add_choice(View):
-
-    def get(self, request):
-        return render(request, 'partials/addchoice.html', {'choiceform': AddChoiceForm()})
-    
-    def post(self, request):
-        pass
-
-
-class add_context_question(LoginRequiredMixin, View):
-    login_url = '/Login/'
+class add_context_question(View):
 
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
         form = AddQuestionForm()
         return render(request, 'context_question.html', {'questionform': form, 'quiz': quiz})
-    
+
     def post(self, request, quiz_id):
 
         form = AddQuestionForm(request.POST)
