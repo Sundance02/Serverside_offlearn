@@ -30,5 +30,3 @@ urlpatterns = [
     path("add_context_question/<int:quiz_id>/", views.add_context_question.as_view(), name="add_context_question"),
     path("question_list/<int:quiz_id>/", views.question_list.as_view(), name="question_list"),
 ]
-
-urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

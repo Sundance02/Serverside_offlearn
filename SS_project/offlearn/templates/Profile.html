@@ -41,7 +41,7 @@
         <div class="bg-[#F4F4F4] p-10 rounded-3xl shadow-xl">
             <div class="on flex bg-white items-center p-10 rounded-3xl w-[900px]">
                 <div class="container-img flex flex-col justify-center items-center max-w-full">                    
-                    <img  src="{{user.user_info.profile_image}}" class="pic-pro object-cover w-[200px]" alt="">
+                    <img  src="{{ user.user_info.profile_image.url }}" class="pic-pro object-cover w-[200px]" alt="">
                     <!-- updatefile & uploadfile -->
                     <div id="input-profile" class="profile">
                         <div class="col-span-3 flex flex-col space-x-4">
