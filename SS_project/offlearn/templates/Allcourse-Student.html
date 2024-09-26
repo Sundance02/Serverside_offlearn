@@ -112,7 +112,7 @@
     <!-- ข้อมูลของ course -->
     {% for course in courses %}
         <div class="w-9/12 class rounded-md shadow-md relative">
-            <img src="{% static 'images/bg.jpg' %}" alt="" class="rounded-t-md object-cover">
+            <img src="{{course.course_image.url}}" alt="" class="rounded-t-md object-cover">
             <p class="text-Black text-xl text-center font-medium pt-6">{{course.course_name}}</p>
             <p class="text-Gray-800 mt-3 text-center px-8">{{course.course_description}}</p>
             <button

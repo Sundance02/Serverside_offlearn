@@ -23,7 +23,7 @@ class Course(models.Model):
     course_image = models.ImageField()
     # เพิ่มอาจารย์ผู้สอน
     def __str__(self):
-        return self.course_name
+        return self.course_name 
 
 
 
@@ -36,10 +36,9 @@ class Content(models.Model):
         return self.content_name
 
 
-
 class Material(models.Model):
     content = models.ForeignKey(Content, on_delete=models.CASCADE)
-    file_path = models.CharField(max_length=255)
+    file_path = models.FileField(blank=True, null=True)
     video_url = models.CharField(max_length=255, blank=True, null=True)
 
     def __str__(self):

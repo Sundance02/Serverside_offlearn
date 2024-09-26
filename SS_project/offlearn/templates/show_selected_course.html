@@ -30,7 +30,7 @@
                 {% if perms.offlearn.change_course %}
                 <div class="pl-72 ">
                     <button class="rounded-xl ring-1 ring-red-600 bg-red-600 text-white  px-8 py-4"
-                        onclick="">แก้ไขคอร์ส</button>
+                    ><a href="{% url 'edit_course' course.id  %}">แก้ไขคอร์ส</a></button>
                 </div>
                 {% endif %}
   
@@ -60,21 +60,29 @@
         </div>
     </div>
     <!-- topics -->
+    {% for content in contents %}
     <div class="bg-slate-200 rounded-xl shadow-md my-8 mx-8 p-8 place-self-center w-full">
-
+        
         <div class="bg-white rounded-xl p-10">
             <!-- topics details -->
             <div class="pb-6">
-                <p class="text-3xl pb-2"><b>ชื่อTOPIC</b></p>
+                <p class="text-3xl pb-2"><b>{{content.content_name}}</b></p>
                 <p>
-
+                    {{content.description}}
                 </p><br>
 
-
-                <a class="underline" href="../Server/File/'.$courseid.'/'.$topicid.'/'.$array_file[$f].'"
-                    download>เเสดงไฟล์</a>
+                {% for mat in content.material_set.all %}
+                {% if mat.video_url != "" %}
+                    <iframe width="560" height="315" src="{{mat.video_url}}" frameborder="0" allow="accelerometer;  clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="pt-12"></iframe>
+                {% endif %}
+                {% if mat.file_path != "" %}
+                <a class="underline" href="{{mat.file_path.url}}"
+                    download>{{mat.file_path}}</a>
+                {% endif %}
                 <br>
+                {% endfor %}
             </div>
+           
 
 
             {% if perms.offlearn.change_course %}
@@ -86,10 +94,13 @@
                         class="rounded-full ring-1 ring-red-600 bg-red-600 text-white px-8 py-2">เเก้ไขเนื้อหา</button>
                 </div>
             </div>
+            {% endif %}
         </div><br>
     </div>
+    {% endfor %}
+    {% if perms.offlearn.change_course %}
     <div class="grid justify-items-center grid-cols-1">
-        <button class="rounded-xl ring-1 ring-red-600 bg-red-600 text-white px-8 py-4" onclick="AddTopic()">เพิ่มเนื้อหาใหม่</button>
+        <button class="rounded-xl ring-1 ring-red-600 bg-red-600 text-white px-8 py-4"><a href="{% url 'create_topic' course.id %}">เพิ่มเนื้อหาใหม่</a></button>
         <br>
     </div>
     {% endif %}
