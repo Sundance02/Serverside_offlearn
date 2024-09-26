@@ -22,7 +22,7 @@
     <div class="pt-4 bg-gray-200 rounded-xl mt-4 p-6">
         {% if question %}
             {% for quest in question %}
-            <a href="#">
+            <a href="{% url 'edit_question' quest.id %}">
                 <div class="bg-white rounded-xl grid grid-cols-6 py-6 pl-6 pr-4 hover:bg-gray-300 mb-4">
                     <p class="text-xl col-span-2 font-bold">Question : {{ quest.question_name }}</p>
                     <p class="text-xl col-span-3 font-bold">Point : {{ quest.point }}</p>
