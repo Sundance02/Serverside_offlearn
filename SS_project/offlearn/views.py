@@ -230,13 +230,17 @@ class Student_List(LoginRequiredMixin, View):
 
 class teacher_quiz(LoginRequiredMixin, View):
     login_url = '/Login/'
-    def get(self, request):
-        return render(request, 'teacher_quiz.html')
+    def get(self, request, course_id):
+        course = Course.objects.get(pk=course_id)
+        quiz = Quiz.objects.filter(course = course)
+        return render(request, 'teacher_quiz.html', {'quiz': quiz, 'course': course})
     
 class teacher_quiz_detail(LoginRequiredMixin, View):
     login_url = '/Login/'
-    def get(self, request):
-        return render(request, 'teacher_quiz_detail.html')
+    def get(self, request, course_id):
+        course = Course.objects.get(pk=course_id)
+        quiz = Quiz.objects.filter(course = course)
+        return render(request, 'teacher_quiz_detail.html', {'quiz': quiz})
     
 class student_quiz(LoginRequiredMixin, View):
     login_url = '/Login/'
@@ -252,6 +256,8 @@ class student_quiz_detail(LoginRequiredMixin, View):
     login_url = '/Login/'
     def get(self, request):
         return render(request, 'student_quiz_detail.html')
+    
+
 class create_quiz(View):
 
     def get(self, request, course_id):
@@ -267,7 +273,7 @@ class create_quiz(View):
             quiz.course = course
             quiz.save()
 
-            return redirect('question_list', quiz.id)
+            return redirect('teacher_quiz', course_id)
 
         return render(request, 'Create_Quiz.html', {'form': form, 'course': course})
     
@@ -328,6 +334,6 @@ class add_context_question(View):
 class question_list(View):
 
     def get(self, request, quiz_id):
-        quizer = Quiz.objects.get(pk=quiz_id)
-        question = Question.objects.filter(quiz = quizer)
-        return render(request, 'Question_list.html', {'quiz': quizer, 'question': question})
+        quiz = Quiz.objects.get(pk=quiz_id)
+        question = Question.objects.filter(quiz = quiz)
+        return render(request, 'Question_list.html', {'quiz': quiz, 'question': question})

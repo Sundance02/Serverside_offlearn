@@ -862,11 +862,6 @@ select {
   margin-right: 12rem;
 }
 
-.mx-5 {
-  margin-left: 1.25rem;
-  margin-right: 1.25rem;
-}
-
 .mx-8 {
   margin-left: 2rem;
   margin-right: 2rem;
@@ -949,10 +944,6 @@ select {
 
 .mt-96 {
   margin-top: 24rem;
-}
-
-.mb-5 {
-  margin-bottom: 1.25rem;
 }
 
 .box-border {
@@ -1047,10 +1038,6 @@ select {
   width: 24rem;
 }
 
-.w-\[10\%\] {
-  width: 10%;
-}
-
 .w-\[100\%\] {
   width: 100%;
 }
@@ -1083,12 +1070,12 @@ select {
   width: 350px;
 }
 
-.w-\[50\%\] {
-  width: 50%;
+.w-\[5\%\] {
+  width: 5%;
 }
 
-.w-\[70\%\] {
-  width: 70%;
+.w-\[50\%\] {
+  width: 50%;
 }
 
 .w-\[700px\] {
@@ -1097,6 +1084,10 @@ select {
 
 .w-\[75\%\] {
   width: 75%;
+}
+
+.w-\[90\%\] {
+  width: 90%;
 }
 
 .w-\[900px\] {
@@ -1109,22 +1100,6 @@ select {
 
 .w-full {
   width: 100%;
-}
-
-.w-\[80\%\] {
-  width: 80%;
-}
-
-.w-\[90\%\] {
-  width: 90%;
-}
-
-.w-\[30\%\] {
-  width: 30%;
-}
-
-.w-\[5\%\] {
-  width: 5%;
 }
 
 .min-w-0 {
@@ -1211,10 +1186,6 @@ select {
   align-items: stretch;
 }
 
-.justify-end {
-  justify-content: flex-end;
-}
-
 .justify-center {
   justify-content: center;
 }
@@ -1264,12 +1235,6 @@ select {
   --tw-space-x-reverse: 0;
   margin-right: calc(1.25rem * var(--tw-space-x-reverse));
   margin-left: calc(1.25rem * calc(1 - var(--tw-space-x-reverse)));
-}
-
-.space-x-7 > :not([hidden]) ~ :not([hidden]) {
-  --tw-space-x-reverse: 0;
-  margin-right: calc(1.75rem * var(--tw-space-x-reverse));
-  margin-left: calc(1.75rem * calc(1 - var(--tw-space-x-reverse)));
 }
 
 .place-self-center {
@@ -1388,11 +1353,6 @@ select {
   background-color: rgb(229 231 235 / var(--tw-bg-opacity));
 }
 
-.bg-gray-300 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(209 213 219 / var(--tw-bg-opacity));
-}
-
 .bg-gray-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(249 250 251 / var(--tw-bg-opacity));
@@ -1429,11 +1389,6 @@ select {
 .bg-white {
   --tw-bg-opacity: 1;
   background-color: rgb(255 255 255 / var(--tw-bg-opacity));
-}
-
-.bg-red-400 {
-  --tw-bg-opacity: 1;
-  background-color: rgb(248 113 113 / var(--tw-bg-opacity));
 }
 
 .bg-cover {
@@ -1540,16 +1495,6 @@ select {
 .py-\[0\.25rem\] {
   padding-top: 0.25rem;
   padding-bottom: 0.25rem;
-}
-
-.px-10 {
-  padding-left: 2.5rem;
-  padding-right: 2.5rem;
-}
-
-.px-20 {
-  padding-left: 5rem;
-  padding-right: 5rem;
 }
 
 .pb-2 {
@@ -1784,6 +1729,10 @@ select {
 .ring-red-600 {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(220 38 38 / var(--tw-ring-opacity));
+}
+
+.filter {
+  filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow);
 }
 
 .transition {

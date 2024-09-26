@@ -4,11 +4,11 @@
 {% block content %}
 <div>
     <div class="grid place-content-center mt-8">
-        <p class="text-5xl font-bold mb-8">Question List</p>
+        <p class="text-5xl font-bold mb-8">{{ quiz.quiz_name }} question list</p>
     </div>
 </div>
 <div class="mx-12 mt-10">
-    <div class="flex justify-center">
+    <div class="flex justify-left">
         <select name="" id="questionType" class="px-16">
             <option value="" selected>Select Question Type</option>
             <option value="context">Context Answer Question</option>
