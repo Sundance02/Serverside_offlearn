@@ -14,9 +14,9 @@
         <p class="text-center text-4xl text-black font-semibold mt-4" id="title"> สร้างคอร์ส </p>
 
 
-            <div class="rounded-md bg-[#F4F4F4] w-[1141px] p-8 place-self-center font-medium grid grid-cols-1 mb-4">
-                <form method="post" enctype="multipart/form-data">
-                    {%csrf_token%}
+        <div class="rounded-md bg-[#F4F4F4] w-[1141px] p-8 place-self-center font-medium grid grid-cols-1 mb-4">
+            <form method="post" enctype="multipart/form-data">
+                {%csrf_token%}
                 <div class="rounded-md bg-white m-8 p-8 text-xl">
                     <div id="input-name" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
                         <label for="nameCourse">
@@ -40,16 +40,16 @@
                         <div class="col-span-3 flex space-x-4">
                             <!-- <input id="upload-profile" onchange="updatefile()" type="file" class="rounded-full w-[150px] hidden"> -->
                             {{form.course_image}}
-                            <label id="label-upload" for="upload-profile"
+                            <!-- <label id="label-upload" for="upload-profile"
                                 class="flex rounded-full bg-[#FFDADA] py-2 px-4 w-[200px]">
-                                <img id="icon-file" src="../image/add_file_icon.svg" alt="" class="flex-none">
+                                <img id="icon-file" src="{% static '/images/add_file_icon.svg' %}" alt="" class="flex-none">
                                 <p id="p-file-name"
                                     class="underline underline-offset-4 text-md text-center flex-grow font-normal truncate"
                                     id="uploadfile"> Upload file </p>
                             </label>
                             <div id="show-file-name" class="text-[#B9B9B9] box-border pt-4 text-base truncate">
                                 อัตราส่วนรูปภาพเป็น 16:9
-                            </div>
+                            </div> -->
 
                         </div>
                     </div>
@@ -57,8 +57,8 @@
                         <label for="teacherCourse"> เพิ่มอาจารย์ผู้สอน </label>
                         <div class="bg-white col-span-3 rounded-full p-1 flex space-x-4" id="teacher">
 
-                            <label id="add-teacher" class="flex justify-center flex-none" onclick="addTeacher()">
-                                <img src="../image/circle-plus.svg" alt="">
+                            <label id="add-teacher" class="flex justify-center flex-none">
+                                {{form.add_instructors}}
                             </label>
                         </div>
                     </div>
@@ -68,309 +68,13 @@
                     <button class="register bg-[#D9272E] text-white px-6 py-3 mt-5 rounded-full w-[200px]"
                         type="submit">สร้างคอร์ส</button>
                 </div>
-                </form>
-            </div>
-
-    </div>
-    <div id="select-teacher"
-        class=" overflow-hidden grid grid-cols-1 hidden absolute inset-0 bg-inherit hover:bg-black/50 w-[100%] h-[100%] ease-in duration-300 transition-all">
-        <div id="contain-popup"
-            class="border border-black place-self-center p-2 rounded-lg bg-white w-[50%] aspect-[4/3]">
-            <div class="mb-3">
-                <div class="relative flex w-full flex-wrap items-stretch mb-4">
-                    <input onchange="searchTeacher()" type="search"
-                        class="relative m-0 block min-w-0 flex-auto rounded-lg border border-solid border-black bg-transparent bg-clip-padding px-3 py-[0.25rem] text-base font-normal leading-[1.6] text-neutral-700 outline-none transition duration-200 ease-in-out focus:z-[3] focus:border-primary focus:text-neutral-700 focus:shadow-[inset_0_0_0_1px_rgb(59,113,202)] focus:outline-none"
-                        placeholder="Search Teacher" id="input-teacherName" />
-
-                    <button
-                        class="relative z-[2] flex items-center rounded-lg bg-primary px-6 py-2.5 text-xs font-medium uppercase leading-tight text-white shadow-md transition duration-150 ease-in-out hover:bg-primary/85 hover:shadow-lg focus:bg-primary-700 focus:shadow-lg focus:outline-none focus:ring-0 active:bg-primary-800 active:shadow-lg"
-                        id="button-addon1" onclick="searchTeacher()">
-                        <svg viewBox="0 0 20 20" fill="currentColor" class="h-5 w-5">
-                            <path fill-rule="evenodd"
-                                d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                                clip-rule="evenodd" />
-                        </svg>
-                    </button>
-
-                </div>
-            </div>
-
-            <div id="containT-name" class="block relative h-full overflow-y-scroll min-w-[100%]">
-
-            </div>
-
+            </form>
         </div>
-
-
-
-    </div>
 
     </div>
     {% endblock%}
 </body>
 
-<!-- <script>
-    function back() {
-        
-    }
-</script>
-
-<script>
-    function getCookie(cname) {
-        let name = cname + "=";
-        let decodedCookie = decodeURIComponent(document.cookie);
-        let ca = decodedCookie.split(';');
-        for (let i = 0; i < ca.length; i++) {
-            let c = ca[i];
-            while (c.charAt(0) == ' ') {
-                c = c.substring(1);
-            }
-            if (c.indexOf(name) == 0) {
-                return c.substring(name.length, c.length);
-            }
-        }
-        return "";
-    }
-</script>
-
-<script>
-    let who = getCookie("Who")
-    let name = getCookie("Name")
-    let surname = getCookie("SurName")
-
-    let idname = `${name.replace(/ /g, '-')}-${surname.replace(/ /g, '-')}`
-
-    let labelOwner = document.createElement('label')
-    labelOwner.setAttribute('who', `${who}`)
-    labelOwner.setAttribute('id', `${idname}`)
-    labelOwner.classList.add("flex-none", "ownner-teacher", "flex", "rounded-full", "bg-[#FFDADA]", "py-1", "px-3", "w-[150px]")
-
-    let param = document.createElement('p')
-    param.classList.add("text-sm", "text-center", "flex-grow", "font-normal", "truncate")
-    param.textContent = `${name} ${surname}`
-
-    labelOwner.appendChild(param)
-    document.getElementById("teacher").insertBefore(labelOwner, document.getElementById('add-teacher'))
-</script>
-
-<script>
-    let modal = document.getElementById('select-teacher')
-    let btn = document.getElementById('open-modal')
-
-    function addTeacher() {
-        modal.classList.replace('hidden', 'block')
-    }
-
-    window.onclick = function(event) {
-        if (event.target == modal) {
-            modal.classList.replace('block', 'hidden')
-        }
-    }
-</script>
-
-<script>
-    function OnUploadCheckimage(img) {
-
-        var extall = "jpg,jpeg,gif,png,bmp";
-
-        ext = img.split('.').pop().toLowerCase();
-
-        if (parseInt(extall.indexOf(ext)) < 0) {
-            return false;
-        }
-        return true;
-    }
-
-    function searchTeacher() {
-
-        let getdataTeacher = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Service': 'Get Teacher Name'
-            },
-            body: JSON.stringify({
-                'name': document.getElementById('input-teacherName').value
-            })
-        }
-
-
-        fetch('../server/web_server.php', getdataTeacher)
-            .then(response => {
-                return response.json()
-            })
-            .then(data => {
-                let containT = document.getElementById('containT-name')
-                while (containT.firstChild) {
-                    containT.removeChild(containT.firstChild);
-                }
-                for (let key in data) {
-                    let id = data[key]['Name'].replace(/ /g, '-')
-                    let divT = document.createElement('div')
-                    divT.setAttribute('onclick', 'selectTeacher(this)')
-                    divT.setAttribute('id', `${id}`)
-                    divT.setAttribute('who', `${data[key]['ID']}`)
-                    divT.classList.add("relative", "shadow-md", "rounded-lg", "my-4", "p-2", "w-[100%]", "hover:opacity-50", "hover:bg-slate-400", "transition-all", "duration-300", "truncate")
-                    divT.innerHTML = `<p>${data[key]['Name']}</p>`
-                    containT.appendChild(divT)
-                }
-            })
-            .catch(error => {
-                console.error('Problem to get Name Teacher:', error);
-            });
-    }
-
-    function selectTeacher(eleTeacher) {
-        let content = eleTeacher.textContent
-        let idtx = content.replace(/ /g, '-')
-        let exist_teacher = document.querySelector(`label#${idtx}`)
-
-        if (exist_teacher === null) {
-            let contain = document.getElementById('teacher')
-
-            let show_teacher = document.createElement('label')
-            let param = document.createElement('p')
-            let img = document.createElement('img')
-
-            show_teacher.classList.add("colab-teacher", "truncate", "flex", "rounded-full", "bg-[#FFDADA]", "py-1", "px-3", "w-[150px]")
-            show_teacher.setAttribute('id', idtx)
-            show_teacher.setAttribute('who', `${eleTeacher.getAttribute("who")}`)
-
-            param.textContent = content
-            param.classList.add("text-sm", "text-center", "flex-grow", "font-normal", "truncate")
-
-            img.setAttribute('src', '../image/close.svg')
-            img.setAttribute('onclick', 'deleteTeacher(this)')
-            img.classList.add('flex-none')
-
-            show_teacher.appendChild(param)
-            show_teacher.appendChild(img)
-
-            contain.insertBefore(show_teacher, document.getElementById('add-teacher'))
-        }
-
-    }
-
-    function deleteTeacher(element) {
-        let target = element.parentElement
-        target.remove()
-    }
-
-    function updatefile() {
-        let show_file_name = document.getElementById('show-file-name')
-        let p_file_name = document.getElementById('p-file-name')
-        let icon_file = document.getElementById('icon-file')
-
-        let check_file = document.getElementById('upload-profile').files[0]
-        let file_name
-        let placeholder
-        if (check_file !== null && check_file !== undefined) {
-            file_name = placeholder = check_file.name
-            if (!OnUploadCheckimage(check_file.name)) {
-                file_name = 'Upload file'
-                placeholder = 'Extension support : jpg,jpeg,gif,png,bmp'
-            }
-        } else {
-            file_name = 'Upload file'
-            placeholder = 'อัตราส่วนรูปภาพเป็น 16:9'
-        }
-        show_file_name.textContent = placeholder
-        p_file_name.textContent = file_name
-
-        if (icon_file !== null) {
-
-            icon_file.remove()
-
-        }
-        if (file_name === 'Upload file') {
-
-            let label = document.getElementById('label-upload')
-            let img = document.createElement('img')
-            img.setAttribute('id', 'icon-file');
-            img.setAttribute('src', '../image/add_file_icon.svg')
-            img.classList.add('flex-none')
-
-            label.insertBefore(img, document.getElementById('p-file-name'))
-        }
-
-    }
-
-    function createCourse() {
-        let ownner_teacher = document.querySelector('label.ownner-teacher')
-        let colab_teacher = document.querySelectorAll('label.colab-teacher')
-
-        let all_teacher = [ownner_teacher.getAttribute('who')]
-        colab_teacher.forEach(item => {
-            all_teacher.push(item.getAttribute('who'))
-        })
-
-        let text = document.getElementById('upload-profile').files[0].name;
-        const NameAndDotFile = text.split(".");
-
-        let createCourse = {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Service': 'Create Course'
-            },
-            body: JSON.stringify({
-                'Name': document.getElementById('name').value,
-                'Description': document.getElementById('description').value,
-                'Picture': NameAndDotFile[1],
-                'Teacher': all_teacher
-            })
-        }
-
-        let namepic
-
-        fetch('../server/web_server.php', createCourse)
-            .then(response => {
-                console.log((response))
-                // return response.text()
-                return response.json()
-
-            })
-            .then(data => {
-                // console.log(data)
-                console.log(data['picname'])
-                namepic = data['picname']
-                uploadfile(namepic)
-                window.location.href = "../frame/Allcourse-Teacher.php"
-            })
-            .catch(error => {
-                console.error('There was a problem with your fetch operation:', error);
-            });
-
-    }
-
-    function uploadfile(newname) {
-        const fileInput = document.getElementById('upload-profile');
-        const file = fileInput.files[0];
-
-        if (file) {
-            file.name = name
-            const formData = new FormData()
-            formData.append('file', file, newname)
-
-            fetch('../server/web_server.php', {
-                    method: 'POST',
-                    body: formData,
-                    headers: {
-                        'Service': 'Upload Course Picture'
-                    }
-                })
-                .then(response => {
-                    console.log(response)
-                    return response.text()
-                }).then(data => {
-                    console.log(data)
-                })
-
-        } else {
-            console.error('No file selected.');
-        }
-    }
-</script> -->
 
 
 

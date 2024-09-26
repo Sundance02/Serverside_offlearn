@@ -67,50 +67,51 @@ class create_course(LoginRequiredMixin, View):
     permission_required = ["offlearn.add_course"]
     def get(self, request):
         form = CreateCourse()
-        print("เข้า get")
         return render(request, 'Create_Course.html', {"form":form})
     def post(self, request):
         form = CreateCourse(request.POST, request.FILES)
-        print('wait to valid')
         print(form.errors)
         if(form.is_valid()):
             print("ถูกต้องเเล้วค้าบบบ")
             course = form.save()
-            teacher = User.objects.get(pk=request.user.id)
-            course.user_course.add(teacher)
+            owner_teacher = User.objects.get(pk=request.user.id)
+            course.user_course.add(owner_teacher)
+            teachers = form.cleaned_data['add_instructors']
+            course.user_course.add(teachers)
             course.save()
             return redirect('show_course')
         return render(request, 'Create_Course.html')
 
-# class Register(View):
-#     def get(self, request):
-#         print('yahaloooo')
-#         form = Registerform()
-#         return render(request, 'Register.html', {"form": form})
-    
-#     def post(self, request):
-#         form = Registerform(request.POST, request.FILES)
-#         print(request.FILES)
-#         if form.is_valid():
-#             user = form.save()
-#             group = Group.objects.get(name='Student')
-#             User_Info.objects.create(user = user, role="Student", profile_image= form.cleaned_data['profile_image'])
-#             user.groups.add(group)
-#             user.save()
-#             messages.success(request, 'Account created successfully')  
-#             return redirect('Login')
-#         return render(request, 'Register.html', {"form": form})
-
 
 class edit_course(LoginRequiredMixin, View):
     login_url = '/Login/'
-    def get(self, request):
-        return render(request, 'Edit_Course.html')
+    def get(self, request, course_id):
+        form = CreateCourse()
+        course = Course.objects.get(pk=course_id)
+        return render(request, 'Edit_Course.html', {"form":form, "course":course})
 
 class create_topic(LoginRequiredMixin, View):
     login_url = '/Login/'
-    def get(self, request):
-        return render(request, 'Create_Topic.html')
+    def get(self, request, course_id):
+        form = CreateTopic()
+        print("เข้า get")
+        return render(request, 'Create_Topic.html',{"form":form, "course_id":course_id})
+    def post(self, request, course_id):
+        form = CreateTopic(request.POST, request.FILES)
+        if(form.is_valid()):
+            course = Course.objects.get(pk=course_id)
+            content = Content.objects.create(course = course, content_name= form.cleaned_data['content_name'], description = form.cleaned_data['description'])
+            files = request.FILES.getlist('file_path')
+            videos = request.POST.getlist('video_url')
+            for file in files:
+                material = Material.objects.create(content=content, file_path = file, video_url = "")
+                material.save()
+            for video in videos:
+                emvideo = video.replace('/watch?v=', '/embed/')
+                print(emvideo)
+                material = Material.objects.create(content=content, file_path = "", video_url = emvideo)
+            return render(request, 'show_selected_course.html',{"course":course})   
+        return render(request, 'Create_Topic.html',{"form":form, "course_id":course_id})        
 
 class edit_topic(LoginRequiredMixin, View):
     login_url = '/Login/'
@@ -152,7 +153,9 @@ class Course_Detail(LoginRequiredMixin, View):
         # incourse = เช็คว่าอยู่ใน course ไหม
         incourse = Course.objects.filter(pk=course_id, user_course = request.user)
         course = Course.objects.get(pk=course_id)
-        context = {"course": course}
+        content = Content.objects.filter(course = course)
+        print(content)
+        context = {"course": course, "contents":content}
         print(incourse)
         # exists เอาไว้เช็คว่าที่ filter นั้นมีข้อมูลไหม
         if(incourse.exists()):

@@ -5,8 +5,6 @@ from django.forms import ModelForm, ValidationError
 from django.forms import ModelForm, DateField, Textarea
 from django.forms.widgets import TextInput, Textarea, PasswordInput
 from django.core.exceptions import ValidationError
-from datetime import date
-from django import forms
 from offlearn.models import *
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm, AuthenticationForm, SetPasswordForm
@@ -51,7 +49,6 @@ class Registerform(UserCreationForm):
     email = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
     username = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4 w-[700px]"}))
     profile_image = forms.ImageField()
-    # ยังไม่ได้ทำรูป
 
     class Meta:
         model = User
@@ -93,6 +90,7 @@ class CreateCourse(ModelForm):
     course_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
     course_description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}))
     course_image = forms.ImageField()
+    add_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor"))
     class Meta:
         model = Course
         fields = [
@@ -100,3 +98,20 @@ class CreateCourse(ModelForm):
             "course_description",
             "course_image"
         ]
+
+BLACKLISTED_EXTENSIONS = ['.exe', '.bat', '.cmd']
+
+class CreateTopic(ModelForm):
+    content_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
+    description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}))
+    video_url = forms.CharField(required=False, widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
+    # file_path = forms.FileField(widget = MultipleFileInput())
+    file_path = forms.FileField(required=False)
+    
+    class Meta:
+        model = Material
+        fields = [
+            'file_path',
+            'video_url'
+        ]
+
