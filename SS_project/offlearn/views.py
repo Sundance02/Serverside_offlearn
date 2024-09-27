@@ -110,7 +110,7 @@ class create_topic(LoginRequiredMixin, View):
                 emvideo = video.replace('/watch?v=', '/embed/')
                 print(emvideo)
                 material = Material.objects.create(content=content, file_path = "", video_url = emvideo)
-            return render(request, 'show_selected_course.html',{"course":course})   
+            return render(request, 'show_selected_course.html',{"course":course})   #redirect ให้มัน refresh หน้าใหม่
         return render(request, 'Create_Topic.html',{"form":form, "course_id":course_id})        
 
 class edit_topic(LoginRequiredMixin, View):
