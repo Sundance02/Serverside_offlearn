@@ -303,7 +303,6 @@ class add_choice_question(View):
             quest.save()
 
             for form in formset:
-
                 choice = form.save(commit=False)
                 choice.question = quest
                 choice.save()
@@ -340,3 +339,56 @@ class question_list(View):
         quiz = Quiz.objects.get(pk=quiz_id)
         question = Question.objects.filter(quiz = quiz)
         return render(request, 'Question_list.html', {'quiz': quiz, 'question': question})
+
+
+class edit_question(View):
+
+    def get(self, request, question_id):
+        question = Question.objects.get(pk=question_id)
+        questionform = AddQuestionForm(instance=question, initial={'question_name': question.question_name, 'point': question.point})
+        if question.question_type == 'Choice':
+            all_choice = Choice.objects.filter(question = question)
+            # num_choice = all_choice.count()
+            ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm, extra=0)
+            formset = ChoiceFormSet(queryset=all_choice)
+            return render(request, 'edit_question.html', {'question': question, 'questionform': questionform, 'formset': formset})
+        elif question.question_type == 'Text':
+            return render(request, 'edit_question.html', {'question': question, 'questionform': questionform})
+    
+    def post(self, request, question_id):
+        question = Question.objects.get(pk=question_id)
+        questionform = AddQuestionForm(request.POST)
+
+        if questionform.is_valid():
+            question.question_name = questionform.cleaned_data['question_name']
+            question.point = questionform.cleaned_data['point']
+            question.save()
+
+            if question.question_type == 'Choice':
+                ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm, extra=10)
+                formset = ChoiceFormSet(request.POST, queryset=Choice.objects.none())
+
+                if formset.is_valid():
+                    choice = Choice.objects.filter(question = question)
+                    choice.delete()
+
+                    for form in formset:
+                        c = form.save(commit=False)
+                        c.question = question
+                        c.save()
+
+                    return redirect('question_list', question.quiz.id)
+                    
+                print(formset.errors)
+                return render(request, 'edit_question.html', {'question': question, 'questionform': questionform, 'formset': formset})
+
+            return redirect('question_list', question.quiz.id)
+        
+        if question.question_type == 'Choice':
+            ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm)
+            formset = ChoiceFormSet(request.POST, queryset=Choice.objects.none())
+
+            return render(request, 'edit_question.html', {'question': question, 'questionform': questionform, 'formset': formset})
+        
+        return render(request, 'edit_question.html', {'question': question, 'questionform': questionform})
+
