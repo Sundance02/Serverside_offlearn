@@ -67,18 +67,21 @@ class create_course(LoginRequiredMixin, View):
     permission_required = ["offlearn.add_course"]
     def get(self, request):
         form = CreateCourse()
-        return render(request, 'Create_Course.html', {"form":form})
+        teacher = User.objects.filter(user_info__role="Instructor")
+        teacher_list = list(teacher.values('first_name', 'id'))
+        return render(request, 'Create_Course.html', {"form":form, "teacher":teacher_list})
     def post(self, request):
         form = CreateCourse(request.POST, request.FILES)
         print(form.errors)
         if(form.is_valid()):
             print("ถูกต้องเเล้วค้าบบบ")
+            teacher = request.POST.getlist('add_instructors')
             course = form.save()
             owner_teacher = User.objects.get(pk=request.user.id)
             course.user_course.add(owner_teacher)
-            teachers = form.cleaned_data['add_instructors']
-            course.user_course.add(teachers)
-            course.save()
+            for i in teacher:
+                course.user_course.add(i)
+                course.save()
             return redirect('show_course')
         return render(request, 'Create_Course.html')
 
@@ -86,8 +89,8 @@ class create_course(LoginRequiredMixin, View):
 class edit_course(LoginRequiredMixin, View):
     login_url = '/Login/'
     def get(self, request, course_id):
-        form = CreateCourse()
         course = Course.objects.get(pk=course_id)
+        form = CreateCourse(instance=course)
         return render(request, 'Edit_Course.html', {"form":form, "course":course})
 
 class create_topic(LoginRequiredMixin, View):
