@@ -40,15 +40,6 @@ class AddChoiceForm(ModelForm):
         fields = ['choice_name', 'is_correct']
 
 
-class TextAnswerForm(forms.Form):
-    answer = forms.CharField(label='Your answer', max_length=255)
-    
-
-class ChoiceAnswerForm(forms.Form):
-    answer = forms.ChoiceField(widget=forms.RadioSelect, label='Choose your answer')
-
-
-
 class Registerform(UserCreationForm):
     first_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4 w-[700px]"}))
     last_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
