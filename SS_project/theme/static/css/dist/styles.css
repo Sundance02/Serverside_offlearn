@@ -925,6 +925,10 @@ select {
   margin-top: 24rem;
 }
 
+.mb-2 {
+  margin-bottom: 0.5rem;
+}
+
 .box-border {
   box-sizing: border-box;
 }
@@ -1237,6 +1241,16 @@ select {
 
 .border-none {
   border-style: none;
+}
+
+.border-\[\#D0D0D0\] {
+  --tw-border-opacity: 1;
+  border-color: rgb(208 208 208 / var(--tw-border-opacity));
+}
+
+.border-black {
+  --tw-border-opacity: 1;
+  border-color: rgb(0 0 0 / var(--tw-border-opacity));
 }
 
 .border-gray-300 {
