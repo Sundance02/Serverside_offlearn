@@ -90,7 +90,22 @@ class CreateCourse(ModelForm):
     course_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
     course_description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}))
     course_image = forms.ImageField()
-    add_instructors = forms.ModelChoiceField(required=False, queryset= User.objects.filter(user_info__role="Instructor"))
+    add_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor"), required=False)
+    class Meta:
+        model = Course
+        fields = [
+            "course_name",
+            "course_description",
+            "course_image"
+        ]
+
+class EditCourse(ModelForm):
+    course_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
+    course_description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}))
+    course_image = forms.ImageField()
+    add_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor"), required=False)
+    del_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor" ), required=False, widget=forms.HiddenInput(attrs={"id":"del_instructors"}))
+    
     class Meta:
         model = Course
         fields = [
