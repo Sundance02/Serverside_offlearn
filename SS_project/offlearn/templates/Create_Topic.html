@@ -16,7 +16,7 @@
     {% block content %}
     <div class="grid grid-cols-1 gap-8 my-8">
 
-        <p class="text-center text-4xl text-black font-semibold" id="title"> สร้างหัวข้อ </p>
+        <p class="text-center text-4xl text-black font-semibold" id="title"> เพิ่มเนื้อหาใหม่ </p>
 
         <div class="rounded-md bg-[#F4F4F4] w-[1141px] p-8 place-self-center font-medium grid grid-cols-1">
             <div class="rounded-md bg-white m-8 p-8 text-xl">
@@ -24,7 +24,7 @@
                     {% csrf_token %}
                     <div id="input-name" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
                         <label for="nameCourse">
-                            <h6> ชื่อหัวข้อ </h6>
+                            <h6> ชื่อเนื้อหา </h6>
                         </label>
                         <!-- <input type="text" id="name" name="Name" class="bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"> -->
                         {{form.content_name}}
@@ -78,7 +78,7 @@
 
                         <div class="flex justify-center">
                             <button class="register bg-[#D9272E] text-white px-6 py-3 mt-12 rounded-full w-[200px] mt-12"
-                                type="submit">สร้างหัวข้อ</button>
+                                type="submit">สร้างนื้อหา</button>
                         </div>
                     
                 </form>

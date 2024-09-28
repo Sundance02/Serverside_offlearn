@@ -69,7 +69,7 @@ class create_course(LoginRequiredMixin, View):
         form = CreateCourse()
         form.fields['add_instructors'].queryset= User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
         teacher = User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
-        teacher_list = list(teacher.values('first_name', 'id'))
+        teacher_list = list(teacher.values('username', 'id'))
         return render(request, 'Create_Course.html', {"form":form, "teacher":teacher_list})
     def post(self, request):
         form = CreateCourse(request.POST, request.FILES)
@@ -94,8 +94,12 @@ class edit_course(LoginRequiredMixin, View):
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)
         form = EditCourse(instance=course)
+        form.fields['add_instructors'].queryset= User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
+        all_teacher = User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
+        all_teacher_list = list(all_teacher.values('username', 'id'))
+        print(all_teacher_list)
         teacher_incourse = User.objects.filter(course__id = course_id)
-        return render(request, 'Edit_Course.html', {"form":form, "course":course, "teachers":teacher_incourse})
+        return render(request, 'Edit_Course.html', {"form":form, "course":course, "teachers":teacher_incourse, "all_teacher":all_teacher_list})
     def post(self, request, course_id):
         course = Course.objects.get(pk=course_id)
         form = EditCourse(request.POST, request.FILES,instance=course)
@@ -125,9 +129,9 @@ class edit_course(LoginRequiredMixin, View):
                     if(i != ''):
                         del_t = User.objects.get(pk=i)
                         course.user_course.remove(del_t)
-                        course.save()        
-                return render(request, 'show_selected_course.html',{"course":course})
-        return render(request, 'Edit_Course.html', {"form":form, "course":course})
+                        course.save()
+                return redirect('Course_Detail', course_id=course.id)
+        return redirect('Course_Detail', course_id=course.id)
 
     
 
@@ -151,13 +155,79 @@ class create_topic(LoginRequiredMixin, View):
                 emvideo = video.replace('/watch?v=', '/embed/')
                 print(emvideo)
                 material = Material.objects.create(content=content, file_path = "", video_url = emvideo)
-            return render(request, 'show_selected_course.html',{"course":course})   #redirect ให้มัน refresh หน้าใหม่
+            return redirect('Course_Detail', course_id=course.id)  #redirect ให้มัน refresh หน้าใหม่
         return render(request, 'Create_Topic.html',{"form":form, "course_id":course_id})        
 
 class edit_topic(LoginRequiredMixin, View):
     login_url = '/Login/'
-    def get(self, request):
+    def get(self, request, topic_id):
+        content = Content.objects.get(pk=topic_id)
+        material = Material.objects.filter(content = content)
+        form = EditContent(instance=content, initial={'content_name':content.content_name, 'description':content.description})
+        return render(request, 'Edit_Topic.html', {'form':form, "contents":content, "materials":material})
+    
+    def post(self, request, topic_id):
+        content = Content.objects.get(pk=topic_id)
+        form = EditContent(request.POST, request.FILES, instance=content)
+        courseid = content.course.id
+        print('รอvalid')
+        print(form.errors.as_text)
+        if(form.is_valid()):
+            print('valid')
+            content.content_name = form.cleaned_data['content_name']
+            content.description = form.cleaned_data['description']
+            content.save()
+            del_video = request.POST.getlist('del_video')
+            del_file = request.POST.getlist('del_file_path')
+            add_video = request.POST.getlist('video_url')
+            add_file = request.FILES.getlist('file_path')
+            print(del_file)
+            print(del_video)
+            # delete section
+            videoSplitList = str(del_video).split(',')
+            fileSplitList = str(del_file).split(',')
+
+            trueVideoList = []
+            trueFileList = []
+
+ 
+            if(len(del_file) > 0 and del_file != ['']):
+                fileSplitList = str(del_file).split(',')
+                trueFileList = []
+                for file in fileSplitList:
+                    true_value = file.strip().replace("'", "").replace("[", "").replace("]", "")
+                    if true_value:
+                        trueFileList.append(int(true_value))
+                for file in trueFileList:
+                    if(file != ''):                        
+                        file = Material.objects.get(pk=file)
+                        file.delete()
+            
+
+            if(len(del_video) > 0 and del_video != ['']):
+                videoSplitList = str(del_video).split(',')
+                trueVideoList = []
+                for video in videoSplitList:
+                    true_value = video.strip().replace("'", "").replace("[", "").replace("]", "")
+                    if true_value:
+                        trueVideoList.append(int(true_value))
+                for video in trueVideoList:
+                    if(video != ''):
+                        print(video)
+                        video = Material.objects.get(pk=video)
+                        video.delete()
+
+            # add section
+            if(len(add_file) > 0 and add_file != ['']):
+                for file in add_file:
+                    file_mat = Material.objects.create(content = content, file_path = file, video_url = '')
+            if(len(add_video) > 0 and add_video != ['']):
+                for video in add_video:
+                    emvideo = video.replace('/watch?v=', '/embed/')
+                    video_mat = Material.objects.create(content = content, file_path = "", video_url = emvideo)
+            return redirect('Course_Detail', course_id=courseid) 
         return render(request, 'Edit_Topic.html')
+
 
 class profile(LoginRequiredMixin, View):
     login_url = '/Login/'

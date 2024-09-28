@@ -120,7 +120,6 @@ class CreateTopic(ModelForm):
     content_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
     description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}))
     video_url = forms.CharField(required=False, widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
-    # file_path = forms.FileField(widget = MultipleFileInput())
     file_path = forms.FileField(required=False)
     
     class Meta:
@@ -130,3 +129,17 @@ class CreateTopic(ModelForm):
             'video_url'
         ]
 
+class EditContent(ModelForm):
+    content_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
+    description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}))
+    video_url = forms.CharField(required=False, widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
+    file_path = forms.FileField(required=False)
+    del_video = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_video"}))
+    del_file_path = forms.FileField(required=False, widget=forms.HiddenInput(attrs={"id":"del_file_path"})) 
+
+    class Meta:
+        model = Material
+        fields = [
+            'file_path',
+            'video_url'
+        ]
