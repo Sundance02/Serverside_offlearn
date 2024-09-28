@@ -83,10 +83,8 @@ class Choice(models.Model):
 
 class StudentAnswer(models.Model):
     student = models.ForeignKey(User, on_delete=models.CASCADE)
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    choice = models.ForeignKey(Choice, on_delete=models.CASCADE)
-    text_answer = models.CharField(max_length=255, null=True)
+    choice = models.ForeignKey(Choice, on_delete=models.CASCADE, null=True)
     text_answer = models.CharField(max_length=255, null=True)
     submit_date = models.DateTimeField(auto_now_add=True)
 

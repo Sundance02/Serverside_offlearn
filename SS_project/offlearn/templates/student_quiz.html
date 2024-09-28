@@ -1,40 +1,78 @@
 {% extends 'base.html' %}
 {% load static %}
-{% block name %} Teacher Quiz {% endblock %}
+
 {% block content %}
-<div>
-    <div class="grid place-content-center mt-8">
-        <p class="text-5xl font-bold">QUIZ</p>
+<div class="mx-20 mt-10 grid place-items-center">
+    <div class="pt-4 bg-gray-200 rounded-xl mt-4 p-6 grid place-items-center w-[90%]" id="questionContainer">
+        <label class="block text-gray-700 font-semibold mr-2 w-full text-center mb-10">{{ quiz.quiz_name }}</label>
+
+
+            <form method="post" class="w-full" action="{% url 'student_quiz' quiz.id %}" id="question-form">
+                {% csrf_token %}
+                {% for quest in question %}
+                    <div class="bg-white rounded-lg p-6 w-full mb-10 grid place-items-left" id="question_form">
+                        <label class="block text-gray-700 text-2xl mr-2 w-[20%] text-left">{{ forloop.counter }}. {{ quest.question_name }} <p style="font-size: small;">({{ quest.point }} score)</p></label>
+                        {% if quest.question_type == 'Text' %}
+                            <textarea name="{{ quest.id }}" id="{{ forloop.counter }}_{{ quest.id }}"></textarea>
+                        {% else %}
+                            {% for ch in quest.choice_set.all %}
+                            <div class="flex items-center mb-2">
+                                <input type="radio" name="{{ quest.id }}" value="{{ ch.id }}" id="{{ forloop.counter }}_{{ quest.id }}" class="mr-2">
+                                <label for="{{ forloop.counter }}_{{ quest.id }}" class="text-gray-700">{{ ch.choice_name }}</label>
+                            </div>
+                            {% endfor %}
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            
+
+        <div class="mb-4 flex justify-center w-full">
+            <button class="grid place-items-center bg-red-500 w-[5%] rounded-full" style="color: white;"
+                type="submit">Save</button>
+        </div>
     </div>
 </div>
-<div class="mx-12 mt-10">
-    <div class="pt-4 bg-gray-200 rounded-xl mt-12 p-6">
-        <!-- Quiz 1 -->
-        <a href="#">
-            <div class="bg-white rounded-xl grid grid-cols-6 py-6 pl-6 pr-4 hover:bg-gray-300 mb-4">
-                <p class="text-xl col-span-2 font-bold">ชื่อ QUIZ</p>
-                <p class="text-xl col-span-3 font-bold">กำหนดส่ง --/--/--</p>
-                <p class="text-xl col-span-1 text-right font-bold text-red-600">ยังไม่ตรวจ</p>
-            </div>
-        </a>
-        <!-- Quiz 2 -->
-        <a href="#">
-            <div class="bg-white rounded-xl grid grid-cols-6 py-6 pl-6 pr-4 hover:bg-gray-300 mb-4">
-                <p class="text-xl col-span-2 font-bold">ชื่อ QUIZ</p>
-                <p class="text-xl col-span-3 font-bold">กำหนดส่ง --/--/--</p>
-                <p class="text-xl col-span-1 text-right font-bold text-green-600">ตรวจเเล้ว 15/20</p>
-            </div>
-        </a>
+</form>
+{% endblock %}
 
-        <a href="#">
-            <div class="bg-white rounded-xl grid grid-cols-6 py-6 pl-6 pr-4 hover:bg-gray-300 mb-4">
-                <p class="text-xl col-span-2 font-bold">ชื่อ QUIZ</p>
-                <p class="text-xl col-span-3 font-bold">กำหนดส่ง --/--/--</p>
-                <p class="text-xl col-span-1 text-right font-bold text-green-600">ตรวจเเล้ว 18/20</p>
+{% block script %}
+<script>
+    const clearBtn = `<button class="bg-red-500 rounded-full text-white font-normal text-base text-center w-[100px] place-self-center" style="cursor: pointer; background-color: rgb(233, 111, 111); color: white;" onclick="removeForm(this)">Clear</button>`;
+    let counter = 0;
+    document.querySelectorAll('#formset-form').forEach((div) => {
+        if (counter > 1) {
+            div.innerHTML += clearBtn;
+        }
+        counter += 1;
+    });
+
+    document.getElementById('addChoice').addEventListener('click', function () {
+        var totalForms = document.getElementById('id_form-TOTAL_FORMS');
+        var formCount = parseInt(totalForms.value);
+
+        const formHTML = `
+            <div class="space-x-5 col-span-6 mb-4 flex justify-left" id="formset-form">
+                <input type="text" name="form-${formCount}-choice_name" id="id_form-${formCount}-choice_name" placeholder="Enter Choice" class="rounded-md bg-gray-200" />
+                <input type="checkbox" name="form-${formCount}-is_correct" id="id_form-${formCount}-is_correct" class="rounded-md bg-gray-200 border" />
+                <button class="bg-red-500 rounded-full text-white font-normal text-base text-center w-[100px] place-self-center" style="cursor: pointer; background-color: rgb(233, 111, 111); color: white;" onclick="removeForm(this)">Clear</button>
             </div>
-        </a>
+            `;
 
-    </div>
-</div>
+        document.getElementById('addChoice').insertAdjacentHTML('beforebegin', formHTML);
 
+        totalForms.value = formCount + 1;
+    });
+
+    function removeForm(button) {
+        const form = button.parentNode;
+
+        if (form) {
+            form.remove();
+
+            const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+            totalForms.value = parseInt(totalForms.value) - 1;
+        }
+    }
+
+</script>
 {% endblock %}
