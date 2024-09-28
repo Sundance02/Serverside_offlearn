@@ -439,8 +439,6 @@ class student_quiz(LoginRequiredMixin, View):
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
         question = Question.objects.filter(quiz = quiz).order_by('id')
-        textanswer = TextAnswerForm()
-        choiceanswer = ChoiceAnswerForm()
         return render(request, 'student_quiz.html', {'question': question, 'quiz': quiz, 'textanswerform': textanswer})
     
     def post(self, request, quiz_id):
