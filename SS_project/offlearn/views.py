@@ -439,7 +439,7 @@ class student_quiz(LoginRequiredMixin, View):
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
         question = Question.objects.filter(quiz = quiz).order_by('id')
-        return render(request, 'student_quiz.html', {'question': question, 'quiz': quiz, 'textanswerform': textanswer})
+        return render(request, 'student_quiz.html', {'question': question, 'quiz': quiz})
     
     def post(self, request, quiz_id):
         user = User.objects.get(pk=request.user.id)
