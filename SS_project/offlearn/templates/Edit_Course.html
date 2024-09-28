@@ -15,7 +15,7 @@
 
 
         <div class="rounded-md bg-[#F4F4F4] w-[1141px] p-8 place-self-center font-medium grid grid-cols-1 mb-4">
-            <form method="post" enctype="multipart/form-data">
+            <form method="post" enctype="multipart/form-data" id="edit_course_form">
                 {%csrf_token%}
                 <div class="rounded-md bg-white m-8 p-8 text-xl">
                     <div id="input-name" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
@@ -35,39 +35,64 @@
                             <h6> รูปหน้าปกคอร์ส </h6>
                         </label>
 
-                        <div class="col-span-3 flex space-x-4">
+                        <div class="col-span-2">
                             <!-- <input id="upload-profile" onchange="updatefile()" type="file" class="rounded-full w-[150px] hidden"> -->
                             {{form.course_image}}
-                            <!-- <label id="label-upload" for="upload-profile"
-                                class="flex rounded-full bg-[#FFDADA] py-2 px-4 w-[200px]">
-                                <img id="icon-file" src="{% static '/images/add_file_icon.svg' %}" alt="" class="flex-none">
-                                <p id="p-file-name"
-                                    class="underline underline-offset-4 text-md text-center flex-grow font-normal truncate"
-                                    id="uploadfile"> Upload file </p>
-                            </label>
-                            <div id="show-file-name" class="text-[#B9B9B9] box-border pt-4 text-base truncate">
-                                อัตราส่วนรูปภาพเป็น 16:9
-                            </div> -->
-
                         </div>
                     </div>
-                    <div id="input-teacher" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
-                        <label for="teacherCourse"> เพิ่มอาจารย์ผู้สอน </label>
-                        <div class="bg-white col-span-3 rounded-full p-1 flex space-x-4" id="teacher">
 
-                            <label id="add-teacher" class="flex justify-center flex-none">
-                                {{form.add_instructors}}
-                            </label>
+                    <script>
+                        let teacher_list = []
+
+                        function remove_teacher(teacherid) {
+                            teacher_list.push(teacherid)
+                            console.log(teacher_list)
+                            const t_div = document.getElementById('teacher_container_'+teacherid)
+                            t_div.style.display = 'none';
+                        }
+
+                        function submitform (){
+                            document.getElementById('del_instructors').value = teacher_list
+                            document.getElementById('edit_course_form').submit();
+                        }
+                    </script>
+                    
+                    <div class="col-span-2">
+                        <h6>อาจารย์ผู้สอนที่มีอยู่</h6>
+                        <div class="grid grid-cols-2 gap-6 mt-4">
+                            {% for teacher in teachers %}
+                            <div class="flex items-center justify-between p-6 bg-[#F4F4F4] rounded-md"
+                                id="teacher_container_{{ teacher.id }}">
+                                <p class=" text-lg">{{ teacher.first_name }} {{ teacher.last_name }}</p>
+                                {{form.del_instructors}}
+                                <button type="button"
+                                    class="bg-[#D9272E] hover:bg-red-600 text-white font-medium py-1 px-4 rounded-md"
+                                    onclick="remove_teacher('{{teacher.id}}')" id="{{teacher.id}}" name="del_instructors"
+                                    value="{{teacher.id}}">ลบ</button>
+
+                            </div>
+                            {% endfor %}
                         </div>
                     </div>
-                </div>
 
-                <div class="flex items-center justify-center">
-                    <button class="register bg-[#D9272E] text-white px-6 py-3 mt-5 rounded-full w-[200px]"
-                        type="submit">สร้างคอร์ส</button>
+                    <br>
+
+                    <label for="teacherCourse"> เพิ่มอาจารย์ผู้สอน </label>
+                    <div class="bg-white col-span-3 rounded-full p-1 flex space-x-4" id="teacher">
+
+                        <label id="add-teacher" class="flex justify-center flex-none">
+                            {{form.add_instructors}}
+                        </label>
+                    </div>
                 </div>
-            </form>
         </div>
+
+        <div class="flex items-center justify-center">
+            <button class="register bg-[#D9272E] text-white px-6 py-3 mt-5 rounded-full w-[200px]"
+                type="submit"  onclick="submitform()">เเก้ไขคอร์ส</button>
+        </div>
+        </form>
+    </div>
 
     </div>
     {% endblock%}

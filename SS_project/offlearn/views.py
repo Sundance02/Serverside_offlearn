@@ -67,7 +67,8 @@ class create_course(LoginRequiredMixin, View):
     permission_required = ["offlearn.add_course"]
     def get(self, request):
         form = CreateCourse()
-        teacher = User.objects.filter(user_info__role="Instructor")
+        form.fields['add_instructors'].queryset= User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
+        teacher = User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
         teacher_list = list(teacher.values('first_name', 'id'))
         return render(request, 'Create_Course.html', {"form":form, "teacher":teacher_list})
     def post(self, request):
@@ -79,9 +80,11 @@ class create_course(LoginRequiredMixin, View):
             course = form.save()
             owner_teacher = User.objects.get(pk=request.user.id)
             course.user_course.add(owner_teacher)
-            for i in teacher:
-                course.user_course.add(i)
-                course.save()
+            print(teacher)
+            if(teacher != ['']):
+                for i in teacher:
+                    course.user_course.add(i)
+                    course.save()
             return redirect('show_course')
         return render(request, 'Create_Course.html')
 
@@ -90,8 +93,43 @@ class edit_course(LoginRequiredMixin, View):
     login_url = '/Login/'
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)
-        form = CreateCourse(instance=course)
+        form = EditCourse(instance=course)
+        teacher_incourse = User.objects.filter(course__id = course_id)
+        return render(request, 'Edit_Course.html', {"form":form, "course":course, "teachers":teacher_incourse})
+    def post(self, request, course_id):
+        course = Course.objects.get(pk=course_id)
+        form = EditCourse(request.POST, request.FILES,instance=course)
+        if(form.is_valid()):
+            form.save()
+            add_teacher = request.POST.getlist('add_instructors')
+            del_teacher = request.POST.getlist('del_instructors')
+            print(add_teacher)
+            print(del_teacher)
+        if(len(add_teacher)  > 0 and add_teacher != ['']):
+                print('เข้าadd')
+                for i in add_teacher:
+                    course.user_course.add(i)
+                    course.save()
+        if(len(del_teacher)  > 0 and del_teacher != ['']):
+                print('เข้าdel')
+                print(del_teacher)
+                splitlist = str(del_teacher).split(',')
+                print(splitlist)                
+                true_teacher_list = []
+                for item in splitlist:
+                    true_value = item.strip().replace("'", "").replace("[", "").replace("]", "")
+                    if true_value:
+                        true_teacher_list.append(int(true_value))
+                for i in true_teacher_list:
+                    print(i)
+                    if(i != ''):
+                        del_t = User.objects.get(pk=i)
+                        course.user_course.remove(del_t)
+                        course.save()        
+                return render(request, 'show_selected_course.html',{"course":course})
         return render(request, 'Edit_Course.html', {"form":form, "course":course})
+
+    
 
 class create_topic(LoginRequiredMixin, View):
     login_url = '/Login/'
