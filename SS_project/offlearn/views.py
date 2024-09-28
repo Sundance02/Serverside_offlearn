@@ -77,7 +77,7 @@ class create_course(LoginRequiredMixin, View):
             owner_teacher = User.objects.get(pk=request.user.id)
             course.user_course.add(owner_teacher)
             teachers = form.cleaned_data['add_instructors']
-            course.user_course.add(teachers)
+            # course.user_course.add(teachers)
             course.save()
             return redirect('show_course')
         return render(request, 'Create_Course.html')

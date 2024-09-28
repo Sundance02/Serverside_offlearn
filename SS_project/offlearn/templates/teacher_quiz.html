@@ -13,6 +13,7 @@
     </a>
     <div class="pt-4 bg-gray-200 rounded-xl mt-4 p-6">
         <!-- Quiz 1 -->
+        {% if quiz %}
         {% for q in quiz %}
             <a href="{% url 'question_list' q.id %}">
                 <div class="bg-white rounded-xl grid grid-cols-6 py-6 pl-6 pr-4 hover:bg-gray-300 mb-4">
@@ -22,6 +23,9 @@
                 </div>
             </a>
         {% endfor %}
+        {% else %}
+        <p class="text-center text-gray-500">No quiz available.</p>
+        {% endif %}
 
     </div>
 </div>
