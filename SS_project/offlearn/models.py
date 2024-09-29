@@ -80,8 +80,18 @@ class Choice(models.Model):
         return self.choice_name
 
 
+class QuizScore(models.Model):
+    student = models.ForeignKey(User, on_delete=models.CASCADE)
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    score = models.IntegerField()
+
+    def __str__(self):
+        return f"Score: {self.score} for {self.quiz.quiz_name}"
+    
 
 class StudentAnswer(models.Model):
+    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
+    score = models.ForeignKey(QuizScore, on_delete=models.CASCADE, null=True)
     student = models.ForeignKey(User, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     choice = models.ForeignKey(Choice, on_delete=models.CASCADE, null=True)
@@ -90,14 +100,3 @@ class StudentAnswer(models.Model):
 
     def __str__(self):
         return self.text_answer
-
-
-
-class QuizScore(models.Model):
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
-    student = models.ForeignKey(User, on_delete=models.CASCADE)
-    quiz = models.ForeignKey(Quiz, on_delete=models.CASCADE)
-    score = models.IntegerField()
-
-    def __str__(self):
-        return f"Score: {self.score} for {self.quiz.quiz_name}"

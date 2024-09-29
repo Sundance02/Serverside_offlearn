@@ -272,20 +272,6 @@ class Student_List(LoginRequiredMixin, View):
         return render(request, 'student_list.html', context)
     
 
-class teacher_quiz(LoginRequiredMixin, View):
-    login_url = '/Login/'
-    def get(self, request, course_id):
-        course = Course.objects.get(pk=course_id)
-        quiz = Quiz.objects.filter(course = course)
-        return render(request, 'teacher_quiz.html', {'quiz': quiz, 'course': course})
-    
-class teacher_quiz_detail(LoginRequiredMixin, View):
-    login_url = '/Login/'
-    def get(self, request, course_id):
-        course = Course.objects.get(pk=course_id)
-        quiz = Quiz.objects.filter(course = course)
-        return render(request, 'teacher_quiz_detail.html', {'quiz': quiz})
-    
 class student_quiz(LoginRequiredMixin, View):
     login_url = '/Login/'
     def get(self, request):
@@ -433,6 +419,7 @@ class edit_question(View):
         
         return render(request, 'edit_question.html', {'question': question, 'questionform': questionform})
 
+
 class student_quiz(LoginRequiredMixin, View):
     login_url = '/Login/'
 
@@ -448,8 +435,36 @@ class student_quiz(LoginRequiredMixin, View):
         for q in question:
             ans =  request.POST.get(str(q.id))
             if q.question_type == 'Text':
-                StudentAnswer.objects.create(student = user, question = q, choice = None, text_answer = ans)
+                StudentAnswer.objects.create(quiz = quiz, student = user, question = q, choice = None, text_answer = ans)
             elif q.question_type == 'Choice':
                 cc = Choice.objects.get(pk=int(ans))
-                StudentAnswer.objects.create(student = user, question = q, choice = cc, text_answer = None)
+                StudentAnswer.objects.create(quiz = quiz, student = user, question = q, choice = cc, text_answer = None)
         return redirect("student_quiz", quiz_id)
+    
+
+class teacher_quiz(LoginRequiredMixin, View):
+    login_url = '/Login/'
+    def get(self, request, course_id):
+        course = Course.objects.get(pk=course_id)
+        quiz = Quiz.objects.filter(course = course)
+        return render(request, 'quiz_list.html', {'quiz': quiz, 'course': course})
+
+
+class teacher_quiz_student_list(LoginRequiredMixin, View):
+    login_url = '/Login/'
+    def get(self, request, quiz_id):
+        quiz = Quiz.objects.get(pk=quiz_id)
+        student_answer = StudentAnswer.objects.filter(quiz=quiz).distinct('student')
+        return render(request, 'teacher_quiz_student_list.html', {'quiz': quiz, 'student_answer': student_answer})
+
+
+class teacher_add_studentscore(View):
+
+    def get(self, request, quiz_id, student_id):
+        quiz = Quiz.objects.get(pk=quiz_id)
+        student = User.objects.get(pk=student_id)
+        student_answer = StudentAnswer.objects.filter(quiz=quiz, student=student, choice=None)
+        return render(request, 'teacher_add_studentscore.html', {'student_answer': student_answer, 'quiz': quiz, 'student': student})
+
+    def post(self, request, quiz_id, student_id):
+        pass
