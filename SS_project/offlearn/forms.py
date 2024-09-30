@@ -20,6 +20,14 @@ class AddQuizForm(ModelForm):
         model = Quiz
         fields = ['quiz_name', 'max_point', 'deadline']
 
+    def clean_deadline(self):
+        data = self.cleaned_data['deadline']
+        current_datetime = datetime.now()
+        if data < current_datetime:
+            raise ValidationError("The deadline date and time must not be in the past.")
+
+        return data
+
 
 class AddQuestionForm(ModelForm):
 

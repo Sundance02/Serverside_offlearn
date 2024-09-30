@@ -358,7 +358,8 @@ class student_quiz_detail(LoginRequiredMixin, View):
         return render(request, 'student_quiz_detail.html')
     
 
-class create_quiz(View):
+class create_quiz(LoginRequiredMixin, View):
+    login_url = '/Login/'
 
     def get(self, request, course_id):
         quizform = AddQuizForm()
@@ -378,7 +379,8 @@ class create_quiz(View):
         return render(request, 'Create_Quiz.html', {'form': form, 'course': course})
     
 
-class add_choice_question(View):
+class add_choice_question(LoginRequiredMixin, View):
+    login_url = '/Login/'
 
     def get(self, request, quiz_id):
 
@@ -409,7 +411,8 @@ class add_choice_question(View):
         print(formset.errors)
         return render(request, 'choice_question.html', {'questionform': questionform, 'choiceform': formset, 'quiz': quiz})
 
-class add_context_question(View):
+class add_context_question(LoginRequiredMixin, View):
+    login_url = '/Login/'
 
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
@@ -430,7 +433,8 @@ class add_context_question(View):
         return render(request, 'context_question.html', {'questionform': form, 'quiz': quiz})
 
 
-class question_list(View):
+class question_list(LoginRequiredMixin, View):
+    login_url = '/Login/'
 
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
@@ -438,7 +442,8 @@ class question_list(View):
         return render(request, 'Question_list.html', {'quiz': quiz, 'question': question})
 
 
-class edit_question(View):
+class edit_question(LoginRequiredMixin, View):
+    login_url = '/Login/'
 
     def get(self, request, question_id):
         question = Question.objects.get(pk=question_id)
@@ -528,7 +533,8 @@ class teacher_quiz_student_list(LoginRequiredMixin, View):
         return render(request, 'teacher_quiz_student_list.html', {'quiz': quiz, 'student_answer': student_answer})
 
 
-class teacher_add_studentscore(View):
+class teacher_add_studentscore(LoginRequiredMixin, View):
+    login_url = '/Login/'
 
     def get(self, request, quiz_id, student_id):
         quiz = Quiz.objects.get(pk=quiz_id)
