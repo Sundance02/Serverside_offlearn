@@ -1,4 +1,5 @@
 from datetime import *
+from django.utils import timezone
 from django import forms
 from .models import *
 from django.forms import ModelForm, ValidationError
@@ -21,8 +22,8 @@ class AddQuizForm(ModelForm):
         fields = ['quiz_name', 'max_point', 'deadline']
 
     def clean_deadline(self):
-        data = self.cleaned_data['deadline']
-        current_datetime = datetime.now()
+        data = self.cleaned_data.get('deadline')
+        current_datetime = timezone.now()
         if data < current_datetime:
             raise ValidationError("The deadline date and time must not be in the past.")
 
@@ -37,6 +38,7 @@ class AddQuestionForm(ModelForm):
     class Meta:
         model = Question
         fields = ['question_name', 'point', 'question_type']
+
 
 class AddChoiceForm(ModelForm):
 
