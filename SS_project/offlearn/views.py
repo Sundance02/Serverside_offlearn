@@ -62,7 +62,7 @@ class searched_course(View):
 
 
     
-class create_course(LoginRequiredMixin, View):
+class create_course(LoginRequiredMixin, PermissionRequiredMixin,View):
     login_url = '/Login/'
     permission_required = ["offlearn.add_course"]
     def get(self, request):
@@ -89,8 +89,9 @@ class create_course(LoginRequiredMixin, View):
         return render(request, 'Create_Course.html')
 
 
-class edit_course(LoginRequiredMixin, View):
+class edit_course(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ["offlearn.change_course"]
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)
         form = EditCourse(instance=course)
@@ -134,9 +135,18 @@ class edit_course(LoginRequiredMixin, View):
         return redirect('Course_Detail', course_id=course.id)
 
     
-
-class create_topic(LoginRequiredMixin, View):
+class delete_course(LoginRequiredMixin, PermissionRequiredMixin,View):
     login_url = '/Login/'
+    permission_required = ["offlearn.delete_course"]
+    def get(self, request, course_id):
+        course = Course.objects.get(pk = course_id)
+        course.delete()
+        return redirect('show_course')  #redirect ให้มัน refresh หน้าใหม่
+
+
+class create_topic(LoginRequiredMixin, PermissionRequiredMixin,View):
+    login_url = '/Login/'
+    permission_required = ["offlearn.add_content"]
     def get(self, request, course_id):
         form = CreateTopic()
         print("เข้า get")
@@ -158,8 +168,9 @@ class create_topic(LoginRequiredMixin, View):
             return redirect('Course_Detail', course_id=course.id)  #redirect ให้มัน refresh หน้าใหม่
         return render(request, 'Create_Topic.html',{"form":form, "course_id":course_id})        
 
-class edit_topic(LoginRequiredMixin, View):
+class edit_topic(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ["offlearn.change_content"]
     def get(self, request, topic_id):
         content = Content.objects.get(pk=topic_id)
         material = Material.objects.filter(content = content)
@@ -229,6 +240,17 @@ class edit_topic(LoginRequiredMixin, View):
         return render(request, 'Edit_Topic.html')
 
 
+class delete_topic(LoginRequiredMixin, PermissionRequiredMixin,View):
+    login_url = '/Login/'
+    permission_required = ["offlearn.delete_content"]
+    def get(self, request, topic_id):
+        content = Content.objects.get(pk = topic_id)
+        course = Course.objects.get(pk = content.course.id)
+        content.delete()
+        return redirect('Course_Detail', course_id=course.id)  #redirect ให้มัน refresh หน้าใหม่
+
+
+
 class profile(LoginRequiredMixin, View):
     login_url = '/Login/'
     def get(self, request):
@@ -238,20 +260,22 @@ class profile(LoginRequiredMixin, View):
 class view_description (View):
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)
-        context = {"course":course}
+        teacher = User.objects.filter(user_info__role = 'Instructor', course__id = course_id)
+        context = {"course":course, "teacher":teacher}
         return render(request, 'view_description.html', context)
     
-class enroll(LoginRequiredMixin, View):
+class enroll(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ["offlearn.enroll_course"]
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)
         student = User.objects.get(pk=request.user.id)
         student.course_set.add(course)
-        context = {"course":course}
-        return render(request, 'show_selected_course.html', context)
+        return redirect('Course_Detail', course_id=course_id) 
     
-class quit(LoginRequiredMixin, View):
+class quit(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ["offlearn.quit_course"]
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)
         student = User.objects.get(pk=request.user.id)
@@ -270,13 +294,12 @@ class Course_Detail(LoginRequiredMixin, View):
         print(incourse)
         # exists เอาไว้เช็คว่าที่ filter นั้นมีข้อมูลไหม
         if(incourse.exists()):
-            print('incourse')
+            print('อยู่ในคอร์ส')
             return render(request, 'show_selected_course.html', context)
-        # อย่าลืม teacher
-        return render(request, 'view_description.html', context)
+        return redirect('view_description', course_id)
 
 
-class Changepassword(View):
+class Changepassword(LoginRequiredMixin, View):
     def get(self, request):
         form = Changepasswordform(request.user)
         return render(request, 'Change.html', {"form": form})
@@ -304,7 +327,12 @@ class Register(View):
         if form.is_valid():
             user = form.save()
             group = Group.objects.get(name='Student')
-            User_Info.objects.create(user = user, role="Student", profile_image= form.cleaned_data['profile_image'])
+            print('test')
+            print(user.id)
+            if(form.cleaned_data['profile_image']):
+                User_Info.objects.create(user = user, role="Student", profile_image= form.cleaned_data['profile_image'])
+            else:
+                User_Info.objects.create(user = user, role="Student", profile_image= 'default.jpg')
             user.groups.add(group)
             user.save()
             messages.success(request, 'Account created successfully')  
@@ -325,15 +353,16 @@ class Login(View):
             return redirect('show_course')
         return render(request, 'Login.html', {"form": form})
 
-class Logout(View):
+class Logout(LoginRequiredMixin, View):
     def get(self, request):
         logout(request)
         return redirect('show_course')
     
 
 
-class Student_List(LoginRequiredMixin, View):
+class Student_List(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ["offlearn.view_student"]
     def get(self, request, course_id):
 
         student = User.objects.filter(course__id = course_id, user_info__role = "Student")

@@ -15,9 +15,13 @@
 <body class="font-body">
     {% block content %}
     <div class="grid grid-cols-1 gap-8 my-8">
-
-        <p class="text-center text-4xl text-black font-semibold" id="title"> เเก้ไขเนื้อหาเรียน </p>
-
+        <div class="grid grid-cols-6 gap-8 my-8">
+            <p class="text-end text-4xl text-black font-semibold col-span-4 pr-32" id="title"> เเก้ไขเนื้อหาเรียน </p>
+            <div class="flex justify-end col-span-2 pl-8">
+                <button class="register bg-[#D9272E] text-white px-6 py-3  mr-8 rounded-full w-[200px] " 
+                    ><a href="{% url 'delete_topic' contents.id %}">ลบเนื้อหา</a></button>
+            </div>
+        </div>
         <div class="rounded-md bg-[#F4F4F4] w-[1141px] p-8 place-self-center font-medium">
             <div class="rounded-md bg-white m-8 p-8 text-xl">
                 <form action="" method="post" enctype="multipart/form-data" id="edit_content_form">
@@ -33,7 +37,6 @@
                         <label for="descriptionCourse">
                             <h6> รายละเอียด </h6>
                         </label>
-                        <!-- <textarea name="Description" id="description" cols="30" rows="5" class="bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4"></textarea> -->
                         {{form.description}}
                     </div>
                     <div id="input-description" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
@@ -108,7 +111,7 @@
                             <div class="flex items-center justify-between p-6 bg-[#F4F4F4] rounded-md"
                                 id="file_material_container_{{ material.id }}">
                                 <a class="underline" href="{{material.file_path.url}}"
-                                    download>{{material.file_path}}</a>
+                                    target="_blank">{{material.file_path}}</a>
                                 {{form.del_file_path}}
                                 <button type="button"
                                     class="bg-[#D9272E] hover:bg-red-600 text-white font-medium py-1 px-4 rounded-md"
@@ -127,7 +130,8 @@
                             {% if material.video_url != '' %}
                             <div class="flex items-center justify-between p-6 bg-[#F4F4F4] rounded-md"
                                 id="video_material_container_{{ material.id }}">
-                                <a class="underline" href="{{ material.video_url }}" download>{{ material.video_url}}</a>
+                                <a class="underline" href="{{ material.video_url }}" download>
+                                    {{material.video_url}}</a>
                                 {{form.del_video}}
                                 <button type="button"
                                     class="bg-[#D9272E] hover:bg-red-600 text-white font-medium py-1 px-4 rounded-md"
@@ -144,7 +148,6 @@
                         <button class="register bg-[#D9272E] text-white px-6 py-3 mt-12 rounded-full w-[200px] mt-12"
                             type="submit" onclick="submitform()">เเก้ไขเนื้อหา</button>
                     </div>
-
                 </form>
             </div>
         </div>

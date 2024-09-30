@@ -54,19 +54,17 @@
                 <a href="{% url 'teacher_quiz' course.id %}">
                     <button class="rounded-xl ring-1 ring-gray-500 bg-whitetext-black px-16 py-4" onclick="">QUIZ</button>
                 </a>
-                {% if perms.offlearn.view_studentincourse %}
+                {% if perms.offlearn.view_student %}
                 <button class="rounded-xl ring-1 ring-gray-500 bg-whitetext-black px-16 py-4 "><a href="{% url 'student_list' course.id %}">นักเรียนในคอร์สเรียน</a></button>
                 {% endif %}
             </div>
 
         </div>
     </div>
-    <!-- topics -->
     {% for content in contents %}
     <div class="bg-slate-200 rounded-xl shadow-md my-8 mx-8 p-8 place-self-center w-full">
         
         <div class="bg-white rounded-xl p-10">
-            <!-- topics details -->
             <div class="pb-6">
                 <p class="text-3xl pb-2"><b>{{content.content_name}}</b></p>
                 <p>
