@@ -12,6 +12,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib import messages
 from django.contrib.auth import logout, login
 from django.contrib.auth.models import Group
+from django.db.models import Sum
 
 class show_course(View):
     def get(self, request):
@@ -387,7 +388,8 @@ class student_quiz_detail(LoginRequiredMixin, View):
         return render(request, 'student_quiz_detail.html')
     
 
-class create_quiz(View):
+class create_quiz(LoginRequiredMixin, View):
+    login_url = '/Login/'
 
     def get(self, request, course_id):
         quizform = AddQuizForm()
@@ -407,7 +409,8 @@ class create_quiz(View):
         return render(request, 'Create_Quiz.html', {'form': form, 'course': course})
     
 
-class add_choice_question(View):
+class add_choice_question(LoginRequiredMixin, View):
+    login_url = '/Login/'
 
     def get(self, request, quiz_id):
 
@@ -419,26 +422,33 @@ class add_choice_question(View):
     def post(self, request, quiz_id):
 
         questionform = AddQuestionForm(request.POST)
+        exist_point = Question.objects.filter(quiz_id = quiz_id).aggregate(total_point = Sum('point'))['total_point'] or 0
         quiz = Quiz.objects.get(pk=quiz_id)
         ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm, extra=10)
         formset = ChoiceFormSet(request.POST, queryset=Choice.objects.none())
 
         if questionform.is_valid() and formset.is_valid():
-            quest = questionform.save(commit=False)
-            quest.quiz = quiz
-            quest.save()
 
-            for form in formset:
-                choice = form.save(commit=False)
-                choice.question = quest
-                choice.save()
+            # Point Validation
+            if questionform.cleaned_data['point'] + exist_point > quiz.max_point:
+                questionform.add_error('point', ValidationError(f"Points exceed the maximum allowed for this quiz. You can add up to {quiz.max_point - exist_point} more points."))
+            else:
+                quest = questionform.save(commit=False)
+                quest.quiz = quiz
+                quest.save()
 
-            return redirect('question_list', quiz_id)
+                for form in formset:
+                    choice = form.save(commit=False)
+                    choice.question = quest
+                    choice.save()
 
-        print(formset.errors)
+                return redirect('question_list', quiz_id)
+
+        # print(formset.errors)
         return render(request, 'choice_question.html', {'questionform': questionform, 'choiceform': formset, 'quiz': quiz})
 
-class add_context_question(View):
+class add_context_question(LoginRequiredMixin, View):
+    login_url = '/Login/'
 
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
@@ -449,17 +459,24 @@ class add_context_question(View):
 
         form = AddQuestionForm(request.POST)
         quiz = Quiz.objects.get(pk=quiz_id)
+        exist_point = Question.objects.filter(quiz_id = quiz_id).aggregate(total_point = Sum('point'))['total_point'] or 0
 
         if form.is_valid():
-            quest = form.save(commit=False)
-            quest.quiz = Quiz.objects.get(pk=quiz_id)
-            quest.save()
-            return redirect('question_list', quiz_id)
-        print(form.errors)
+
+            # Point Validation
+            if form.cleaned_data['point'] + exist_point > quiz.max_point:
+                form.add_error('point', ValidationError(f"Points exceed the maximum allowed for this quiz. You can add up to {quiz.max_point - exist_point} more points."))
+            else:
+                quest = form.save(commit=False)
+                quest.quiz = Quiz.objects.get(pk=quiz_id)
+                quest.save()
+                return redirect('question_list', quiz_id)
+        # print(form.errors)
         return render(request, 'context_question.html', {'questionform': form, 'quiz': quiz})
 
 
-class question_list(View):
+class question_list(LoginRequiredMixin, View):
+    login_url = '/Login/'
 
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
@@ -467,7 +484,8 @@ class question_list(View):
         return render(request, 'Question_list.html', {'quiz': quiz, 'question': question})
 
 
-class edit_question(View):
+class edit_question(LoginRequiredMixin, View):
+    login_url = '/Login/'
 
     def get(self, request, question_id):
         question = Question.objects.get(pk=question_id)
@@ -484,31 +502,35 @@ class edit_question(View):
     def post(self, request, question_id):
         question = Question.objects.get(pk=question_id)
         questionform = AddQuestionForm(request.POST)
+        exist_point = Question.objects.filter(quiz_id = question.quiz.id).aggregate(total_point = Sum('point'))['total_point'] or 0
 
         if questionform.is_valid():
-            question.question_name = questionform.cleaned_data['question_name']
-            question.point = questionform.cleaned_data['point']
-            question.save()
+            if questionform.cleaned_data['point'] + (exist_point - question.point) > question.quiz.max_point:
+                questionform.add_error('point', ValidationError(f"Points exceed the maximum allowed for this quiz. You can add up to {question.quiz.max_point - exist_point} more points."))
+            else:
+                question.question_name = questionform.cleaned_data['question_name']
+                question.point = questionform.cleaned_data['point']
+                question.save()
 
-            if question.question_type == 'Choice':
-                ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm, extra=10)
-                formset = ChoiceFormSet(request.POST, queryset=Choice.objects.none())
+                if question.question_type == 'Choice':
+                    ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm, extra=10)
+                    formset = ChoiceFormSet(request.POST, queryset=Choice.objects.none())
 
-                if formset.is_valid():
-                    choice = Choice.objects.filter(question = question)
-                    choice.delete()
+                    if formset.is_valid():
+                        choice = Choice.objects.filter(question = question)
+                        choice.delete()
 
-                    for form in formset:
-                        c = form.save(commit=False)
-                        c.question = question
-                        c.save()
+                        for form in formset:
+                            c = form.save(commit=False)
+                            c.question = question
+                            c.save()
 
-                    return redirect('question_list', question.quiz.id)
-                    
-                print(formset.errors)
-                return render(request, 'edit_question.html', {'question': question, 'questionform': questionform, 'formset': formset})
+                        return redirect('question_list', question.quiz.id)
+                        
+                    print(formset.errors)
+                    return render(request, 'edit_question.html', {'question': question, 'questionform': questionform, 'formset': formset})
 
-            return redirect('question_list', question.quiz.id)
+                return redirect('question_list', question.quiz.id)
         
         if question.question_type == 'Choice':
             ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm)
@@ -557,7 +579,8 @@ class teacher_quiz_student_list(LoginRequiredMixin, View):
         return render(request, 'teacher_quiz_student_list.html', {'quiz': quiz, 'student_answer': student_answer})
 
 
-class teacher_add_studentscore(View):
+class teacher_add_studentscore(LoginRequiredMixin, View):
+    login_url = '/Login/'
 
     def get(self, request, quiz_id, student_id):
         quiz = Quiz.objects.get(pk=quiz_id)
@@ -566,4 +589,22 @@ class teacher_add_studentscore(View):
         return render(request, 'teacher_add_studentscore.html', {'student_answer': student_answer, 'quiz': quiz, 'student': student})
 
     def post(self, request, quiz_id, student_id):
-        pass
+        quiz = Quiz.objects.get(pk=quiz_id)
+        student = User.objects.get(pk=student_id)
+        student_answer = StudentAnswer.objects.filter(quiz=quiz, student=student)
+        total_score = 0
+        for i in student_answer:
+            if i.question.question_type == 'Text':
+                text_score = request.POST.get(str(i.id))
+                total_score += int(text_score)
+            else:
+                if i.choice.is_correct:
+                    total_score += i.question.point
+
+        qq = QuizScore.objects.create(student = student, quiz = quiz, score = total_score)
+        
+        for i in student_answer:
+            i.score = qq
+            i.save()
+        
+        return redirect('teacher_quiz_student_list', quiz_id)

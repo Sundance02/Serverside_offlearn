@@ -33,6 +33,6 @@ urlpatterns = [
     path("edit_question/<int:question_id>/", views.edit_question.as_view(), name="edit_question"),
     path("student_quiz/<int:quiz_id>/", views.student_quiz.as_view(), name="student_quiz"),
     path("teacher_quiz/<int:course_id>/", views.teacher_quiz.as_view(), name="teacher_quiz"),
-    path("teacher_quiz_student_list/<int:quiz_id>/", views.teacher_quiz_student_list.as_view(), name="teacher_quiz_detail"),
+    path("teacher_quiz_student_list/<int:quiz_id>/", views.teacher_quiz_student_list.as_view(), name="teacher_quiz_student_list"),
     path("teacher_add_studentscore/<int:quiz_id>/<int:student_id>/", views.teacher_add_studentscore.as_view(), name="teacher_add_studentscore"),
 ]
