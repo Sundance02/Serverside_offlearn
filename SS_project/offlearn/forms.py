@@ -40,6 +40,13 @@ class AddChoiceForm(ModelForm):
         fields = ['choice_name', 'is_correct']
 
 
+class QuizScoreForm(ModelForm):
+
+    class Meta:
+        model = QuizScore
+        fields = ['score']
+
+
 class Registerform(UserCreationForm):
     first_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4 w-[700px]"}))
     last_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))

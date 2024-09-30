@@ -534,7 +534,26 @@ class teacher_add_studentscore(View):
         quiz = Quiz.objects.get(pk=quiz_id)
         student = User.objects.get(pk=student_id)
         student_answer = StudentAnswer.objects.filter(quiz=quiz, student=student, choice=None)
-        return render(request, 'teacher_add_studentscore.html', {'student_answer': student_answer, 'quiz': quiz, 'student': student})
+        quiz_score = QuizScoreForm()
+        return render(request, 'teacher_add_studentscore.html', {'student_answer': student_answer, 'quiz': quiz, 'student': student, 'quiz_score': quiz_score})
 
     def post(self, request, quiz_id, student_id):
-        pass
+        quiz = Quiz.objects.get(pk=quiz_id)
+        student = User.objects.get(pk=student_id)
+        student_answer = StudentAnswer.objects.filter(quiz=quiz, student=student)
+        total_score = 0
+        for i in student_answer:
+            if i.question.question_type == 'Text':
+                text_score = request.POST.get(str(i.id))
+                total_score += int(text_score)
+            else:
+                if i.choice.is_correct:
+                    total_score += i.question.point
+                    
+        qq = QuizScore.objects.create(student = student, quiz = quiz, score = total_score)
+        
+        for i in student_answer:
+            i.score = qq
+            i.save()
+        
+        return redirect('teacher_quiz_student_list', quiz_id)
