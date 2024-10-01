@@ -9,10 +9,11 @@
             {% csrf_token %}
             {% for i in student_answer %}
             <div class="bg-white rounded-lg p-6 w-full mb-10 grid place-items-left" id="question_form">
-                <p>Question : {{ i.question.question_name }}</p>
-                <p>Student Answer : {{ i.text_answer }}</p>
-                <label for="{{ i.id }}">Score</label>
-                <input name="{{ i.id }}" id="{{ forloop.counter }}_{{ quest.id }}" type="number">
+                <p>Question : {{ i.question.question_name }}</p> <br>
+                <p>Student Answer</p>
+                <p class="bg-gray-200 rounded-md px-3 py-2 w-[70%]">{{ i.text_answer }}</p> <br>
+                <label for="{{ i.id }}">Score ({{ i.question.point }})</label>
+                <input class="bg-gray-200 rounded-md px-3 py-2 w-[20%]" name="{{ i.id }}" id="{{ forloop.counter }}_{{ quest.id }}" type="number" max="{{ i.question.point }}">
             </div>
             {% endfor %}
             <div class="grid place-items-center">

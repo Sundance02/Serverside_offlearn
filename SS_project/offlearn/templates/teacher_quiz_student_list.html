@@ -10,20 +10,28 @@
 <div class="mx-12 mt-10">
     {% for stu in student_answer %}
     {% if not stu.score %}
-    <a href="#">
+    <a href="{% url 'teacher_add_studentscore' stu.quiz.id stu.student.id %}">
         <div class="bg-red-100 rounded-xl place-items-center grid grid-cols-5 py-6 pl-6 pr-4 hover:bg-gray-300 mb-4">
             <p class="text-xl col-span-1 font-bold">ชื่อ : {{ stu.student.first_name }} {{ stu.student.last_name }}</p>
-            <p class="text-xl col-span-2 font-bold">ส่งเมื่อ : {{ stu.submit_date }}</p>
+            {% if stu.submit_date > quiz.deadline %}
+            <p class="text-xl col-span-2 font-bold" style="color: red;">ส่งเมื่อ : {{ stu.submit_date }} (ส่งเกินเวลา)</p>
+            {% else %}
+            <p class="text-xl col-span-2 font-bold" style="color: green;">ส่งเมื่อ : {{ stu.submit_date }}</p>
+            {% endif %}
             <p class="text-xl col-span-1 font-bold">คะแนน : --/{{ quiz.max_point }}</p>
             <p class="text-xl col-span-1 text-right font-bold text-red-600">ยังไม่ตรวจ</p>
         </div>
     </a>
     {% else %}
-    <a href="#">
+    <a href="">
         <div class="bg-green-100 rounded-xl place-items-center grid grid-cols-5 py-6 pl-6 pr-4 hover:bg-gray-300 mb-4">
             <p class="text-xl col-span-1 font-bold">ชื่อ : {{ stu.student.first_name }} {{ stu.student.last_name }}</p>
-            <p class="text-xl col-span-2 font-bold">ส่งเมื่อ : {{ stu.submit_date }}</p>
-            <p class="text-xl col-span-1 font-bold">คะแนน : {{ stu.score }}/{{ quiz.max_point }}</p>
+            {% if stu.submit_date > quiz.deadline %}
+            <p class="text-xl col-span-2 font-bold" style="color: red;">ส่งเมื่อ : {{ stu.submit_date }} (ส่งเกินเวลา)</p>
+            {% else %}
+            <p class="text-xl col-span-2 font-bold" style="color: green;">ส่งเมื่อ : {{ stu.submit_date }}</p>
+            {% endif %}
+            <p class="text-xl col-span-1 font-bold">คะแนน : {{ stu.score.score   }} / {{ quiz.max_point }}</p>
             <p class="text-xl col-span-1 text-right font-bold text-green-600">ตรวจแล้ว</p>
         </div>
     </a>

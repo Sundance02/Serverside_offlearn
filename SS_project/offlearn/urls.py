@@ -26,13 +26,16 @@ urlpatterns = [
     path("quit/<int:course_id>", views.quit.as_view(), name="quit"),
         # Quiz Path
     path("create_quiz/<int:course_id>/", views.create_quiz.as_view(), name="create_quiz"),
+    path("edit_quiz/<int:quiz_id>/", views.edit_quiz.as_view(), name="edit_quiz"),
+    path("delete_quiz/<int:quiz_id>/", views.delete_quiz.as_view(), name="delete_quiz"),
     path("add_choice_question/<int:quiz_id>/", views.add_choice_question.as_view(), name="add_choice_question"),
     path("add_context_question/<int:quiz_id>/", views.add_context_question.as_view(), name="add_context_question"),
     path("question_list/<int:quiz_id>/", views.question_list.as_view(), name="question_list"),
     path("edit_question/<int:question_id>/", views.edit_question.as_view(), name="edit_question"),
-    path("edit_question/<int:question_id>/", views.edit_question.as_view(), name="edit_question"),
+    # path("edit_question/<int:question_id>/", views.edit_question.as_view(), name="edit_question"),
     path("student_quiz/<int:quiz_id>/", views.student_quiz.as_view(), name="student_quiz"),
     path("teacher_quiz/<int:course_id>/", views.teacher_quiz.as_view(), name="teacher_quiz"),
     path("teacher_quiz_student_list/<int:quiz_id>/", views.teacher_quiz_student_list.as_view(), name="teacher_quiz_student_list"),
     path("teacher_add_studentscore/<int:quiz_id>/<int:student_id>/", views.teacher_add_studentscore.as_view(), name="teacher_add_studentscore"),
+    path("delete_question/<int:question_id>/", views.delete_question.as_view(), name="delete_question"),
 ]

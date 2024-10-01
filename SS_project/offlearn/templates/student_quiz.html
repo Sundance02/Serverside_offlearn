@@ -13,7 +13,7 @@
                     <div class="bg-white rounded-lg p-6 w-full mb-10 grid place-items-left" id="question_form">
                         <label class="block text-gray-700 text-2xl mr-2 w-[20%] text-left">{{ forloop.counter }}. {{ quest.question_name }} <p style="font-size: small;">({{ quest.point }} score)</p></label>
                         {% if quest.question_type == 'Text' %}
-                            <textarea name="{{ quest.id }}" id="{{ forloop.counter }}_{{ quest.id }}"></textarea>
+                            <textarea class="bg-gray-200 rounded-md px-3 py-2 w-[70%]" name="{{ quest.id }}" id="{{ forloop.counter }}_{{ quest.id }}"></textarea>
                         {% else %}
                             {% for ch in quest.choice_set.all %}
                             <div class="flex items-center mb-2">

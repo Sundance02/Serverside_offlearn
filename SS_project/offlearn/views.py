@@ -407,6 +407,34 @@ class create_quiz(LoginRequiredMixin, View):
             return redirect('teacher_quiz', course_id)
 
         return render(request, 'Create_Quiz.html', {'form': form, 'course': course})
+
+class edit_quiz(LoginRequiredMixin, View):
+    login_url = '/Login/'
+
+    def get(self, request, quiz_id):
+        quiz = Quiz.objects.get(pk=quiz_id)
+        quizform = AddQuizForm(instance=quiz, initial={'quiz_name': quiz.quiz_name, 'deadline': quiz.deadline, 'max_point': quiz.max_point})
+        return render(request, 'edit_quiz.html', {'quizform': quizform, 'quiz': quiz})
+
+    def post(self, request, quiz_id):
+        quiz = Quiz.objects.get(pk=quiz_id)
+        quizform = AddQuizForm(request.POST)
+        if quizform.is_valid():
+            quiz.quiz_name = quizform.cleaned_data['quiz_name']
+            quiz.deadline = quizform.cleaned_data['deadline']
+            quiz.max_point = quizform.cleaned_data['max_point']
+            quiz.save()
+            return redirect('teacher_quiz', quiz.course.id)
+        return render(request, 'edit_quiz.html', {'quizform': quizform, 'quiz': quiz})
+
+class delete_quiz(LoginRequiredMixin, View):
+    login_url = '/Login/'
+    
+    def post(self, request, quiz_id):
+        if request.POST.get('_method') == 'DELETE':
+            quiz = Quiz.objects.get(pk=quiz_id)
+            quiz.delete()
+            return redirect('teacher_quiz', quiz.course.id)
     
 
 class add_choice_question(LoginRequiredMixin, View):
@@ -482,6 +510,16 @@ class question_list(LoginRequiredMixin, View):
         quiz = Quiz.objects.get(pk=quiz_id)
         question = Question.objects.filter(quiz = quiz)
         return render(request, 'Question_list.html', {'quiz': quiz, 'question': question})
+    
+
+class delete_question(LoginRequiredMixin, View):
+    login_url = '/Login/'
+
+    def post(self, request, question_id):
+        if request.POST.get('_method') == 'DELETE':
+            question = Question.objects.get(pk=question_id)
+            question.delete()
+            return redirect('question_list', question.quiz.id)
 
 
 class edit_question(LoginRequiredMixin, View):
@@ -560,7 +598,7 @@ class student_quiz(LoginRequiredMixin, View):
             elif q.question_type == 'Choice':
                 cc = Choice.objects.get(pk=int(ans))
                 StudentAnswer.objects.create(quiz = quiz, student = user, question = q, choice = cc, text_answer = None)
-        return redirect("student_quiz", quiz_id)
+        return redirect("teacher_quiz", quiz.course.id)
     
 
 class teacher_quiz(LoginRequiredMixin, View):
