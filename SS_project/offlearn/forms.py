@@ -24,7 +24,7 @@ class AddQuizForm(ModelForm):
     def clean_deadline(self):
         data = self.cleaned_data.get('deadline')
         current_datetime = timezone.now()
-        if data < current_datetime:
+        if data <= current_datetime:
             raise ValidationError("The deadline date and time must not be in the past.")
 
         return data

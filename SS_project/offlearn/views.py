@@ -518,6 +518,16 @@ class question_list(LoginRequiredMixin, View):
         quiz = Quiz.objects.get(pk=quiz_id)
         question = Question.objects.filter(quiz = quiz)
         return render(request, 'Question_list.html', {'quiz': quiz, 'question': question})
+    
+
+class delete_question(LoginRequiredMixin, View):
+    login_url = '/Login/'
+
+    def post(self, request, question_id):
+        if request.POST.get('_method') == 'DELETE':
+            question = Question.objects.get(pk=question_id)
+            question.delete()
+            return redirect('question_list', question.quiz.id)
 
 
 class edit_question(LoginRequiredMixin, View):
@@ -596,7 +606,7 @@ class student_quiz(LoginRequiredMixin, View):
             elif q.question_type == 'Choice':
                 cc = Choice.objects.get(pk=int(ans))
                 StudentAnswer.objects.create(quiz = quiz, student = user, question = q, choice = cc, text_answer = None)
-        return redirect("student_quiz", quiz_id)
+        return redirect("teacher_quiz", quiz.course.id)
     
 
 class teacher_quiz(LoginRequiredMixin, View):
