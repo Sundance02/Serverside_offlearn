@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% load static tailwind_tags %}
+<!-- ต้องใช้ข้อมูลด้วยว่าใครเป็นคนสร้างคอร์สเพื่อให้คนๆนั้นเป็น Owner -->
+
+
+<title>{% block name %} Create Course {% endblock %}</title>
+{% tailwind_css %}
+</head>
+
+<body class="font-body">
+    {% block content %}
+    <div class="grid grid-cols-1 gap-8 relative">
+
+        <div class="grid grid-cols-6 gap-8 my-8">
+            <p class="text-end text-4xl text-black font-semibold col-span-4 pr-48" id="title"> เเก้ไขคอร์ส </p>
+            <div class="flex justify-start col-span-2 pl-8">
+                <button class="register bg-[#D9272E] text-white px-6 py-3  mr-8 rounded-full w-[200px] "><a
+                        href="{% url 'delete_course' course.id %}">ลบคอร์ส</a></button>
+            </div>
+        </div>
+
+
+        <div class="rounded-md bg-[#F4F4F4] w-[1141px] p-8 place-self-center font-medium grid grid-cols-1 mb-4">
+            <form method="post" enctype="multipart/form-data" id="edit_course_form">
+                {%csrf_token%}
+                <div class="rounded-md bg-white m-8 p-8 text-xl">
+                    <div id="input-name" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
+                        <label for="nameCourse">
+                            <h6> ชื่อคอร์ส </h6>
+                        </label>
+                        {{form.course_name}}
+                    </div>
+                    <div id="input-description" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
+                        <label for="descriptionCourse">
+                            <h6> รายละเอียดคอร์ส </h6>
+                        </label>
+                        {{form.course_description}}
+                    </div>
+                    <div id="input-profile" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
+                        <label for="profileCourse">
+                            <h6> รูปหน้าปกคอร์ส </h6>
+                        </label>
+
+                        <div class="col-span-2">
+                            <!-- <input id="upload-profile" onchange="updatefile()" type="file" class="rounded-full w-[150px] hidden"> -->
+                            {{form.course_image}}
+                        </div>
+                    </div>
+
+                    <script>
+                        let teacher_list = []
+
+                        function remove_teacher(teacherid) {
+                            teacher_list.push(teacherid)
+                            console.log(teacher_list)
+                            const t_div = document.getElementById('teacher_container_' + teacherid)
+                            t_div.style.display = 'none';
+                        }
+
+                        function submitform() {
+                            document.getElementById('del_instructors').value = teacher_list
+                            document.getElementById('edit_course_form').submit();
+                        }
+                    </script>
+
+                    <div class="col-span-2">
+                        <h6>อาจารย์ผู้สอนที่มีอยู่</h6>
+                        <div class="grid grid-cols-2 gap-6 mt-4">
+                            {% for teacher in teachers %}
+                            <div class="flex items-center justify-between p-6 bg-[#F4F4F4] rounded-md"
+                                id="teacher_container_{{ teacher.id }}">
+                                <p class=" text-lg">{{ teacher.first_name }} {{ teacher.last_name }}</p>
+                                {{form.del_instructors}}
+                                <button type="button"
+                                    class="bg-[#D9272E] hover:bg-red-600 text-white font-medium py-1 px-4 rounded-md"
+                                    onclick="remove_teacher('{{teacher.id}}')" id="{{teacher.id}}"
+                                    name="del_instructors" value="{{teacher.id}}">ลบ</button>
+
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <br>
+                    <script>
+                        function add_teacher(teacher_list) {
+                            const div_container = document.getElementById('addteacher_container')
+                            const inputTeacherField = document.createElement("select")
+                            inputTeacherField.name = 'add_instructors'
+                            console.log(teacher_list)
+                            for (let teacher = 0; teacher < teacher_list.length; teacher++) {
+                                var option = document.createElement("option");
+                                option.value = teacher_list[teacher].id
+                                option.text = teacher_list[teacher].username
+                                inputTeacherField.add(option)
+                            }
+                            div_container.appendChild(inputTeacherField)
+                        }
+                    </script>
+                    <div class="bg-white col-span-3 rounded-full p-1 flex space-x-4" id="addteacher_container">
+                        <button onclick="add_teacher({{all_teacher}})" type="button">+ เพิ่มอาจารย์ผู้สอน</button>
+                        <label id="add-teacher" class="flex justify-center flex-none">
+
+                        </label>
+                    </div>
+                </div>
+        </div>
+
+        <div class="flex items-center justify-center">
+            <button class="register bg-[#D9272E] text-white px-6 py-3 mt-5 rounded-full w-[200px]" type="submit"
+                onclick="submitform()">เเก้ไขคอร์ส</button>
+        </div>
+        </form>
+    </div>
+    {% endblock%}
+</body>
+
+
+
+
+</html>

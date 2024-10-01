@@ -43,15 +43,6 @@
                         </label>
                         <div id="inputvideo-container">
                             <button onclick="addvideoinput()" type="button">+ เพิ่มวิดีโอ</button>
-                            <script>
-                                function addvideoinput() {
-                                    const div_container = document.getElementById('inputvideo-container')
-                                    const inputVideoField = document.createElement("input")
-                                    inputVideoField.classList.add('bg-[#F4F4F4]', 'col-span-3', 'rounded-full', 'text-base', 'py-2', 'px-4', 'mt-6')
-                                    inputVideoField.name = "video_url"
-                                    div_container.appendChild(inputVideoField)
-                                }
-                            </script>
                         </div>
 
 
@@ -63,28 +54,48 @@
                         <!-- <input type="text"> -->
                         <div id="inputfile-container">
                             <button onclick="addfileinput()" type="button">+ เพิ่มไฟล์</button>
-                            <script>
-                                function addfileinput() {
-                                    const div_container = document.getElementById('inputfile-container')
-                                    const inputFileField = document.createElement("input")
-                                    inputFileField.type = "file"
-                                    inputFileField.classList.add('mt-6')
-                                    inputFileField.name = "file_path"
-                                    div_container.appendChild(inputFileField)
-                                }
-                            </script>
                         </div>
                     </div>
 
-                        <div class="flex justify-center">
-                            <button class="register bg-[#D9272E] text-white px-6 py-3 mt-12 rounded-full w-[200px] mt-12"
-                                type="submit">สร้างนื้อหา</button>
-                        </div>
-                    
+                    <div class="flex justify-center">
+                        <button class="register bg-[#D9272E] text-white px-6 py-3 mt-12 rounded-full w-[200px] mt-12"
+                            type="submit">สร้างนื้อหา</button>
+                    </div>
+                    {% if form.errors %}
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                         <p class="text-[#D9272E]">- {{ error|escape }} </p> <br>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <p class="text-[#D9272E]">  - {{ error|escape }} </p> <br>
+                    {% endfor %}
+                    {% endif %}
                 </form>
             </div>
         </div>
         {% endblock %}
 </body>
+
+
+{% block script %}
+<script>
+    function addfileinput() {
+        const div_container = document.getElementById('inputfile-container')
+        const inputFileField = document.createElement("input")
+        inputFileField.type = "file"
+        inputFileField.classList.add('mt-6')
+        inputFileField.name = "file_path"
+        div_container.appendChild(inputFileField)
+    }
+    function addvideoinput() {
+        const div_container = document.getElementById('inputvideo-container')
+        const inputVideoField = document.createElement("input")
+        inputVideoField.classList.add('bg-[#F4F4F4]', 'col-span-3', 'rounded-full', 'text-base', 'py-2', 'px-4', 'mt-6')
+        inputVideoField.name = "video_url"
+        div_container.appendChild(inputVideoField)
+    }
+</script>
+{% endblock %}
 
 </html>

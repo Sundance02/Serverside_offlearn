@@ -53,29 +53,22 @@
 
                         </div>
                     </div>
-                    <script>
-                        function add_teacher(teacher_list){
-                            const div_container = document.getElementById('addteacher_container')
-                            const inputTeacherField = document.createElement("select")
-                            inputTeacherField.name = 'add_instructors'
-                            console.log(teacher_list)
-                            for (let teacher = 0;  teacher< teacher_list.length; teacher++){
-                                var option = document.createElement("option");
-                                option.value = teacher_list[teacher].id
-                                option.text = teacher_list[teacher].username
-                                inputTeacherField.add(option)
-                            }
-                            div_container.appendChild(inputTeacherField)
-                        }
-                    </script>
                     <div id="input-teacher" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
                         <label for="teacherCourse"> เพิ่มอาจารย์ผู้สอน </label>
                         <div class="bg-white col-span-3 rounded-full p-1 flex space-x-4" id="addteacher_container">
-                                <button onclick="add_teacher({{teacher}})" type="button">+ เพิ่มอาจารย์ผู้สอน</button>
-                                <label id="add-teacher" class="flex justify-center flex-none">
-                                </label>
+                            <button onclick="add_teacher({{teacher}})" type="button">+ เพิ่มอาจารย์ผู้สอน</button>
+                            <label id="add-teacher" class="flex justify-center flex-none">
+                            </label>
                         </div>
                     </div>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <p class="text-[#D9272E]">- {{ error|escape }} </p> <br>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <p class="text-[#D9272E]">  - {{ error|escape }} </p> <br>
+                    {% endfor %}
                 </div>
 
                 <div class="flex items-center justify-center">
@@ -90,6 +83,22 @@
 </body>
 
 
-
+{% block script %}
+<script>
+    function add_teacher(teacher_list) {
+        const div_container = document.getElementById('addteacher_container')
+        const inputTeacherField = document.createElement("select")
+        inputTeacherField.name = 'add_instructors'
+        console.log(teacher_list)
+        for (let teacher = 0; teacher < teacher_list.length; teacher++) {
+            var option = document.createElement("option");
+            option.value = teacher_list[teacher].id
+            option.text = teacher_list[teacher].username
+            inputTeacherField.add(option)
+        }
+        div_container.appendChild(inputTeacherField)
+    }
+</script>
+{% endblock%}
 
 </html>

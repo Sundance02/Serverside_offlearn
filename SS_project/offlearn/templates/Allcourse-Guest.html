@@ -74,7 +74,7 @@
 <div class="grid justify-items-center gap-y-12 grid-cols-3 mt-12 mx-48">
     <!-- ข้อมูลของ course -->
     {% for course in courses %}
-        <div class="w-9/12 class rounded-md shadow-md relative">
+        <div class="w-9/12 class rounded-md shadow-md relative break-words">
             <img src="{{course.course_image.url}}" alt="" class="rounded-t-md object-cover">
             <p class="text-Black text-xl text-center font-medium pt-6">{{course.course_name}}</p>
             <p class="text-Gray-800 mt-3 text-center px-8">{{course.course_description}}</p>

@@ -1073,6 +1073,10 @@ select {
   width: 100%;
 }
 
+.w-2 {
+  width: 0.5rem;
+}
+
 .min-w-full {
   min-width: 100%;
 }
@@ -1206,6 +1210,10 @@ select {
   place-self: center;
 }
 
+.overflow-auto {
+  overflow: auto;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -1218,6 +1226,10 @@ select {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+}
+
+.overflow-ellipsis {
+  text-overflow: ellipsis;
 }
 
 .whitespace-nowrap {
@@ -1654,6 +1666,11 @@ select {
 .text-white {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+
+.text-\[\#D9272E\] {
+  --tw-text-opacity: 1;
+  color: rgb(217 39 46 / var(--tw-text-opacity));
 }
 
 .underline {
