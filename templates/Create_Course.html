@@ -1,0 +1,95 @@
+{% extends 'base.html' %}
+{% load static tailwind_tags %}
+<!-- ต้องใช้ข้อมูลด้วยว่าใครเป็นคนสร้างคอร์สเพื่อให้คนๆนั้นเป็น Owner -->
+
+
+<title>{% block name %} Create Course {% endblock %}</title>
+{% tailwind_css %}
+</head>
+
+<body class="font-body">
+    {% block content %}
+    <div class="grid grid-cols-1 gap-8 relative">
+
+        <p class="text-center text-4xl text-black font-semibold mt-4" id="title"> สร้างคอร์ส </p>
+
+
+        <div class="rounded-md bg-[#F4F4F4] w-[1141px] p-8 place-self-center font-medium grid grid-cols-1 mb-4">
+            <form method="post" enctype="multipart/form-data">
+                {%csrf_token%}
+                <div class="rounded-md bg-white m-8 p-8 text-xl">
+                    <div id="input-name" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
+                        <label for="nameCourse">
+                            <h6> ชื่อคอร์ส </h6>
+                        </label>
+                        <!-- <input type="text" id="name" name="Name"
+                            class="bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"> -->
+                        {{form.course_name}}
+                    </div>
+                    <div id="input-description" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
+                        <label for="descriptionCourse">
+                            <h6> รายละเอียดคอร์ส </h6>
+                        </label>
+                        {{form.course_description}}
+                    </div>
+                    <div id="input-profile" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
+                        <label for="profileCourse">
+                            <h6> รูปหน้าปกคอร์ส </h6>
+                        </label>
+
+                        <div class="col-span-3 flex space-x-4">
+                            <!-- <input id="upload-profile" onchange="updatefile()" type="file" class="rounded-full w-[150px] hidden"> -->
+                            {{form.course_image}}
+                            <!-- <label id="label-upload" for="upload-profile"
+                                class="flex rounded-full bg-[#FFDADA] py-2 px-4 w-[200px]">
+                                <img id="icon-file" src="{% static '/images/add_file_icon.svg' %}" alt="" class="flex-none">
+                                <p id="p-file-name"
+                                    class="underline underline-offset-4 text-md text-center flex-grow font-normal truncate"
+                                    id="uploadfile"> Upload file </p>
+                            </label>
+                            <div id="show-file-name" class="text-[#B9B9B9] box-border pt-4 text-base truncate">
+                                อัตราส่วนรูปภาพเป็น 16:9
+                            </div> -->
+
+                        </div>
+                    </div>
+                    <script>
+                        function add_teacher(teacher_list){
+                            const div_container = document.getElementById('addteacher_container')
+                            const inputTeacherField = document.createElement("select")
+                            inputTeacherField.name = 'add_instructors'
+                            console.log(teacher_list)
+                            for (let teacher = 0;  teacher< teacher_list.length; teacher++){
+                                var option = document.createElement("option");
+                                option.value = teacher_list[teacher].id
+                                option.text = teacher_list[teacher].username
+                                inputTeacherField.add(option)
+                            }
+                            div_container.appendChild(inputTeacherField)
+                        }
+                    </script>
+                    <div id="input-teacher" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
+                        <label for="teacherCourse"> เพิ่มอาจารย์ผู้สอน </label>
+                        <div class="bg-white col-span-3 rounded-full p-1 flex space-x-4" id="addteacher_container">
+                                <button onclick="add_teacher({{teacher}})" type="button">+ เพิ่มอาจารย์ผู้สอน</button>
+                                <label id="add-teacher" class="flex justify-center flex-none">
+                                </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="flex items-center justify-center">
+                    <button class="register bg-[#D9272E] text-white px-6 py-3 mt-5 rounded-full w-[200px]"
+                        type="submit">สร้างคอร์ส</button>
+                </div>
+            </form>
+        </div>
+
+    </div>
+    {% endblock%}
+</body>
+
+
+
+
+</html>

@@ -1,0 +1,92 @@
+{% extends "base.html" %}
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block name %} Profile {% endblock %}</title>
+    <!-- <link rel="stylesheet" href="../output.css"> -->
+    {% tailwind_css %}
+    {% block mycss %}
+    <style>
+        .container-img img {
+            clip-path: circle()
+        }
+
+        .profile {
+            margin-top: 20px;
+        }
+
+        .pic-pro {
+            width: 300px;
+            /* กำหนดความกว้างของรูปเป็นค่าคงที่ 200px */
+            height: 200px;
+            /* กำหนดความสูงของรูปเป็นค่าคงที่ 150px */
+            object-fit: cover;
+            /* ใช้ object-fit เพื่อรักษาสัดส่วนของรูป */
+        }
+    </style>
+    {% endblock %}
+    <!-- <script src="cookie.js"></script> -->
+</head>
+
+<body class="font-body">
+    {% block content %}
+    <div class="flex flex-col items-center justify-center m-5">
+        <div class="head">
+            <h1 class="text-center text-5xl p-5 font-semibold">บัญชีของคุณ</h1>
+        </div>
+        <div class="bg-[#F4F4F4] p-10 rounded-3xl shadow-xl">
+            <div class="on flex bg-white items-center p-10 rounded-3xl w-[900px]">
+                <div class="container-img flex flex-col justify-center items-center max-w-full">                    
+                    <img  src="{{ user.user_info.profile_image.url }}" class="pic-pro object-cover w-[200px]" alt="">
+                    <!-- updatefile & uploadfile -->
+                    <div id="input-profile" class="profile">
+                        <div class="col-span-3 flex flex-col space-x-4">
+                            <input id="upload-profile" onchange="updatefile()" type="file" class="rounded-full w-[150px] hidden">
+                            <div id="show-file-name" class="flex text-[#B9B9B9] box-border pt-4 text-base truncate"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="detail m-6">
+                    <div class="flex">
+                        <div class="flex">
+                            <p class="text-3xl m-2" id="student-name">{{user.first_name}}</p>
+                            <img src="" alt="" class="edit-icon m-2">
+                        </div>
+
+                        <div class="flex">
+                            <p class="text-3xl m-2" id="student-lastname">{{user.last_name}}</p>
+                            <img src="" alt="" class="edit-icon m-2">
+                        </div>
+                    </div>
+
+                    <div class="role flex items-center">
+                        <img src="../image/user-alt.svg" alt="">
+                        <p class="role">Role: {{user.user_info.role}}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="under flex flex-col bg-white rounded-3xl p-10 mt-8 w-[900px]">
+                <p class="text-xl mb-4"><b>ข้อมูลส่วนตัว</b></p>
+                <div class="email flex">
+                    <img src="../image/email.svg" alt="">
+                    <p class="m-5 underline" id="student-email">{{user.email}}</p>
+                    <img src="" alt="" class="edit-icon m-1">
+                </div>
+            </div>
+        </div>
+
+        <div class="container-btn m-5">
+            <button class="edit-profile bg-[#D9272E] text-white px-6 py-3 m-5 m-3 rounded-full w-[200px]" name="edit-profile" id="edit-profile"><a href="{% url 'Changepassword' %}">เปลี่ยนรหัสผ่าน</a></button>
+            <button class="logout bg-[#D9272E] text-white px-6 py-3 m-5 rounded-full w-[200px]" name="logout"><a href="{% url 'Logout' %}">ออกจากระบบ</a></button>
+        </div>
+    </div>
+    {% endblock %}
+</body>
+
+</html>

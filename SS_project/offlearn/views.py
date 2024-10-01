@@ -82,12 +82,14 @@ class create_course(LoginRequiredMixin, PermissionRequiredMixin,View):
             owner_teacher = User.objects.get(pk=request.user.id)
             course.user_course.add(owner_teacher)
             print(teacher)
-            if(teacher != ['']):
+            if(teacher):
                 for i in teacher:
                     course.user_course.add(i)
                     course.save()
             return redirect('show_course')
-        return render(request, 'Create_Course.html')
+        teacher = User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
+        teacher_list = list(teacher.values('username', 'id'))
+        return render(request, 'Create_Course.html', {"form":form, "teacher":teacher_list})
 
 
 class edit_course(LoginRequiredMixin, PermissionRequiredMixin, View):
@@ -95,45 +97,50 @@ class edit_course(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = ["offlearn.change_course"]
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)
-        form = EditCourse(instance=course)
+        form = CreateCourse(instance=course)
         form.fields['add_instructors'].queryset= User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
         all_teacher = User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
         all_teacher_list = list(all_teacher.values('username', 'id'))
-        print(all_teacher_list)
         teacher_incourse = User.objects.filter(course__id = course_id)
         return render(request, 'Edit_Course.html', {"form":form, "course":course, "teachers":teacher_incourse, "all_teacher":all_teacher_list})
     def post(self, request, course_id):
         course = Course.objects.get(pk=course_id)
-        form = EditCourse(request.POST, request.FILES,instance=course)
+        form = CreateCourse(request.POST, request.FILES,instance=course)
+        print("เข้า post")
         if(form.is_valid()):
+            print('เเก้ไขคอร์สเข้า valid')
             form.save()
             add_teacher = request.POST.getlist('add_instructors')
             del_teacher = request.POST.getlist('del_instructors')
             print(add_teacher)
             print(del_teacher)
-        if(len(add_teacher)  > 0 and add_teacher != ['']):
-                print('เข้าadd')
-                for i in add_teacher:
-                    course.user_course.add(i)
-                    course.save()
-        if(len(del_teacher)  > 0 and del_teacher != ['']):
-                print('เข้าdel')
-                print(del_teacher)
-                splitlist = str(del_teacher).split(',')
-                print(splitlist)                
-                true_teacher_list = []
-                for item in splitlist:
-                    true_value = item.strip().replace("'", "").replace("[", "").replace("]", "")
-                    if true_value:
-                        true_teacher_list.append(int(true_value))
-                for i in true_teacher_list:
-                    print(i)
-                    if(i != ''):
-                        del_t = User.objects.get(pk=i)
-                        course.user_course.remove(del_t)
+            if(add_teacher):
+                    print('เข้าadd')
+                    for i in add_teacher:
+                        course.user_course.add(i)
                         course.save()
-                return redirect('Course_Detail', course_id=course.id)
-        return redirect('Course_Detail', course_id=course.id)
+            if(del_teacher):
+                    print('เข้าdel')
+                    print(del_teacher)
+                    splitlist = str(del_teacher).split(',')
+                    print(splitlist)                
+                    true_teacher_list = []
+                    for item in splitlist:
+                        true_value = item.strip().replace("'", "").replace("[", "").replace("]", "")
+                        if true_value:
+                            true_teacher_list.append(int(true_value))
+                    for i in true_teacher_list:
+                        print(i)
+                        if(i != ''):
+                            del_t = User.objects.get(pk=i)
+                            course.user_course.remove(del_t)
+                            course.save()
+                    return redirect('Course_Detail', course_id=course.id)
+        form.fields['add_instructors'].queryset= User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
+        all_teacher = User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
+        all_teacher_list = list(all_teacher.values('username', 'id'))
+        teacher_incourse = User.objects.filter(course__id = course_id)
+        return render(request, 'Edit_Course.html', {"form":form, "course":course, "teachers":teacher_incourse, "all_teacher":all_teacher_list})
 
     
 class delete_course(LoginRequiredMixin, PermissionRequiredMixin,View):
@@ -167,7 +174,7 @@ class create_topic(LoginRequiredMixin, PermissionRequiredMixin,View):
                 print(emvideo)
                 material = Material.objects.create(content=content, file_path = "", video_url = emvideo)
             return redirect('Course_Detail', course_id=course.id)  #redirect ให้มัน refresh หน้าใหม่
-        return render(request, 'Create_Topic.html',{"form":form, "course_id":course_id})        
+        return render(request, 'Create_Topic.html',{"form":form, "course_id":course_id})
 
 class edit_topic(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/Login/'
@@ -175,12 +182,13 @@ class edit_topic(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request, topic_id):
         content = Content.objects.get(pk=topic_id)
         material = Material.objects.filter(content = content)
-        form = EditContent(instance=content, initial={'content_name':content.content_name, 'description':content.description})
+        form = CreateTopic(instance=content, initial={'content_name':content.content_name, 'description':content.description})
         return render(request, 'Edit_Topic.html', {'form':form, "contents":content, "materials":material})
     
     def post(self, request, topic_id):
         content = Content.objects.get(pk=topic_id)
-        form = EditContent(request.POST, request.FILES, instance=content)
+        material = Material.objects.filter(content = content)
+        form = CreateTopic(request.POST, request.FILES, instance=content)
         courseid = content.course.id
         print('รอvalid')
         print(form.errors.as_text)
@@ -203,7 +211,7 @@ class edit_topic(LoginRequiredMixin, PermissionRequiredMixin, View):
             trueFileList = []
 
  
-            if(len(del_file) > 0 and del_file != ['']):
+            if(del_file):
                 fileSplitList = str(del_file).split(',')
                 trueFileList = []
                 for file in fileSplitList:
@@ -216,7 +224,7 @@ class edit_topic(LoginRequiredMixin, PermissionRequiredMixin, View):
                         file.delete()
             
 
-            if(len(del_video) > 0 and del_video != ['']):
+            if(del_video):
                 videoSplitList = str(del_video).split(',')
                 trueVideoList = []
                 for video in videoSplitList:
@@ -230,15 +238,15 @@ class edit_topic(LoginRequiredMixin, PermissionRequiredMixin, View):
                         video.delete()
 
             # add section
-            if(len(add_file) > 0 and add_file != ['']):
+            if(add_file):
                 for file in add_file:
                     file_mat = Material.objects.create(content = content, file_path = file, video_url = '')
-            if(len(add_video) > 0 and add_video != ['']):
+            if(add_video):
                 for video in add_video:
                     emvideo = video.replace('/watch?v=', '/embed/')
                     video_mat = Material.objects.create(content = content, file_path = "", video_url = emvideo)
             return redirect('Course_Detail', course_id=courseid) 
-        return render(request, 'Edit_Topic.html')
+        return render(request, 'Edit_Topic.html', {"form": form,"contents":content, "materials":material})
 
 
 class delete_topic(LoginRequiredMixin, PermissionRequiredMixin,View):
@@ -407,6 +415,34 @@ class create_quiz(LoginRequiredMixin, View):
             return redirect('teacher_quiz', course_id)
 
         return render(request, 'Create_Quiz.html', {'form': form, 'course': course})
+
+class edit_quiz(LoginRequiredMixin, View):
+    login_url = '/Login/'
+
+    def get(self, request, quiz_id):
+        quiz = Quiz.objects.get(pk=quiz_id)
+        quizform = AddQuizForm(instance=quiz, initial={'quiz_name': quiz.quiz_name, 'deadline': quiz.deadline, 'max_point': quiz.max_point})
+        return render(request, 'edit_quiz.html', {'quizform': quizform, 'quiz': quiz})
+
+    def post(self, request, quiz_id):
+        quiz = Quiz.objects.get(pk=quiz_id)
+        quizform = AddQuizForm(request.POST)
+        if quizform.is_valid():
+            quiz.quiz_name = quizform.cleaned_data['quiz_name']
+            quiz.deadline = quizform.cleaned_data['deadline']
+            quiz.max_point = quizform.cleaned_data['max_point']
+            quiz.save()
+            return redirect('teacher_quiz', quiz.course.id)
+        return render(request, 'edit_quiz.html', {'quizform': quizform, 'quiz': quiz})
+
+class delete_quiz(LoginRequiredMixin, View):
+    login_url = '/Login/'
+    
+    def post(self, request, quiz_id):
+        if request.POST.get('_method') == 'DELETE':
+            quiz = Quiz.objects.get(pk=quiz_id)
+            quiz.delete()
+            return redirect('teacher_quiz', quiz.course.id)
     
 
 class add_choice_question(LoginRequiredMixin, View):

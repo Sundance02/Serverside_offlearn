@@ -1,0 +1,28 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block name %} ตั้งชื่อด้วยไอน้อง {% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/dist/output.css' %}">
+    {% tailwind_css %}
+
+	{% block mycss %}
+	{% endblock %}
+</head>
+
+<body>
+	<div>
+		{% block na %}
+		{% include 'header.html' %}
+		{% endblock %}
+	</div>
+	<div>
+		{% block content %}
+		{% endblock %}
+	</div>
+	{% block script %}
+	{% endblock %}
+</body>
+</html>

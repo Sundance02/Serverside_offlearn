@@ -96,25 +96,11 @@ class Changepasswordform(SetPasswordForm):
 
 
 class CreateCourse(ModelForm):
-    course_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
-    course_description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}))
-    course_image = forms.ImageField()
-    add_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor"), required=False)
-    class Meta:
-        model = Course
-        fields = [
-            "course_name",
-            "course_description",
-            "course_image"
-        ]
-
-class EditCourse(ModelForm):
-    course_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
-    course_description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}))
+    course_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}), max_length=80 , required=False)
+    course_description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}), max_length=255 , required=False)
     course_image = forms.ImageField()
     add_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor"), required=False)
     del_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor" ), required=False, widget=forms.HiddenInput(attrs={"id":"del_instructors"}))
-    
     class Meta:
         model = Course
         fields = [
@@ -122,33 +108,94 @@ class EditCourse(ModelForm):
             "course_description",
             "course_image"
         ]
+    def clean_course_name(self):
+        course_name = self.cleaned_data.get('course_name')
+        if not course_name:
+            raise forms.ValidationError("กรุณากรอกชื่อคอร์ส")
+        return course_name
 
-BLACKLISTED_EXTENSIONS = ['.exe', '.bat', '.cmd']
+    def clean_course_description(self):
+        course_description = self.cleaned_data.get('course_description')
+        if not course_description:
+            raise forms.ValidationError("กรุณากรอกคำอธิบายคอร์ส")
+        return course_description
+
+# class EditCourse(ModelForm):
+#     course_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}), max_length=80)
+#     course_description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}), max_length=255)
+#     course_image = forms.ImageField()
+#     add_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor"), required=False)
+#     del_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor" ), required=False, widget=forms.HiddenInput(attrs={"id":"del_instructors"}))
+    
+#     class Meta:
+#         model = Course
+#         fields = [
+#             "course_name",
+#             "course_description",
+#             "course_image"
+#         ]
+
+BLACKLISTED_EXTENSIONS = ['.exe', '.bat', '.cmd', '.js', '.sh']
 
 class CreateTopic(ModelForm):
-    content_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
-    description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}))
-    video_url = forms.CharField(required=False, widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
-    file_path = forms.FileField(required=False)
-    
-    class Meta:
-        model = Material
-        fields = [
-            'file_path',
-            'video_url'
-        ]
-
-class EditContent(ModelForm):
-    content_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
-    description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}))
+    content_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}), max_length=80, required=False)
+    description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}), max_length=255, required=False)
     video_url = forms.CharField(required=False, widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
     file_path = forms.FileField(required=False)
     del_video = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_video"}))
-    del_file_path = forms.FileField(required=False, widget=forms.HiddenInput(attrs={"id":"del_file_path"})) 
-
+    del_file_path = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_file_path"}))
     class Meta:
         model = Material
         fields = [
             'file_path',
             'video_url'
         ]
+
+    
+    def clean_file_path(self):
+        file = self.cleaned_data.get('file_path')
+        if file:
+            extension = file.name.split('.')[-1].lower()
+            print(extension)
+            if f".{extension}" in BLACKLISTED_EXTENSIONS:
+                raise forms.ValidationError(f"***ไฟล์ชนิด {extension} ไม่ได้รับอนุญาตให้อัปโหลด")
+        return file
+    
+    def clean_content_name(self):
+        content_name = self.cleaned_data.get('content_name')
+        if not content_name:
+            raise forms.ValidationError("กรุณากรอกชื่อเนื้อหา")
+        return content_name
+
+    def clean_description(self):
+        description = self.cleaned_data.get('description')
+        if not description:
+            raise forms.ValidationError("กรุณากรอกคำอธิบายเนื้อหา")
+        return description
+    
+
+
+# class EditContent(ModelForm):
+#     content_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}), max_length=80)
+#     description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}), max_length=255)
+#     video_url = forms.CharField(required=False, widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
+#     file_path = forms.FileField(required=False)
+#     del_video = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_video"}))
+#     del_file_path = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_file_path"}))
+    
+
+#     class Meta:
+#         model = Material
+#         fields = [
+#             'file_path',
+#             'video_url'
+#         ]
+
+#     def clean_file_path(self):
+#         file = self.cleaned_data.get('file_path')
+#         if file:
+#             extension = file.name.split('.')[-1].lower()
+#             print(extension)
+#             if f".{extension}" in BLACKLISTED_EXTENSIONS:
+#                 raise forms.ValidationError(f"***ไฟล์ชนิด {extension} ไม่ได้รับอนุญาตให้อัปโหลด")
+#         return file

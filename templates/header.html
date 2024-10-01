@@ -1,0 +1,55 @@
+{% load static tailwind_tags %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Header</title>
+    {% tailwind_css %}
+</head>
+    {% if user.is_authenticated %}
+    <div class="flex justify-between w-auto h-25 items-center bg-[#D9272E]">
+
+           
+               <div class="name">
+               <a href="{% url 'show_course' %}"><h3 class="text-white p-6 text-4xl">IT UnderLearn</h3></a>
+                </div>
+
+
+
+        <div class="container-detail flex m-5 items-center" onclick="window.location.href='{% url 'profile' %}'">
+            <div class="flex">
+                <p class="text-white m-2">{{user.first_name}}</p>
+                <p class="text-white m-2">{{user.last_name}}</p>
+            </div>
+
+            <div class="container-img">
+                  <img  src="{{user.user_info.profile_image.url}}" alt="" style="clip-path: circle();width: 50px;height: 50px;">
+            </div>
+        </div>
+    </div>
+    {% else %}
+    <div id="start"></div> 
+    <div class="flex justify-between w-auto h-25 items-center bg-[#D9272E]">
+        <div class="name">
+            <a href="{% url 'show_course' %}">
+                <h3 class="text-white p-6 text-4xl">IT OffLearn</h3>
+            </a>
+        </div>
+
+        <div class="container-btn">
+            <button class="login bg-white text-black py-3 rounded-full w-[150px]" name="login" onclick="window.location.href='{% url 'Login' %}'">
+                เข้าสู่ระบบ
+            </button>
+            <button class="register bg-white text-black py-3 m-6 rounded-full w-[150px]" name="register">
+                <a href="{% url 'Register' %}">ลงทะเบียน</a>
+            </button>
+        </div>
+    </div>
+    {% endif %}
+    
+    <div></div id="end">
+
+
+</html>
