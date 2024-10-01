@@ -10,7 +10,7 @@ urlpatterns = [
     path("offlearn/", include("offlearn.urls")),
     path("Login/", Login.as_view(), name="Login"),
     path("Register/", Register.as_view(), name="Register"),
-    path("Logout/", Logout.as_view(), name="Logout"),
+    path("logout/", Logout.as_view(), name="Logout"),
     path("Changepassword/", Changepassword.as_view(), name="Changepassword"),
 ]
 

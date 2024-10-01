@@ -50,3 +50,28 @@
 </div>
 
 {% endblock %}
+
+{% block script %}
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const selectElement = document.getElementById('questionType');
+        const linkElement = document.getElementById('addQuestionLink');
+
+        selectElement.addEventListener('change', function() {
+            const selectedValue = selectElement.value;
+            let url = '';
+
+            if (selectedValue === 'context') {
+                url = "{% url 'add_context_question' quiz.id %}";
+            } else if (selectedValue === 'choice') {
+                url = "{% url 'add_choice_question' quiz.id %}";
+            } else {
+                url = '#';
+            }
+
+            linkElement.href = url;
+        });
+    });
+</script>
+
+{% endblock %}

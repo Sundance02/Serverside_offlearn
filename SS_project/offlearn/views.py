@@ -388,8 +388,9 @@ class student_quiz_detail(LoginRequiredMixin, View):
         return render(request, 'student_quiz_detail.html')
     
 
-class create_quiz(LoginRequiredMixin, View):
+class create_quiz(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ['offlearn.add_quiz']
 
     def get(self, request, course_id):
         quizform = AddQuizForm()
@@ -410,6 +411,7 @@ class create_quiz(LoginRequiredMixin, View):
 
 class edit_quiz(LoginRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ['offlearn.change_quiz']
 
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
@@ -429,6 +431,7 @@ class edit_quiz(LoginRequiredMixin, View):
 
 class delete_quiz(LoginRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ['offlearn.delete_quiz']
     
     def post(self, request, quiz_id):
         if request.POST.get('_method') == 'DELETE':
@@ -439,6 +442,7 @@ class delete_quiz(LoginRequiredMixin, View):
 
 class add_choice_question(LoginRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ['offlearn.add_question', 'offlearn.add_choice']
 
     def get(self, request, quiz_id):
 
@@ -477,6 +481,7 @@ class add_choice_question(LoginRequiredMixin, View):
 
 class add_context_question(LoginRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ['offlearn.add_question']
 
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
@@ -505,6 +510,7 @@ class add_context_question(LoginRequiredMixin, View):
 
 class question_list(LoginRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ['offlearn.view_question']
 
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
@@ -514,6 +520,7 @@ class question_list(LoginRequiredMixin, View):
 
 class delete_question(LoginRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ['offlearn.delete_question']
 
     def post(self, request, question_id):
         if request.POST.get('_method') == 'DELETE':
@@ -524,6 +531,8 @@ class delete_question(LoginRequiredMixin, View):
 
 class edit_question(LoginRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ['offlearn.change_question']
+
 
     def get(self, request, question_id):
         question = Question.objects.get(pk=question_id)
@@ -581,6 +590,8 @@ class edit_question(LoginRequiredMixin, View):
 
 class student_quiz(LoginRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ['offlearn.view_quiz', 'offlearn.view_question', 'offlearn.view_choice']
+
 
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
@@ -603,14 +614,19 @@ class student_quiz(LoginRequiredMixin, View):
 
 class teacher_quiz(LoginRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ['offlearn.view_quiz']
+
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)
         quiz = Quiz.objects.filter(course = course)
-        return render(request, 'quiz_list.html', {'quiz': quiz, 'course': course})
+        stu_answer = StudentAnswer.objects.filter(student=request.user).distinct('quiz')
+        return render(request, 'quiz_list.html', {'quiz': quiz, 'course': course, 'stu_answer': stu_answer})
 
 
 class teacher_quiz_student_list(LoginRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ['offlearn.add_student_answer', 'offlearn.view_quiz_score']
+
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
         student_answer = StudentAnswer.objects.filter(quiz=quiz).distinct('student')
@@ -619,6 +635,7 @@ class teacher_quiz_student_list(LoginRequiredMixin, View):
 
 class teacher_add_studentscore(LoginRequiredMixin, View):
     login_url = '/Login/'
+    permission_required = ['offlearn.add_quizscore']
 
     def get(self, request, quiz_id, student_id):
         quiz = Quiz.objects.get(pk=quiz_id)

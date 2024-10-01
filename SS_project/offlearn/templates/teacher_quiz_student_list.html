@@ -12,7 +12,7 @@
     {% if not stu.score %}
     <a href="{% url 'teacher_add_studentscore' stu.quiz.id stu.student.id %}">
         <div class="bg-red-100 rounded-xl place-items-center grid grid-cols-5 py-6 pl-6 pr-4 hover:bg-gray-300 mb-4">
-            <p class="text-xl col-span-1 font-bold">ชื่อ : {{ stu.student.first_name }} {{ stu.student.last_name }}</p>
+            <p class="text-xl col-span-1 font-bold w-full">ชื่อ : {{ stu.student.first_name }} {{ stu.student.last_name }}</p>
             {% if stu.submit_date > quiz.deadline %}
             <p class="text-xl col-span-2 font-bold" style="color: red;">ส่งเมื่อ : {{ stu.submit_date }} (ส่งเกินเวลา)</p>
             {% else %}
@@ -25,7 +25,7 @@
     {% else %}
     <a href="">
         <div class="bg-green-100 rounded-xl place-items-center grid grid-cols-5 py-6 pl-6 pr-4 hover:bg-gray-300 mb-4">
-            <p class="text-xl col-span-1 font-bold">ชื่อ : {{ stu.student.first_name }} {{ stu.student.last_name }}</p>
+            <p class="text-xl col-span-1 font-bold w-full">ชื่อ : {{ stu.student.first_name }} {{ stu.student.last_name }}</p>
             {% if stu.submit_date > quiz.deadline %}
             <p class="text-xl col-span-2 font-bold" style="color: red;">ส่งเมื่อ : {{ stu.submit_date }} (ส่งเกินเวลา)</p>
             {% else %}
