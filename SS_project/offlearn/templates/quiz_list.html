@@ -18,22 +18,10 @@
         {% if quiz %}
         {% for q in quiz %}
         {% if not perms.offlearn.change_question and not perms.offlearn.change_quiz and not perms.offlearn.delete_quiz and not perms.offlearn.add_quizscore %}
-
-        {% for i in stu_answer %}
-            {% if not i.quiz == q %}
-            <a href="{% url 'student_quiz' q.id %}">
-            <div class="bg-red-200 rounded-xl grid grid-cols-6 py-6 pl-6 pr-4 mb-4 hover:bg-gray-300">
-                <p class="text-xl col-span-2 font-bold">{{ q.quiz_name }}</p>
-                <p class="text-xl col-span-2 font-bold">Due Date<br> {{ q.deadline }}</p>
-                <p class="text-xl col-span-1 font-bold">คะแนน : --/{{ q.max_point }}</p>
-            {% else %}
-            <a href="">
-            <div class="bg-green-200 rounded-xl grid grid-cols-6 py-6 pl-6 pr-4 mb-4 hover:bg-gray-300">
-                <p class="text-xl col-span-2 font-bold">{{ q.quiz_name }}</p>
-                <p class="text-xl col-span-2 font-bold">Due Date<br> {{ q.deadline }}</p>
-                <p class="text-xl col-span-1 font-bold">คะแนน : {{ i.score.score }}/{{ q.max_point }}</p>
-            {% endif %}
-        {% endfor %}
+        <a href="{% url 'student_quiz' q.id %}">
+        <div class="bg-white rounded-xl grid grid-cols-5 py-6 pl-6 pr-4 mb-4">
+            <p class="text-xl col-span-2 font-bold">{{ q.quiz_name }}</p>
+            <p class="text-xl col-span-2 font-bold">Due Date<br> {{ q.deadline }}</p>
 
         {% else %}
         <div class="bg-white rounded-xl grid grid-cols-4 py-6 pl-6 pr-4 mb-4">

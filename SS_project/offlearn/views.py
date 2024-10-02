@@ -604,7 +604,9 @@ class student_quiz(LoginRequiredMixin, View):
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
         question = Question.objects.filter(quiz = quiz).order_by('id')
-        return render(request, 'student_quiz.html', {'question': question, 'quiz': quiz})
+        student_answer = StudentAnswer.objects.filter(quiz=quiz, student=request.user).first()
+        # print(student_answer)
+        return render(request, 'student_quiz.html', {'question': question, 'quiz': quiz, 'student_answer': student_answer})
     
     def post(self, request, quiz_id):
         user = User.objects.get(pk=request.user.id)
@@ -627,8 +629,9 @@ class teacher_quiz(LoginRequiredMixin, View):
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)
         quiz = Quiz.objects.filter(course = course)
-        stu_answer = StudentAnswer.objects.filter(student=request.user).distinct('quiz')
-        return render(request, 'quiz_list.html', {'quiz': quiz, 'course': course, 'stu_answer': stu_answer})
+        # stu_answer = StudentAnswer.objects.filter(student=request.user).distinct('quiz')
+        # print(stu_answer[1].quiz)
+        return render(request, 'quiz_list.html', {'quiz': quiz, 'course': course})
 
 
 class teacher_quiz_student_list(LoginRequiredMixin, View):
