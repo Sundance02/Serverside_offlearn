@@ -376,7 +376,9 @@ class Register(View):
             return redirect('Login')
         return render(request, 'Register.html', {"form": form})
 
-class Register_Instructor(View):
+class Register_Instructor(LoginRequiredMixin, PermissionRequiredMixin, View):
+    login_url = '/Login/'
+    permission_required = ["offlearn.add_instructor"]
     def get(self, request):
         print('yahaloooo')
         form = Registerform()
