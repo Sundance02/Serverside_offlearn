@@ -14,43 +14,71 @@ from django.contrib.auth import logout, login
 from django.contrib.auth.models import Group
 from django.db.models import Sum
 
+# class show_course(View):
+#     def get(self, request):
+#         if(request.user.groups.filter(name="Student").exists()):
+#             user_course = Course.objects.filter(user_course__id = request.user.id)
+#             context = {"courses":user_course}
+#             page = "Allcourse-Student.html"
+#         elif(request.user.groups.filter(name="Instructor").exists()):
+#             user_course = Course.objects.filter(user_course__id = request.user.id)
+#             context = {"courses":user_course}
+#             page = "Allcourse-Teacher.html"
+#         else:
+#             user_course = Course.objects.all()
+#             context = {"courses":user_course}
+#             page = "Allcourse-Guest.html"
+#         return render(request, page, context)  
+
+
 class show_course(View):
     def get(self, request):
+        user_course = Course.objects.filter(user_course__id = request.user.id)
         if(request.user.groups.filter(name="Student").exists()):
-            user_course = Course.objects.filter(user_course__id = request.user.id)
-            context = {"courses":user_course}
-            page = "Allcourse-Student.html"
+            role = "Student"
         elif(request.user.groups.filter(name="Instructor").exists()):
-            user_course = Course.objects.filter(user_course__id = request.user.id)
-            context = {"courses":user_course}
-            page = "Allcourse-Teacher.html"
+            role = "Teacher"
+        elif(request.user.groups.filter(name="Admin").exists()):
+            role = "Admin"
+            user_course = Course.objects.all() 
         else:
-            user_course = Course.objects.all()
-            context = {"courses":user_course}
-            page = "Allcourse-Guest.html"
-        return render(request, page, context)  
+            role = "Guest"
+            user_course = Course.objects.all() 
+        context = {"courses":user_course, "role":role}
+        return render(request, "Allcourse.html", context)  
+
+
         
 class searched_course(View):
     def post(self, request):
         if(request.user.groups.filter(name="Student").exists()):
-            page = "Allcourse-Student.html"
+            role = "Student"
         elif(request.user.groups.filter(name="Instructor").exists()):
-            page = "Allcourse-Teacher.html"
+            role = "Teacher"
+        elif(request.user.groups.filter(name="Admin").exists()):
+            role = "Admin"
+            user_course = Course.objects.all() 
         else:
-            page = "Allcourse-Guest.html"
-      
+            role = "Guest"
         searched_info = request.POST['searched']
         result = Course.objects.filter(course_name__icontains = searched_info)
-        context = {"courses":result}
-        return render(request, page, context)
+        context = {"courses":result, "role":role}
+
+        return render(request, 'Allcourse.html', context)
     def get(self, request):
-        if(request.user.groups.filter(name="Student").exists()):
-            page = "Allcourse-Student.html"
-        elif(request.user.groups.filter(name="Instructor").exists()):
-            page = "Allcourse-Teacher.html"
-        else:
-            page = "Allcourse-Guest.html"
         result = ""       
+        
+
+        if(request.user.groups.filter(name="Student").exists()):
+            role = "Student"
+        elif(request.user.groups.filter(name="Instructor").exists()):
+            role = "Teacher"
+        elif(request.user.groups.filter(name="Admin").exists()):
+            role = "Admin"
+            user_course = Course.objects.all() 
+        else:
+            role = "Guest"
+
         filter = request.GET.get('filter')
         if(filter == "all"):
             result = Course.objects.all()
@@ -58,8 +86,8 @@ class searched_course(View):
             result = Course.objects.filter(user_course__id = request.user.id)
         elif(filter == "notown"):
             result = Course.objects.exclude(user_course__id = request.user.id)
-        context = {"courses":result}
-        return render(request, page, context)   
+        context = {"courses":result, "role":role}
+        return render(request, 'Allcourse.html', context)   
 
 
     
@@ -81,6 +109,8 @@ class create_course(LoginRequiredMixin, PermissionRequiredMixin,View):
             course = form.save()
             owner_teacher = User.objects.get(pk=request.user.id)
             course.user_course.add(owner_teacher)
+            admin = User.objects.get(pk=1)
+            course.user_course.add(admin)
             print(teacher)
             if(teacher):
                 for i in teacher:
@@ -98,10 +128,10 @@ class edit_course(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)
         form = CreateCourse(instance=course)
-        form.fields['add_instructors'].queryset= User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
-        all_teacher = User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
+        # form.fields['add_instructors'].queryset= User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id, )
+        all_teacher = User.objects.filter(user_info__role="Instructor").exclude(course__id = course_id, user_info__role="Instructor")
         all_teacher_list = list(all_teacher.values('username', 'id'))
-        teacher_incourse = User.objects.filter(course__id = course_id)
+        teacher_incourse = User.objects.filter(course__id = course_id, user_info__role="Instructor")
         return render(request, 'Edit_Course.html', {"form":form, "course":course, "teachers":teacher_incourse, "all_teacher":all_teacher_list})
     def post(self, request, course_id):
         course = Course.objects.get(pk=course_id)
@@ -263,7 +293,6 @@ class delete_topic(LoginRequiredMixin, PermissionRequiredMixin,View):
 class profile(LoginRequiredMixin, View):
     login_url = '/Login/'
     def get(self, request):
-        print(request.user.user_info.profile_image)
         return render(request, 'Profile.html')
     
 class view_description (View):
@@ -336,17 +365,40 @@ class Register(View):
         if form.is_valid():
             user = form.save()
             group = Group.objects.get(name='Student')
-            print('test')
-            print(user.id)
-            if(form.cleaned_data['profile_image']):
-                User_Info.objects.create(user = user, role="Student", profile_image= form.cleaned_data['profile_image'])
-            else:
-                User_Info.objects.create(user = user, role="Student", profile_image= 'default.jpg')
             user.groups.add(group)
             user.save()
+
+            if(form.cleaned_data['profile_image']):
+                User_Info.objects.create(user = user, role= "Student", profile_image= form.cleaned_data['profile_image'])
+            else:
+                User_Info.objects.create(user = user, role= "Student", profile_image= 'default.jpg')
             messages.success(request, 'Account created successfully')  
             return redirect('Login')
         return render(request, 'Register.html', {"form": form})
+
+class Register_Instructor(View):
+    def get(self, request):
+        print('yahaloooo')
+        form = Registerform()
+        return render(request, 'Register.html', {"form": form})
+    
+    def post(self, request):
+        form = Registerform(request.POST, request.FILES)
+        print(request.FILES)
+        if form.is_valid():
+            user = form.save()
+            group = Group.objects.get(name='Instructor')
+            user.groups.add(group)
+            user.save()
+
+            if(form.cleaned_data['profile_image']):
+                User_Info.objects.create(user = user, role= "Instructor", profile_image= form.cleaned_data['profile_image'])
+            else:
+                User_Info.objects.create(user = user, role= "Instructor", profile_image= 'default.jpg')
+            messages.success(request, 'Account created successfully')  
+            return redirect('Login')
+        return render(request, 'Register.html', {"form": form})
+
 
 
 class Login(View):
