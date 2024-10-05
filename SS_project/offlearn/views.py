@@ -372,11 +372,10 @@ class Logout(LoginRequiredMixin, View):
 class Student_List(LoginRequiredMixin, PermissionRequiredMixin, View):
     login_url = '/Login/'
     permission_required = ["offlearn.view_student"]
-    def get(self, request, course_id):
 
-        student = User.objects.filter(course__id = course_id, user_info__role = "Student")
-        print(student)
-        context = {"students":student}
+    def get(self, request, course_id):
+        students = User.objects.filter(course__id=course_id, user_info__role="Student").annotate(total_score=Sum('quizscore__score'))
+        context = {"students": students}
         return render(request, 'student_list.html', context)
     
 
@@ -473,14 +472,24 @@ class add_choice_question(LoginRequiredMixin, View):
             if questionform.cleaned_data['point'] + exist_point > quiz.max_point:
                 questionform.add_error('point', ValidationError(f"Points exceed the maximum allowed for this quiz. You can add up to {quiz.max_point - exist_point} more points."))
             else:
+
+                for form in formset:
+                    if not form.cleaned_data:
+                        questionform.add_error(None, ValidationError("You must fill out all forms."))
+                        print(questionform.errors)
+                        return render(request, 'choice_question.html', {'questionform': questionform, 'choiceform': formset, 'quiz': quiz})
+
                 quest = questionform.save(commit=False)
                 quest.quiz = quiz
                 quest.save()
 
+
                 for form in formset:
-                    choice = form.save(commit=False)
-                    choice.question = quest
-                    choice.save()
+                    if form.cleaned_data:
+                        choice = form.save(commit=False)
+                        choice.question = quest
+                        choice.save()
+                   
 
                 return redirect('question_list', quiz_id)
 
@@ -522,7 +531,7 @@ class question_list(LoginRequiredMixin, View):
 
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
-        question = Question.objects.filter(quiz = quiz)
+        question = Question.objects.filter(quiz = quiz).order_by('id')
         return render(request, 'Question_list.html', {'quiz': quiz, 'question': question})
     
 
@@ -563,6 +572,7 @@ class edit_question(LoginRequiredMixin, View):
             if questionform.cleaned_data['point'] + (exist_point - question.point) > question.quiz.max_point:
                 questionform.add_error('point', ValidationError(f"Points exceed the maximum allowed for this quiz. You can add up to {question.quiz.max_point - exist_point} more points."))
             else:
+
                 question.question_name = questionform.cleaned_data['question_name']
                 question.point = questionform.cleaned_data['point']
                 question.save()
@@ -572,6 +582,12 @@ class edit_question(LoginRequiredMixin, View):
                     formset = ChoiceFormSet(request.POST, queryset=Choice.objects.none())
 
                     if formset.is_valid():
+
+                        for form in formset:
+                            if not form.cleaned_data:
+                                questionform.add_error(None, ValidationError("You must fill out all forms."))
+                                return render(request, 'edit_question.html', {'question': question, 'questionform': questionform, 'formset': formset})
+
                         choice = Choice.objects.filter(question = question)
                         choice.delete()
 
@@ -628,7 +644,7 @@ class teacher_quiz(LoginRequiredMixin, View):
 
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)
-        quiz = Quiz.objects.filter(course = course)
+        quiz = Quiz.objects.filter(course = course).order_by('id')
         # stu_answer = StudentAnswer.objects.filter(student=request.user).distinct('quiz')
         # print(stu_answer[1].quiz)
         return render(request, 'quiz_list.html', {'quiz': quiz, 'course': course})
