@@ -933,6 +933,26 @@ select {
   margin-top: 24rem;
 }
 
+.mr-12 {
+  margin-right: 3rem;
+}
+
+.mr-6 {
+  margin-right: 1.5rem;
+}
+
+.ml-12 {
+  margin-left: 3rem;
+}
+
+.ml-4 {
+  margin-left: 1rem;
+}
+
+.ml-2 {
+  margin-left: 0.5rem;
+}
+
 .box-border {
   box-sizing: border-box;
 }
@@ -1505,10 +1525,6 @@ select {
 
 .pt-8 {
   padding-top: 2rem;
-}
-
-.pl-4 {
-  padding-left: 1rem;
 }
 
 .text-left {

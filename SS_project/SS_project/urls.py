@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
-from offlearn.views import Login, Register, Logout, Changepassword
+from offlearn.views import Login, Register, Logout, Changepassword, Register_Instructor
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -10,6 +10,7 @@ urlpatterns = [
     path("offlearn/", include("offlearn.urls")),
     path("Login/", Login.as_view(), name="Login"),
     path("Register/", Register.as_view(), name="Register"),
+    path("Register_Instructor/", Register_Instructor.as_view(), name="Register_Instructor"),
     path("logout/", Logout.as_view(), name="Logout"),
     path("Changepassword/", Changepassword.as_view(), name="Changepassword"),
 ]
