@@ -10,14 +10,14 @@
 <body class="font-body">
     {% block content %}
     <div class="grid grid-cols-1 gap-8 relative">
-        <div class="grid grid-cols-10 gap-8 my-8">
+        <div class="grid grid-cols-11 gap-8 my-8">
 
-            <div class="flex justify-start col-start-1  col-end-3 pl-8">
+            <div class="flex justify-start col-start-2 col-end-4 ">
                 <button class="register bg-[#D9272E] text-white px-6 py-3  mr-8 rounded-full w-[200px] " ><a
                         href="{% url 'Course_Detail' course.id %}">กลับหน้าคอร์ส</a></button>
             </div>
-            <p class="text-center text-4xl text-black font-semibold col-start-4 col-end-8">แก้ไขคอร์ส</p>
-            <div class="flex col-start-8 col-end-10 ">
+            <p class="text-end text-4xl text-black font-semibold col-start-5 col-end-7">แก้ไขคอร์ส</p>
+            <div class="flex justify-end col-start-8 col-end-11">
                 <button class="register bg-[#D9272E] text-white px-6 py-3  mr-8 rounded-full w-[200px] "  onclick="return confirm('ยืนยันการลบคอร์ส');"><a
                         href="{% url 'delete_course' course.id %}">ลบคอร์ส</a></button>
             </div>
