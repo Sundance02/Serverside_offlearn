@@ -16,7 +16,16 @@
     {% block content %}
     <div class="grid grid-cols-1 gap-8 my-8">
 
-        <p class="text-center text-4xl text-black font-semibold" id="title"> เพิ่มเนื้อหาใหม่ </p>
+        <div class="grid grid-cols-10 gap-8 my-8">
+
+            <div class="flex justify-start col-start-1  col-end-3 pl-8">
+                <button class="register bg-[#D9272E] text-white px-6 py-3  mr-8 rounded-full w-[200px] "><a
+                        href="{% url 'Course_Detail' course_id %}">กลับหน้าคอร์ส</a></button>
+            </div>
+        
+            <p class="text-center text-4xl text-black font-semibold col-start-4 col-end-8">เพิ่มเนื้อหาใหม่</p>
+        
+        </div>
 
         <div class="rounded-md bg-[#F4F4F4] w-[1141px] p-8 place-self-center font-medium grid grid-cols-1">
             <div class="rounded-md bg-white m-8 p-8 text-xl">

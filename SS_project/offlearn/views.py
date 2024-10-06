@@ -211,9 +211,10 @@ class edit_topic(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = ["offlearn.change_content"]
     def get(self, request, topic_id):
         content = Content.objects.get(pk=topic_id)
+        course = Course.objects.get(pk = content.course.id)
         material = Material.objects.filter(content = content)
         form = CreateTopic(instance=content, initial={'content_name':content.content_name, 'description':content.description})
-        return render(request, 'Edit_Topic.html', {'form':form, "contents":content, "materials":material})
+        return render(request, 'Edit_Topic.html', {'form':form, "contents":content, "materials":material, "course":course})
     
     def post(self, request, topic_id):
         content = Content.objects.get(pk=topic_id)
@@ -436,7 +437,7 @@ class Student_List(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def get(self, request, course_id):
         students = User.objects.filter(course__id=course_id, user_info__role="Student").annotate(total_score=Sum('quizscore__score'))
-        context = {"students": students}
+        context = {"students": students, "course_id":course_id}
         return render(request, 'student_list.html', context)
     
 

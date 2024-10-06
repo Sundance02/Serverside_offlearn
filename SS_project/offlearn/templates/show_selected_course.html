@@ -85,7 +85,6 @@
 
 
             {% if perms.offlearn.change_content %}
-            <!-- btn -->
             <div class="grid justify-items-center grid-cols-1">
                 <div>
 
@@ -97,13 +96,11 @@
         </div><br>
     </div>
     {% endfor %}
-    <!-- perms -->
     {% if perms.offlearn.add_content %}
     <div class="grid justify-items-center grid-cols-1">
         <button class="rounded-xl ring-1 ring-red-600 bg-red-600 text-white px-8 py-4"><a href="{% url 'create_topic' course.id %}">เพิ่มเนื้อหาใหม่</a></button>
         <br>
     </div>
-    <!-- perms -->
     {% endif %}
 
 </div>

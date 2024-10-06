@@ -7,7 +7,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block name %} Profile {% endblock %}</title>
-    <!-- <link rel="stylesheet" href="../output.css"> -->
     {% tailwind_css %}
     {% block mycss %}
     <style>
@@ -21,15 +20,12 @@
 
         .pic-pro {
             width: 300px;
-            /* กำหนดความกว้างของรูปเป็นค่าคงที่ 200px */
+            
             height: 200px;
-            /* กำหนดความสูงของรูปเป็นค่าคงที่ 150px */
             object-fit: cover;
-            /* ใช้ object-fit เพื่อรักษาสัดส่วนของรูป */
         }
     </style>
     {% endblock %}
-    <!-- <script src="cookie.js"></script> -->
 </head>
 
 <body class="font-body">
