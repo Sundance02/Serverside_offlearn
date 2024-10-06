@@ -361,45 +361,52 @@ class Register(View):
     
     def post(self, request):
         form = Registerform(request.POST, request.FILES)
-        print(request.FILES)
         if form.is_valid():
             user = form.save()
-            group = Group.objects.get(name='Student')
-            user.groups.add(group)
-            user.save()
-
-            if(form.cleaned_data['profile_image']):
-                User_Info.objects.create(user = user, role= "Student", profile_image= form.cleaned_data['profile_image'])
+            if request.user.has_perm('offlearn.add_instructor'):
+                group = Group.objects.get(name='Instructor')
+                user.groups.add(group)
+                user.save()
+                if(form.cleaned_data['profile_image']):
+                    User_Info.objects.create(user = user, role= "Instructor", profile_image= form.cleaned_data['profile_image'])
+                else:
+                    User_Info.objects.create(user = user, role= "Instructor", profile_image= 'default.jpg')
+                messages.success(request, 'Account created successfully')  
             else:
-                User_Info.objects.create(user = user, role= "Student", profile_image= 'default.jpg')
-            messages.success(request, 'Account created successfully')  
+                group = Group.objects.get(name='Student')
+                user.groups.add(group)
+                user.save()
+                if(form.cleaned_data['profile_image']):
+                    User_Info.objects.create(user = user, role= "Student", profile_image= form.cleaned_data['profile_image'])
+                else:
+                    User_Info.objects.create(user = user, role= "Student", profile_image= 'default.jpg')
+                messages.success(request, 'Account created successfully')  
             return redirect('Login')
         return render(request, 'Register.html', {"form": form})
 
-class Register_Instructor(LoginRequiredMixin, PermissionRequiredMixin, View):
-    login_url = '/Login/'
-    permission_required = ["offlearn.add_instructor"]
-    def get(self, request):
-        print('yahaloooo')
-        form = Registerform()
-        return render(request, 'Register.html', {"form": form})
+# class Register_Instructor(LoginRequiredMixin, PermissionRequiredMixin, View):
+#     login_url = '/Login/'
+#     permission_required = ["offlearn.add_instructor"]
+#     def get(self, request):
+#         print('yahaloooo')
+#         form = Registerform()
+#         return render(request, 'Register.html', {"form": form})
     
-    def post(self, request):
-        form = Registerform(request.POST, request.FILES)
-        print(request.FILES)
-        if form.is_valid():
-            user = form.save()
-            group = Group.objects.get(name='Instructor')
-            user.groups.add(group)
-            user.save()
+#     def post(self, request):
+#         form = Registerform(request.POST, request.FILES)
+#         if form.is_valid():
+#             user = form.save()
+#             group = Group.objects.get(name='Instructor')
+#             user.groups.add(group)
+#             user.save()
 
-            if(form.cleaned_data['profile_image']):
-                User_Info.objects.create(user = user, role= "Instructor", profile_image= form.cleaned_data['profile_image'])
-            else:
-                User_Info.objects.create(user = user, role= "Instructor", profile_image= 'default.jpg')
-            messages.success(request, 'Account created successfully')  
-            return redirect('Login')
-        return render(request, 'Register.html', {"form": form})
+#             if(form.cleaned_data['profile_image']):
+#                 User_Info.objects.create(user = user, role= "Instructor", profile_image= form.cleaned_data['profile_image'])
+#             else:
+#                 User_Info.objects.create(user = user, role= "Instructor", profile_image= 'default.jpg')
+#             messages.success(request, 'Account created successfully')  
+#             return redirect('Login')
+#         return render(request, 'Register.html', {"form": form})
 
 
 
