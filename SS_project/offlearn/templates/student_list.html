@@ -28,20 +28,29 @@
                             <th scope="col"
                                 class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> นามสกุล
                             </th>
+                            {% for i in quiz %}
                             <th scope="col"
-                                class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> คะเเนน
+                                class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> {{i.quiz_name}}
+                            </th>
+                            {% endfor %}
+                            <th scope="col"
+                                class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> คะเเนนรวม
                             </th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for student in students %}
                         <tr class="odd:bg-white even:bg-gray-50">
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">{{
-                                student.first_name }}</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{
-                                student.last_name }}</td>
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{
-                                student.total_score }}</td>
+                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900 ">
+                                {{student.first_name }}</td>
+                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                                {{student.last_name }}</td>
+                            {% for i in student.quizscore_set.all %}
+                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                                {{ i.score }}</td>
+                            {% endfor %}
+                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                                {{student.total_score }}</td>
                         </tr>
                         {% endfor %}
                     </tbody>
