@@ -28,10 +28,12 @@
                     <button class="login bg-[#D9272E] text-white px-6 py-3 m-3 w-[350px] rounded-md" name="login">เข้าสู่ระบบ</button>
                 </div>
 
-                <div class="flex items-center justify-center">
-                    <button class="login bg-[#F4F4F4] text-black px-6 py-3 m-3 w-[350px] rounded-md" name="register"><a href="{% url 'Register' %}">สมัครสมาชิก</a></button>
-                </div>
+
             </form>
+
+            <div class="flex items-center justify-center">
+                <button class="login bg-[#F4F4F4] text-black px-6 py-3 m-3 w-[350px] rounded-md" name="register"><a href="{% url 'Register' %}">สมัครสมาชิก</a></button>
+            </div>
             {% if form.errors %}
             {% for field in form %}
                 {% for error in field.errors %}

@@ -14,21 +14,6 @@ from django.contrib.auth import logout, login
 from django.contrib.auth.models import Group
 from django.db.models import Sum
 
-# class show_course(View):
-#     def get(self, request):
-#         if(request.user.groups.filter(name="Student").exists()):
-#             user_course = Course.objects.filter(user_course__id = request.user.id)
-#             context = {"courses":user_course}
-#             page = "Allcourse-Student.html"
-#         elif(request.user.groups.filter(name="Instructor").exists()):
-#             user_course = Course.objects.filter(user_course__id = request.user.id)
-#             context = {"courses":user_course}
-#             page = "Allcourse-Teacher.html"
-#         else:
-#             user_course = Course.objects.all()
-#             context = {"courses":user_course}
-#             page = "Allcourse-Guest.html"
-#         return render(request, page, context)  
 
 
 class show_course(View):
@@ -50,6 +35,7 @@ class show_course(View):
 
         
 class searched_course(View):
+    # post เอาไว้ใช้กับ search
     def post(self, request):
         if(request.user.groups.filter(name="Student").exists()):
             role = "Student"
@@ -57,7 +43,6 @@ class searched_course(View):
             role = "Teacher"
         elif(request.user.groups.filter(name="Admin").exists()):
             role = "Admin"
-            user_course = Course.objects.all() 
         else:
             role = "Guest"
         searched_info = request.POST['searched']
@@ -65,17 +50,16 @@ class searched_course(View):
         context = {"courses":result, "role":role}
 
         return render(request, 'Allcourse.html', context)
+    
+    # getเอาไว้ใช้กับปุ่ม filter
     def get(self, request):
         result = ""       
-        
-
         if(request.user.groups.filter(name="Student").exists()):
             role = "Student"
         elif(request.user.groups.filter(name="Instructor").exists()):
             role = "Teacher"
         elif(request.user.groups.filter(name="Admin").exists()):
             role = "Admin"
-            user_course = Course.objects.all() 
         else:
             role = "Guest"
 
@@ -96,7 +80,6 @@ class create_course(LoginRequiredMixin, PermissionRequiredMixin,View):
     permission_required = ["offlearn.add_course"]
     def get(self, request):
         form = CreateCourse()
-        form.fields['add_instructors'].queryset= User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
         teacher = User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
         teacher_list = list(teacher.values('username', 'id'))
         return render(request, 'Create_Course.html', {"form":form, "teacher":teacher_list})
@@ -109,9 +92,10 @@ class create_course(LoginRequiredMixin, PermissionRequiredMixin,View):
             course = form.save()
             owner_teacher = User.objects.get(pk=request.user.id)
             course.user_course.add(owner_teacher)
-            admin = User.objects.get(pk=1)
-            course.user_course.add(admin)
-            print(teacher)
+            # เพิ่ม admin ที่เป็นคนดูเเลระบบ 
+            admin = User.objects.filter(user_info__role = "Admin")
+            for i in admin:
+                course.user_course.add(i)
             if(teacher):
                 for i in teacher:
                     course.user_course.add(i)
@@ -131,6 +115,7 @@ class edit_course(LoginRequiredMixin, PermissionRequiredMixin, View):
         # form.fields['add_instructors'].queryset= User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id, )
         all_teacher = User.objects.filter(user_info__role="Instructor").exclude(course__id = course_id, user_info__role="Instructor")
         all_teacher_list = list(all_teacher.values('username', 'id'))
+        # query อจ ที่อยู่ในคอร์สทั้งหมด
         teacher_incourse = User.objects.filter(course__id = course_id, user_info__role="Instructor")
         return render(request, 'Edit_Course.html', {"form":form, "course":course, "teachers":teacher_incourse, "all_teacher":all_teacher_list})
     def post(self, request, course_id):
@@ -143,7 +128,7 @@ class edit_course(LoginRequiredMixin, PermissionRequiredMixin, View):
             add_teacher = request.POST.getlist('add_instructors')
             del_teacher = request.POST.getlist('del_instructors')
             print(add_teacher)
-            print(del_teacher)
+            print("1)", del_teacher)
             if(add_teacher):
                     print('เข้าadd')
                     for i in add_teacher:
@@ -151,16 +136,17 @@ class edit_course(LoginRequiredMixin, PermissionRequiredMixin, View):
                         course.save()
             if(del_teacher):
                     print('เข้าdel')
-                    print(del_teacher)
                     splitlist = str(del_teacher).split(',')
-                    print(splitlist)                
+                    print("2)", splitlist)                
                     true_teacher_list = []
                     for item in splitlist:
+                        print("3)", item)
                         true_value = item.strip().replace("'", "").replace("[", "").replace("]", "")
+                        print("4)", true_value)
                         if true_value:
                             true_teacher_list.append(int(true_value))
                     for i in true_teacher_list:
-                        print(i)
+                        print("5)", i)
                         if(i != ''):
                             del_t = User.objects.get(pk=i)
                             course.user_course.remove(del_t)
@@ -328,10 +314,7 @@ class Course_Detail(LoginRequiredMixin, View):
         incourse = Course.objects.filter(pk=course_id, user_course = request.user)
         course = Course.objects.get(pk=course_id)
         content = Content.objects.filter(course = course)
-        print(content)
         context = {"course": course, "contents":content}
-        print(incourse)
-        # exists เอาไว้เช็คว่าที่ filter นั้นมีข้อมูลไหม
         if(incourse.exists()):
             print('อยู่ในคอร์ส')
             return render(request, 'show_selected_course.html', context)
@@ -384,31 +367,6 @@ class Register(View):
                 messages.success(request, 'Account created successfully')  
             return redirect('Login')
         return render(request, 'Register.html', {"form": form})
-
-# class Register_Instructor(LoginRequiredMixin, PermissionRequiredMixin, View):
-#     login_url = '/Login/'
-#     permission_required = ["offlearn.add_instructor"]
-#     def get(self, request):
-#         print('yahaloooo')
-#         form = Registerform()
-#         return render(request, 'Register.html', {"form": form})
-    
-#     def post(self, request):
-#         form = Registerform(request.POST, request.FILES)
-#         if form.is_valid():
-#             user = form.save()
-#             group = Group.objects.get(name='Instructor')
-#             user.groups.add(group)
-#             user.save()
-
-#             if(form.cleaned_data['profile_image']):
-#                 User_Info.objects.create(user = user, role= "Instructor", profile_image= form.cleaned_data['profile_image'])
-#             else:
-#                 User_Info.objects.create(user = user, role= "Instructor", profile_image= 'default.jpg')
-#             messages.success(request, 'Account created successfully')  
-#             return redirect('Login')
-#         return render(request, 'Register.html', {"form": form})
-
 
 
 class Login(View):

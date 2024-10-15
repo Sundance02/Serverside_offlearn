@@ -100,6 +100,7 @@ class CreateCourse(ModelForm):
     course_description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}), max_length=255 , required=False)
     course_image = forms.ImageField()
     add_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor"), required=False)
+    # ลบเอาไว้ใช้กับเเก้ไขคอร์ส
     del_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor" ), required=False, widget=forms.HiddenInput(attrs={"id":"del_instructors"}))
     class Meta:
         model = Course
