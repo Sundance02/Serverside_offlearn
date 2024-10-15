@@ -379,6 +379,8 @@ class Login(View):
         if form.is_valid(): 
             user = form.get_user()
             login(request, user)
+            print(request.user.groups.all())
+            print(request.user.has_perm('offlearn.add_instructor'))
             return redirect('show_course')
         return render(request, 'Login.html', {"form": form})
 
@@ -395,7 +397,9 @@ class Student_List(LoginRequiredMixin, PermissionRequiredMixin, View):
 
     def get(self, request, course_id):
         students = User.objects.filter(course__id=course_id, user_info__role="Student").annotate(total_score=Sum('quizscore__score'))
-        context = {"students": students, "course_id":course_id}
+        course = Course.objects.get(pk=course_id)
+        quiz = Quiz.objects.filter(course = course)
+        context = {"students": students, "course_id":course_id, "quiz": quiz}
         return render(request, 'student_list.html', context)
     
 

@@ -2,16 +2,21 @@
 {% load static %}
 {% block name %} Teacher Quiz {% endblock %}
 {% block content %}
+<br>
+<button class="ml-8 register bg-[#D9272E] text-white px-6 py-3  mr-8 rounded-full w-[200px] "><a href="{% url 'Course_Detail' course.id %}">กลับหน้าคอร์ส</a></button>
 <div>
     <div class="grid place-content-center mt-8">
         <p class="text-5xl font-bold">{{ course.course_name }} QUIZ</p>
+        <br>
     </div>
 </div>
 <div class="mx-12 mt-10">
     {% if perms.offlearn.add_quiz %}
-    <a href="{% url 'create_quiz' course.id %}">
-        <button class="rounded-full ring-1 ring-red-600 bg-red-600 text-white px-8 py-4 hover:bg-red-700">สร้าง Quiz</button>
-    </a>
+    <div class="flex justify-center">
+        <a href="{% url 'create_quiz' course.id %}">
+            <button class="rounded-full ring-1 ring-red-600 bg-red-600 text-white px-8 py-4 hover:bg-red-700">สร้าง Quiz</button>
+        </a>
+    </div>
     {% endif %}
     <div class="pt-4 bg-gray-200 rounded-xl mt-4 p-6">
         <!-- Quiz 1 -->
