@@ -30,7 +30,7 @@
                             </th>
                             {% for i in quiz %}
                             <th scope="col"
-                                class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize"> {{i.quiz_name}}
+                                class="p-5 text-left text-sm leading-6 font-semibold text-gray-900 capitalize">{{i.quiz_name}}
                             </th>
                             {% endfor %}
                             <th scope="col"
@@ -45,9 +45,12 @@
                                 {{student.first_name }}</td>
                             <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                                 {{student.last_name }}</td>
-                            {% for i in student.quizscore_set.all %}
-                            <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
-                                {{ i.score }}</td>
+                            {% for i in quiz %}
+                                {% if i.quizscore_set.first.student == student %}
+                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ i.quizscore_set.first.score }}</td>
+                                {% else %}
+                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">None</td>
+                                {% endif %}
                             {% endfor %}
                             <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                                 {{student.total_score }}</td>

@@ -396,9 +396,9 @@ class Student_List(LoginRequiredMixin, PermissionRequiredMixin, View):
     permission_required = ["offlearn.view_student"]
 
     def get(self, request, course_id):
-        students = User.objects.filter(course__id=course_id, user_info__role="Student").annotate(total_score=Sum('quizscore__score'))
         course = Course.objects.get(pk=course_id)
-        quiz = Quiz.objects.filter(course = course)
+        quiz = Quiz.objects.filter(course = course).order_by('id')
+        students = User.objects.filter(course__id=course_id, user_info__role="Student").annotate(total_score=Sum('quizscore__score', filter=Q(quizscore__quiz__in = quiz))).order_by('id')
         context = {"students": students, "course_id":course_id, "quiz": quiz}
         return render(request, 'student_list.html', context)
     
