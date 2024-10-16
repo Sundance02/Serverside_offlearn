@@ -26,7 +26,7 @@
         <div class="flex">
             {% if user.user_info.role == 'Admin' %}
             <button class="register bg-white text-black py-3 mr-6 rounded-full w-[150px]" name="register">
-                <a href="{% url 'Register_Instructor' %}">ลงทะเบียนอาจารย์</a>
+                <a href="{% url 'Register' %}">ลงทะเบียนอาจารย์</a>
             </button>
             {% endif %} 
             <p class="text-white m-2">{{user.first_name}}</p>

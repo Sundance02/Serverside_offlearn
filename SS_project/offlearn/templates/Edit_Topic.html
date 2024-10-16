@@ -6,13 +6,22 @@
 <body class="font-body">
     {% block content %}
     <div class="grid grid-cols-1 gap-8 my-8">
-        <div class="grid grid-cols-6 gap-8 my-8">
-            <p class="text-end text-4xl text-black font-semibold col-span-4 pr-32" id="title"> เเก้ไขเนื้อหาเรียน </p>
-            <div class="flex justify-end col-span-2 pl-8">
-                <button class="register bg-[#D9272E] text-white px-6 py-3  mr-8 rounded-full w-[200px] "><a
-                        href="{% url 'delete_topic' contents.id %}">ลบเนื้อหา</a></button>
+        <div class="grid grid-cols-10 gap-8 my-8">
+            <div class="flex justify-start col-start-2 col-end-4 ">
+                <button class="register bg-[#D9272E] text-white px-6 py-3 mr-8 rounded-full w-[200px]">
+                    <a href="{% url 'Course_Detail' course.id %}">กลับหน้าคอร์ส</a>
+                </button>
+            </div>
+        
+            <p class="text-end text-4xl text-black font-semibold col-start-4 col-end-7" id="title">แก้ไขเนื้อหาเรียน</p>
+        
+            <div class="flex justify-end col-start-8 col-end-10">
+                <button class="register bg-[#D9272E] text-white px-6 py-3 rounded-full w-[200px]">
+                    <a href="{% url 'delete_topic' contents.id %}">ลบเนื้อหา</a>
+                </button>
             </div>
         </div>
+        
         <div class="rounded-md bg-[#F4F4F4] w-[1141px] p-8 place-self-center font-medium">
             <div class="rounded-md bg-white m-8 p-8 text-xl">
                 <form action="" method="post" enctype="multipart/form-data" id="edit_content_form">
@@ -94,12 +103,13 @@
                             {% endfor %}
                         </div>
                     </div>
-
-
+                    
                     <div class="flex justify-center">
                         <button class="register bg-[#D9272E] text-white px-6 py-3 mt-12 rounded-full w-[200px] mt-12"
                             type="submit" onclick="submitform()">เเก้ไขเนื้อหา</button>
                     </div>
+
+
                     {% if form.errors %}
                     {% for field in form %}
                         {% for error in field.errors %}
@@ -113,6 +123,7 @@
                 </form>
             </div>
         </div>
+
         {% endblock %}
 </body>
 

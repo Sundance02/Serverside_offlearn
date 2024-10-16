@@ -1,8 +1,5 @@
 {% extends 'base.html' %}
 {% load static tailwind_tags %}
-<!-- ต้องใช้ข้อมูลด้วยว่าใครเป็นคนสร้างคอร์สเพื่อให้คนๆนั้นเป็น Owner -->
-
-
 <title>{% block name %} Create Course {% endblock %}</title>
 {% tailwind_css %}
 </head>
@@ -22,8 +19,6 @@
                         <label for="nameCourse">
                             <h6> ชื่อคอร์ส </h6>
                         </label>
-                        <!-- <input type="text" id="name" name="Name"
-                            class="bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"> -->
                         {{form.course_name}}
                     </div>
                     <div id="input-description" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">
@@ -38,19 +33,7 @@
                         </label>
 
                         <div class="col-span-3 flex space-x-4">
-                            <!-- <input id="upload-profile" onchange="updatefile()" type="file" class="rounded-full w-[150px] hidden"> -->
                             {{form.course_image}}
-                            <!-- <label id="label-upload" for="upload-profile"
-                                class="flex rounded-full bg-[#FFDADA] py-2 px-4 w-[200px]">
-                                <img id="icon-file" src="{% static '/images/add_file_icon.svg' %}" alt="" class="flex-none">
-                                <p id="p-file-name"
-                                    class="underline underline-offset-4 text-md text-center flex-grow font-normal truncate"
-                                    id="uploadfile"> Upload file </p>
-                            </label>
-                            <div id="show-file-name" class="text-[#B9B9B9] box-border pt-4 text-base truncate">
-                                อัตราส่วนรูปภาพเป็น 16:9
-                            </div> -->
-
                         </div>
                     </div>
                     <div id="input-teacher" class="grid grid-cols-4 gap-2 place-content-center my-[1rem]">

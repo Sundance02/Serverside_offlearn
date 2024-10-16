@@ -2,13 +2,15 @@
 {% load static %}
 {% block name %} Teacher Quiz {% endblock %}
 {% block content %}
+<br>
+<button class=" ml-8 register bg-[#D9272E] text-white px-6 py-3  mr-8 rounded-full w-[200px] justify-left"><a href="{% url 'teacher_quiz' quiz.course.id %}">กลับไปยังหน้า Quiz</a></button>
 <div>
     <div class="grid place-content-center mt-8">
         <p class="text-5xl font-bold mb-8">{{ quiz.quiz_name }} Question List</p>
     </div>
 </div>
 <div class="mx-12 mt-10">
-    <div class="flex justify-left">
+    <div class="flex justify-center">
         <select name="" id="questionType" class="px-16">
             <option value="" selected>Select Question Type</option>
             <option value="context">Context Answer Question</option>

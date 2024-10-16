@@ -8,8 +8,8 @@ from django.contrib.auth.models import User
 
 class User_Info(models.Model):
     class Role(models.Choices):
-        Choice = "Student"
-        Text = "Instructor"
+        stu = "Student"
+        instruc = "Instructor"
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=Role.choices)
     profile_image = models.ImageField(default='/media/default.jpg')
