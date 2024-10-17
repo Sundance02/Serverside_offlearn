@@ -46,9 +46,12 @@ class searched_course(View):
         else:
             role = "Guest"
         searched_info = request.POST['searched']
-        result = Course.objects.filter(course_name__icontains = searched_info)
-        context = {"courses":result, "role":role}
+        if role != "Teacher":
+            result = Course.objects.filter(course_name__icontains = searched_info)
+        else:
+            result = Course.objects.filter(course_name__icontains = searched_info, user_course__id = request.user.id)
 
+        context = {"courses":result, "role":role}
         return render(request, 'Allcourse.html', context)
     
     # getเอาไว้ใช้กับปุ่ม filter
