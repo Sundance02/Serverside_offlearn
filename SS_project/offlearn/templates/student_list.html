@@ -45,13 +45,22 @@
                                 {{student.first_name }}</td>
                             <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                                 {{student.last_name }}</td>
-                            {% for i in quiz %}
-                                {% if i.quizscore_set.first.student == student %}
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">{{ i.quizscore_set.first.score }}</td>
-                                {% else %}
-                                <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">None</td>
-                                {% endif %}
+                                {% for i in quiz %}
+                                {% with quiz_scores=i.quizscore_set.all %}
+                                    <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
+                                        {% if quiz_scores %}
+                                            {% for score in quiz_scores %}
+                                                {% if score.student == student %}
+                                                    {{ score.score }}
+                                                {% endif %}
+                                            {% endfor %}
+                                        {% else %}
+                                            None
+                                        {% endif %}
+                                    </td>
+                                {% endwith %}
                             {% endfor %}
+                            
                             <td class="p-5 whitespace-nowrap text-sm leading-6 font-medium text-gray-900">
                                 {{student.total_score }}</td>
                         </tr>

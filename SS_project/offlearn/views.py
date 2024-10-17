@@ -445,7 +445,7 @@ class edit_quiz(LoginRequiredMixin, View):
 
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
-        quizform = AddQuizForm(instance=quiz, initial={'quiz_name': quiz.quiz_name, 'deadline': quiz.deadline, 'max_point': quiz.max_point})
+        quizform = AddQuizForm(instance=quiz)
         return render(request, 'edit_quiz.html', {'quizform': quizform, 'quiz': quiz})
 
     def post(self, request, quiz_id):
@@ -476,7 +476,7 @@ class add_choice_question(LoginRequiredMixin, View):
 
     def get(self, request, quiz_id):
 
-        ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm, extra=2)
+        ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm, extra=2) # modelformset_factory สร้าง FormSet (กลุ่มของฟอร์ม) จาก ModelForm ซึ่งช่วยให้คุณสามารถสร้างฟอร์มหลาย ๆ ฟอร์มที่อิงตามโมเดลเดียวกันได้ในครั้งเดียว
         formset = ChoiceFormSet(queryset=Choice.objects.none())
         quiz = Quiz.objects.get(pk=quiz_id)
         return render(request, 'choice_question.html', {'choiceform': formset, 'questionform': AddQuestionForm(), 'quiz': quiz})
@@ -532,7 +532,7 @@ class add_context_question(LoginRequiredMixin, View):
 
         form = AddQuestionForm(request.POST)
         quiz = Quiz.objects.get(pk=quiz_id)
-        exist_point = Question.objects.filter(quiz_id = quiz_id).aggregate(total_point = Sum('point'))['total_point'] or 0
+        exist_point = Question.objects.filter(quiz_id = quiz_id).aggregate(total_point = Sum('point'))['total_point'] or 0 # ใช้ or 0 เพื่อถ้า query เป็น None จะเปลี่ยนเป็น 0 แทน
 
         if form.is_valid():
 
@@ -576,7 +576,7 @@ class edit_question(LoginRequiredMixin, View):
 
     def get(self, request, question_id):
         question = Question.objects.get(pk=question_id)
-        questionform = AddQuestionForm(instance=question, initial={'question_name': question.question_name, 'point': question.point})
+        questionform = AddQuestionForm(instance=question)
         if question.question_type == 'Choice':
             all_choice = Choice.objects.filter(question = question)
             # num_choice = all_choice.count()
