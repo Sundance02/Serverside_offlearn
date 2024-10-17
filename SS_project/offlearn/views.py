@@ -488,8 +488,8 @@ class add_choice_question(LoginRequiredMixin, View):
         questionform = AddQuestionForm(request.POST)
         exist_point = Question.objects.filter(quiz_id = quiz_id).aggregate(total_point = Sum('point'))['total_point'] or 0
         quiz = Quiz.objects.get(pk=quiz_id)
-        ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm, extra=10)
-        formset = ChoiceFormSet(request.POST, queryset=Choice.objects.none())
+        ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm)
+        formset = ChoiceFormSet(request.POST, queryset=Choice.objects.none()) # ให้ form ว่างใช้ queryset นี้
 
         if questionform.is_valid() and formset.is_valid():
 
@@ -603,7 +603,7 @@ class edit_question(LoginRequiredMixin, View):
                 question.save()
 
                 if question.question_type == 'Choice':
-                    ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm, extra=10)
+                    ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm)
                     formset = ChoiceFormSet(request.POST, queryset=Choice.objects.none())
 
                     if formset.is_valid():
