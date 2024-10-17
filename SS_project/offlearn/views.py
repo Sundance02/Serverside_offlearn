@@ -154,7 +154,6 @@ class edit_course(LoginRequiredMixin, PermissionRequiredMixin, View):
                             course.user_course.remove(del_t)
                             course.save()
                     return redirect('Course_Detail', course_id=course.id)
-        form.fields['add_instructors'].queryset= User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
         all_teacher = User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id)
         all_teacher_list = list(all_teacher.values('username', 'id'))
         teacher_incourse = User.objects.filter(course__id = course_id)
@@ -205,7 +204,9 @@ class edit_topic(LoginRequiredMixin, PermissionRequiredMixin, View):
     
     def post(self, request, topic_id):
         content = Content.objects.get(pk=topic_id)
+        course = Course.objects.get(pk = content.course.id)
         material = Material.objects.filter(content = content)
+
         form = CreateTopic(request.POST, request.FILES, instance=content)
         courseid = content.course.id
         print('รอvalid')
@@ -245,7 +246,7 @@ class edit_topic(LoginRequiredMixin, PermissionRequiredMixin, View):
                     emvideo = video.replace('/watch?v=', '/embed/')
                     video_mat = Material.objects.create(content = content, file_path = "", video_url = emvideo)
             return redirect('Course_Detail', course_id=courseid) 
-        return render(request, 'Edit_Topic.html', {"form": form,"contents":content, "materials":material})
+        return render(request, 'Edit_Topic.html', {"form": form,"contents":content, "materials":material, "course":course})
 
 
 class delete_topic(LoginRequiredMixin, PermissionRequiredMixin,View):
@@ -312,7 +313,6 @@ class Changepassword(LoginRequiredMixin, View):
         form = Changepasswordform(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            user.save
             messages.success(request, 'เปลี่ยนรหัสผ่านสำเร็จ กรุณา Login ใหม่อีกครั้ง')  
             return redirect('Login')
         return render(request, 'Change.html', {"form": form})    
