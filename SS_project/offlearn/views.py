@@ -212,9 +212,7 @@ class edit_topic(LoginRequiredMixin, PermissionRequiredMixin, View):
         print(form.errors.as_text)
         if(form.is_valid()):
             print('valid')
-            content.content_name = form.cleaned_data['content_name']
-            content.description = form.cleaned_data['description']
-            content.save()
+            form.save()
             del_video = request.POST.getlist('del_video')
             del_file = request.POST.getlist('del_file_path')
             add_video = request.POST.getlist('video_url')
