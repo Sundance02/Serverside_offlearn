@@ -213,45 +213,28 @@ class edit_topic(LoginRequiredMixin, PermissionRequiredMixin, View):
         if(form.is_valid()):
             print('valid')
             form.save()
-            del_video = request.POST.getlist('del_video')
-            del_file = request.POST.getlist('del_file_path')
+            del_list = request.POST.getlist('del_list')
             add_video = request.POST.getlist('video_url')
             add_file = request.FILES.getlist('file_path')
-            print(del_file)
-            print(del_video)
+            print(del_list)
             # delete section
-            videoSplitList = str(del_video).split(',')
-            fileSplitList = str(del_file).split(',')
+            del_SplitList = str(del_list).split(',')
 
-            trueVideoList = []
-            trueFileList = []
+            true_dellist = []
 
  
-            if(del_file):
-                fileSplitList = str(del_file).split(',')
-                trueFileList = []
-                for file in fileSplitList:
+            if(del_SplitList):
+                print(del_SplitList)
+                true_dellist = []
+                for file in del_SplitList:
                     true_value = file.strip().replace("'", "").replace("[", "").replace("]", "")
                     if true_value:
-                        trueFileList.append(int(true_value))
-                for file in trueFileList:
+                        true_dellist.append(int(true_value))
+                for file in true_dellist:
                     if(file != ''):                        
                         file = Material.objects.get(pk=file)
                         file.delete()
             
-
-            if(del_video):
-                videoSplitList = str(del_video).split(',')
-                trueVideoList = []
-                for video in videoSplitList:
-                    true_value = video.strip().replace("'", "").replace("[", "").replace("]", "")
-                    if true_value:
-                        trueVideoList.append(int(true_value))
-                for video in trueVideoList:
-                    if(video != ''):
-                        print(video)
-                        video = Material.objects.get(pk=video)
-                        video.delete()
 
             # add section
             if(add_file):
@@ -445,7 +428,7 @@ class edit_quiz(LoginRequiredMixin, View):
 
     def get(self, request, quiz_id):
         quiz = Quiz.objects.get(pk=quiz_id)
-        quizform = AddQuizForm(instance=quiz)
+        quizform = AddQuizForm(instance=quiz, initial={'quiz_name': quiz.quiz_name, 'deadline': quiz.deadline, 'max_point': quiz.max_point})
         return render(request, 'edit_quiz.html', {'quizform': quizform, 'quiz': quiz})
 
     def post(self, request, quiz_id):
@@ -476,7 +459,7 @@ class add_choice_question(LoginRequiredMixin, View):
 
     def get(self, request, quiz_id):
 
-        ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm, extra=2) # modelformset_factory สร้าง FormSet (กลุ่มของฟอร์ม) จาก ModelForm ซึ่งช่วยให้คุณสามารถสร้างฟอร์มหลาย ๆ ฟอร์มที่อิงตามโมเดลเดียวกันได้ในครั้งเดียว
+        ChoiceFormSet = modelformset_factory(Choice, form=AddChoiceForm, extra=2)
         formset = ChoiceFormSet(queryset=Choice.objects.none())
         quiz = Quiz.objects.get(pk=quiz_id)
         return render(request, 'choice_question.html', {'choiceform': formset, 'questionform': AddQuestionForm(), 'quiz': quiz})
@@ -532,7 +515,7 @@ class add_context_question(LoginRequiredMixin, View):
 
         form = AddQuestionForm(request.POST)
         quiz = Quiz.objects.get(pk=quiz_id)
-        exist_point = Question.objects.filter(quiz_id = quiz_id).aggregate(total_point = Sum('point'))['total_point'] or 0 # ใช้ or 0 เพื่อถ้า query เป็น None จะเปลี่ยนเป็น 0 แทน
+        exist_point = Question.objects.filter(quiz_id = quiz_id).aggregate(total_point = Sum('point'))['total_point'] or 0
 
         if form.is_valid():
 
@@ -576,7 +559,7 @@ class edit_question(LoginRequiredMixin, View):
 
     def get(self, request, question_id):
         question = Question.objects.get(pk=question_id)
-        questionform = AddQuestionForm(instance=question)
+        questionform = AddQuestionForm(instance=question, initial={'question_name': question.question_name, 'point': question.point})
         if question.question_type == 'Choice':
             all_choice = Choice.objects.filter(question = question)
             # num_choice = all_choice.count()

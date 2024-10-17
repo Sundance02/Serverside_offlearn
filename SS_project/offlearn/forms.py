@@ -127,8 +127,7 @@ class CreateTopic(ModelForm):
     content_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}), max_length=80, required=False)
     description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}), max_length=255, required=False)
     # ลบเอาไว้ใช้กับเเก้ไขtopic
-    del_video = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_video"}))
-    del_file_path = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_file_path"}))
+    del_list = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_list"}))
     class Meta:
         model = Content
         fields = [
