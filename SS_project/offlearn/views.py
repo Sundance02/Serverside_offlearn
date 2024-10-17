@@ -633,7 +633,15 @@ class student_quiz(LoginRequiredMixin, View):
     def post(self, request, quiz_id):
         user = User.objects.get(pk=request.user.id)
         quiz = Quiz.objects.get(pk=quiz_id)
+        student_answer = StudentAnswer.objects.filter(quiz=quiz, student=request.user).first()
         question = Question.objects.filter(quiz = quiz).order_by('id')
+
+        # valid ans
+        for q in question:
+            ans =  request.POST.get(str(q.id))
+            if not ans:
+                return render(request, 'student_quiz.html', {'question': question, 'quiz': quiz, 'student_answer': student_answer, 'error_msg': 'please answer all question before submit.'})
+
         for q in question:
             ans =  request.POST.get(str(q.id))
             if q.question_type == 'Text':

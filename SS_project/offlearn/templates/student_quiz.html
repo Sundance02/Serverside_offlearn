@@ -3,47 +3,75 @@
 
 {% block content %}
 <br>
-<button class="ml-8 register bg-[#D9272E] text-white px-6 py-3  mr-8 rounded-full w-[200px] "><a href="{% url 'teacher_quiz' quiz.course.id %}">กลับหน้าคอร์ส</a></button>
+<button class="ml-8 register bg-[#D9272E] text-white px-6 py-3 mr-8 rounded-full w-[200px]">
+    <a href="{% url 'teacher_quiz' quiz.course.id %}">กลับหน้าคอร์ส</a>
+</button>
 <div class="mx-20 mt-10 grid place-items-center">
     <div class="pt-4 bg-gray-200 rounded-xl mt-4 p-6 grid place-items-center w-[90%]" id="questionContainer">
         <label class="block text-gray-700 font-semibold mr-2 w-full text-center mb-10">{{ quiz.quiz_name }}</label>
 
-            {% if student_answer %}
-                {% if student_answer.score %}
-                <p class="text-center text-black-500">Your Score is {{ student_answer.score.score }} / {{quiz.max_point}} </p>
-                {% else %}
-                <p class="text-center text-black-500">Your Score is -- / {{quiz.max_point}} (Not grading) </p>
-                {% endif %}
+        {% if student_answer %}
+            {% if student_answer.score %}
+                <p class="text-center text-black-500">Your Score is {{ student_answer.score.score }} / {{ quiz.max_point }} </p>
             {% else %}
+                <p class="text-center text-black-500">Your Score is -- / {{ quiz.max_point }} (Not grading) </p>
+            {% endif %}
+        {% else %}
             {% if question %}
-            <form method="post" class="w-full" action="{% url 'student_quiz' quiz.id %}" id="question-form">
-                {% csrf_token %}
-                {% for quest in question %}
-                    <div class="bg-white rounded-lg p-6 w-full mb-10 grid place-items-left" id="question_form">
-                        <label class="block text-gray-700 text-2xl mr-2 w-[20%] text-left">{{ forloop.counter }}. {{ quest.question_name }} <p style="font-size: small;">({{ quest.point }} score)</p></label>
-                        {% if quest.question_type == 'Text' %}
-                            <textarea class="bg-gray-200 rounded-md px-3 py-2 w-full" name="{{ quest.id }}" id="{{ forloop.counter }}_{{ quest.id }}"></textarea>
-                        {% else %}
-                            {% for ch in quest.choice_set.all %}
-                            <div class="flex items-center mb-2">
-                                <input type="radio" name="{{ quest.id }}" value="{{ ch.id }}" id="{{ forloop.counter }}_{{ quest.id }}" class="mr-2">
-                                <label for="{{ forloop.counter }}_{{ quest.id }}" class="text-gray-700">{{ ch.choice_name }}</label>
-                            </div>
-                            {% endfor %}
-                        {% endif %}
+                <form method="post" class="w-full" action="{% url 'student_quiz' quiz.id %}" id="question-form" onsubmit="return validateForm()">
+                    {% csrf_token %}
+                    {% for quest in question %}
+                        <div class="bg-white rounded-lg p-6 w-full mb-10 grid place-items-left" id="question_form">
+                            <label class="block text-gray-700 text-2xl mr-2 w-[20%] text-left">{{ forloop.counter }}. {{ quest.question_name }} <p style="font-size: small;">({{ quest.point }} score)</p></label>
+                            {% if quest.question_type == 'Text' %}
+                                <textarea class="bg-gray-200 rounded-md px-3 py-2 w-full" name="{{ quest.id }}" id="{{ forloop.counter }}_{{ quest.id }}"></textarea>
+                            {% else %}
+                                {% for ch in quest.choice_set.all %}
+                                    <div class="flex items-center mb-2">
+                                        <input type="radio" name="{{ quest.id }}" value="{{ ch.id }}" id="{{ forloop.counter }}_{{ quest.id }}_{{ forloop.counter }}" class="mr-2">
+                                        <label for="{{ forloop.counter }}_{{ quest.id }}_{{ forloop.counter }}" class="text-gray-700">{{ ch.choice_name }}</label>
+                                    </div>
+                                {% endfor %}
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                    {{ error_msg }}
+                    <div class="mb-4 flex justify-center w-full">
+                        <button class="grid place-items-center bg-red-500 w-[5%] rounded-full" style="color: white;" type="submit">Submit</button>
                     </div>
-                {% endfor %}
-                <div class="mb-4 flex justify-center w-full">
-                    <button class="grid place-items-center bg-red-500 w-[5%] rounded-full" style="color: white;"
-                        type="submit">Submit</button>
-                </div>
+                </form>
             {% else %}
                 <p class="text-center text-gray-500">No questions available.</p>
             {% endif %}
-            {% endif %}
-            
-
+        {% endif %}
     </div>
 </div>
-</form>
+
+<script>
+    function validateForm() {
+        const questions = document.querySelectorAll('#question_form');
+        let allAnswered = true;
+
+        questions.forEach((question) => {
+            const textarea = question.querySelector('textarea');
+            const radioChecked = question.querySelector('input[type="radio"]:checked');
+
+            
+            if (!textarea && !radioChecked) {
+                allAnswered = false;
+            } else if (textarea && textarea.value.trim() === '') {
+                allAnswered = false;
+            }
+        });
+
+        if (!allAnswered) {
+            alert('Please answer all questions before submitting.');
+            return false;
+        }
+
+        return true;
+    }
+</script>
+
+
 {% endblock %}
