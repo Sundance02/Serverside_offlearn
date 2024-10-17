@@ -206,6 +206,7 @@ class edit_topic(LoginRequiredMixin, PermissionRequiredMixin, View):
         content = Content.objects.get(pk=topic_id)
         course = Course.objects.get(pk = content.course.id)
         material = Material.objects.filter(content = content)
+
         form = CreateTopic(request.POST, request.FILES, instance=content)
         courseid = content.course.id
         print('รอvalid')
@@ -312,7 +313,6 @@ class Changepassword(LoginRequiredMixin, View):
         form = Changepasswordform(request.user, request.POST)
         if form.is_valid():
             user = form.save()
-            user.save
             messages.success(request, 'เปลี่ยนรหัสผ่านสำเร็จ กรุณา Login ใหม่อีกครั้ง')  
             return redirect('Login')
         return render(request, 'Change.html', {"form": form})    
