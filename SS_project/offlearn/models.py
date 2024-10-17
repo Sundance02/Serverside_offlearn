@@ -12,7 +12,7 @@ class User_Info(models.Model):
         instruc = "Instructor"
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=20, choices=Role.choices)
-    profile_image = models.ImageField(default='/media/default.jpg')
+    profile_image = models.ImageField(default='/media/default.png')
 
 
 
