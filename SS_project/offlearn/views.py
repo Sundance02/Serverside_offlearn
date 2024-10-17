@@ -115,7 +115,6 @@ class edit_course(LoginRequiredMixin, PermissionRequiredMixin, View):
     def get(self, request, course_id):
         course = Course.objects.get(pk=course_id)
         form = CreateCourse(instance=course)
-        # form.fields['add_instructors'].queryset= User.objects.filter(user_info__role="Instructor").exclude(pk=request.user.id, )
         all_teacher = User.objects.filter(user_info__role="Instructor").exclude(course__id = course_id, user_info__role="Instructor")
         all_teacher_list = list(all_teacher.values('username', 'id'))
         # query อจ ที่อยู่ในคอร์สทั้งหมด

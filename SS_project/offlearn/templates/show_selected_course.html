@@ -72,13 +72,16 @@
                 </p><br>
 
                 {% for mat in content.material_set.all %}
+                {% if mat.file_path != "" %}
+                    <a class="underline" href="{{mat.file_path.url}}" target="_blank">{{mat.file_path}}</a> <br>
+                {% endif %}
+
+                {% endfor %}
+                
+                {% for mat in content.material_set.all %}
                 {% if mat.video_url != "" %}
                     <iframe width="560" height="315" src="{{mat.video_url}}" frameborder="0" allow="accelerometer;  clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen class="pt-12"></iframe>
                 {% endif %}
-                {% if mat.file_path != "" %}
-                <a class="underline" href="{{mat.file_path.url}}" target="_blank">{{mat.file_path}}</a>
-                {% endif %}
-                <br>
                 {% endfor %}
             </div>
            
