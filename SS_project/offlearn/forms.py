@@ -99,7 +99,6 @@ class CreateCourse(ModelForm):
     course_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}), max_length=80 , required=False)
     course_description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}), max_length=255 , required=False)
     course_image = forms.ImageField()
-    add_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor"), required=False)
     # ลบเอาไว้ใช้กับเเก้ไขคอร์ส
     del_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor" ), required=False, widget=forms.HiddenInput(attrs={"id":"del_instructors"}))
     class Meta:
@@ -127,18 +126,16 @@ BLACKLISTED_EXTENSIONS = ['.exe', '.bat', '.cmd', '.js', '.sh']
 class CreateTopic(ModelForm):
     content_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}), max_length=80, required=False)
     description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}), max_length=255, required=False)
-    video_url = forms.CharField(required=False, widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
-    file_path = forms.FileField(required=False)
+    # ลบเอาไว้ใช้กับเเก้ไขtopic
     del_video = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_video"}))
     del_file_path = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_file_path"}))
     class Meta:
-        model = Material
+        model = Content
         fields = [
-            'file_path',
-            'video_url'
+            'content_name',
+            'description'
         ]
 
-    
     def clean_file_path(self):
         file = self.cleaned_data.get('file_path')
         if file:
@@ -159,3 +156,5 @@ class CreateTopic(ModelForm):
         if not description:
             raise forms.ValidationError("กรุณากรอกคำอธิบายเนื้อหา")
         return description
+    
+
