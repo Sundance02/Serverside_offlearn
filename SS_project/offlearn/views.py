@@ -175,7 +175,6 @@ class create_topic(LoginRequiredMixin, PermissionRequiredMixin,View):
     permission_required = ["offlearn.add_content"]
     def get(self, request, course_id):
         form = CreateTopic()
-        print("เข้า get")
         return render(request, 'Create_Topic.html',{"form":form, "course_id":course_id})
     def post(self, request, course_id):
         form = CreateTopic(request.POST, request.FILES)
@@ -201,7 +200,7 @@ class edit_topic(LoginRequiredMixin, PermissionRequiredMixin, View):
         content = Content.objects.get(pk=topic_id)
         course = Course.objects.get(pk = content.course.id)
         material = Material.objects.filter(content = content)
-        form = CreateTopic(instance=content, initial={'content_name':content.content_name, 'description':content.description})
+        form = CreateTopic(instance=content)
         return render(request, 'Edit_Topic.html', {'form':form, "contents":content, "materials":material, "course":course})
     
     def post(self, request, topic_id):
