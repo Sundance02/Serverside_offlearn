@@ -99,7 +99,6 @@ class CreateCourse(ModelForm):
     course_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}), max_length=80 , required=False)
     course_description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}), max_length=255 , required=False)
     course_image = forms.ImageField()
-    add_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor"), required=False)
     # ลบเอาไว้ใช้กับเเก้ไขคอร์ส
     del_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor" ), required=False, widget=forms.HiddenInput(attrs={"id":"del_instructors"}))
     class Meta:
@@ -121,20 +120,6 @@ class CreateCourse(ModelForm):
             raise forms.ValidationError("กรุณากรอกคำอธิบายคอร์ส")
         return course_description
 
-# class EditCourse(ModelForm):
-#     course_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}), max_length=80)
-#     course_description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}), max_length=255)
-#     course_image = forms.ImageField()
-#     add_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor"), required=False)
-#     del_instructors = forms.ModelChoiceField( queryset= User.objects.filter(user_info__role="Instructor" ), required=False, widget=forms.HiddenInput(attrs={"id":"del_instructors"}))
-    
-#     class Meta:
-#         model = Course
-#         fields = [
-#             "course_name",
-#             "course_description",
-#             "course_image"
-#         ]
 
 BLACKLISTED_EXTENSIONS = ['.exe', '.bat', '.cmd', '.js', '.sh']
 
@@ -143,6 +128,7 @@ class CreateTopic(ModelForm):
     description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}), max_length=255, required=False)
     video_url = forms.CharField(required=False, widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
     file_path = forms.FileField(required=False)
+    # ลบเอาไว้ใช้กับเเก้ไขtopic
     del_video = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_video"}))
     del_file_path = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_file_path"}))
     class Meta:
@@ -175,28 +161,3 @@ class CreateTopic(ModelForm):
         return description
     
 
-
-# class EditContent(ModelForm):
-#     content_name = forms.CharField(widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}), max_length=80)
-#     description = forms.CharField(widget=Textarea(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-lg text-base py-2 px-4", "rows":"5", "cols":"30"}), max_length=255)
-#     video_url = forms.CharField(required=False, widget=TextInput(attrs={"class":"bg-[#F4F4F4] col-span-3 rounded-full text-base py-2 px-4"}))
-#     file_path = forms.FileField(required=False)
-#     del_video = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_video"}))
-#     del_file_path = forms.CharField(required=False, widget=forms.HiddenInput(attrs={"id":"del_file_path"}))
-    
-
-#     class Meta:
-#         model = Material
-#         fields = [
-#             'file_path',
-#             'video_url'
-#         ]
-
-#     def clean_file_path(self):
-#         file = self.cleaned_data.get('file_path')
-#         if file:
-#             extension = file.name.split('.')[-1].lower()
-#             print(extension)
-#             if f".{extension}" in BLACKLISTED_EXTENSIONS:
-#                 raise forms.ValidationError(f"***ไฟล์ชนิด {extension} ไม่ได้รับอนุญาตให้อัปโหลด")
-#         return file
